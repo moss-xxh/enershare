@@ -1212,9 +1212,8 @@
                         <div class="connecting-progress-bar" id="progressBar" style="width: 0%"></div>
                     </div>
                     <div class="connecting-steps" id="connectingSteps">
-                        <div class="connecting-step active" data-i18n-step="connecting1">正在搜索设备</div>
-                        <div class="connecting-step" data-i18n-step="connecting2">正在验证连接</div>
-                        <div class="connecting-step" data-i18n-step="connecting3">正在同步数据</div>
+                        <div class="connecting-step active" data-i18n-step="connecting1">正在建立连接</div>
+                        <div class="connecting-step" data-i18n-step="connecting2">正在同步数据</div>
                     </div>
                     <button class="connecting-btn" id="connectingBtn" style="display: none;">确定</button>
                 </div>
@@ -1278,9 +1277,8 @@
                 guideStep3Desc: '连接设备WiFi后,返回爱尚App，点击"开始连接"按钮完成配置',
                 connecting: '正在连接设备',
                 connectingDesc: '请稍候...',
-                connecting1: '正在搜索设备',
-                connecting2: '正在验证连接',
-                connecting3: '正在同步数据',
+                connecting1: '正在建立连接',
+                connecting2: '正在同步数据',
                 connectSuccess: '连接成功',
                 connectSuccessDesc: '设备已成功连接',
                 connectError: '连接失败',
@@ -1346,9 +1344,8 @@
                 guideStep3Desc: '連接設備WiFi後，返回愛尚App，點擊"開始連接"按鈕完成配置',
                 connecting: '正在連接設備',
                 connectingDesc: '請稍候...',
-                connecting1: '正在搜索設備',
-                connecting2: '正在驗證連接',
-                connecting3: '正在同步數據',
+                connecting1: '正在建立連接',
+                connecting2: '正在同步數據',
                 connectSuccess: '連接成功',
                 connectSuccessDesc: '設備已成功連接',
                 connectError: '連接失敗',
@@ -1414,9 +1411,8 @@
                 guideStep3Desc: 'After connecting to device WiFi, return to the app and click "Start Connection" button to complete configuration',
                 connecting: 'Connecting Device',
                 connectingDesc: 'Please wait...',
-                connecting1: 'Searching for device',
-                connecting2: 'Verifying connection',
-                connecting3: 'Syncing data',
+                connecting1: 'Establishing connection',
+                connecting2: 'Syncing data',
                 connectSuccess: 'Connection Successful',
                 connectSuccessDesc: 'Device connected successfully',
                 connectError: 'Connection Failed',
@@ -1561,52 +1557,44 @@
             // 模拟连接过程
             setTimeout(() => {
                 // 第1步完成
-                progressBar.style.width = '33%';
+                progressBar.style.width = '50%';
                 steps[0].classList.remove('active');
                 steps[0].classList.add('completed');
                 steps[1].classList.add('active');
 
                 setTimeout(() => {
                     // 第2步完成
-                    progressBar.style.width = '66%';
+                    progressBar.style.width = '100%';
                     steps[1].classList.remove('active');
                     steps[1].classList.add('completed');
-                    steps[2].classList.add('active');
+
+                    // 随机决定成功或失败（这里设置90%成功率）
+                    const isSuccess = Math.random() > 0.1;
 
                     setTimeout(() => {
-                        // 第3步完成
-                        progressBar.style.width = '100%';
-                        steps[2].classList.remove('active');
-                        steps[2].classList.add('completed');
+                        if (isSuccess) {
+                            // 连接成功
+                            connectingIcon.innerHTML = '<div class="connecting-success">✓</div>';
+                            connectingTitle.textContent = texts.connectSuccess;
+                            connectingDesc.textContent = texts.connectSuccessDesc;
+                            connectingProgress.style.display = 'none';
+                            connectingSteps.style.display = 'none';
 
-                        // 随机决定成功或失败（这里设置90%成功率）
-                        const isSuccess = Math.random() > 0.1;
-
-                        setTimeout(() => {
-                            if (isSuccess) {
-                                // 连接成功
-                                connectingIcon.innerHTML = '<div class="connecting-success">✓</div>';
-                                connectingTitle.textContent = texts.connectSuccess;
-                                connectingDesc.textContent = texts.connectSuccessDesc;
-                                connectingProgress.style.display = 'none';
-                                connectingSteps.style.display = 'none';
-
-                                // 延迟1秒后自动跳转
-                                setTimeout(() => {
-                                    window.location.href = '仪表盘.html';
-                                }, 1000);
-                            } else {
-                                // 连接失败
-                                connectingIcon.innerHTML = '<div class="connecting-error">✕</div>';
-                                connectingTitle.textContent = texts.connectError;
-                                connectingDesc.textContent = texts.connectErrorDesc;
-                                connectingProgress.style.display = 'none';
-                                connectingSteps.style.display = 'none';
-                                connectingBtn.style.display = 'block';
-                                connectingBtn.textContent = texts.confirmBtn;
-                            }
-                        }, 500);
-                    }, 1500);
+                            // 延迟1秒后自动跳转
+                            setTimeout(() => {
+                                window.location.href = '仪表盘.html';
+                            }, 1000);
+                        } else {
+                            // 连接失败
+                            connectingIcon.innerHTML = '<div class="connecting-error">✕</div>';
+                            connectingTitle.textContent = texts.connectError;
+                            connectingDesc.textContent = texts.connectErrorDesc;
+                            connectingProgress.style.display = 'none';
+                            connectingSteps.style.display = 'none';
+                            connectingBtn.style.display = 'block';
+                            connectingBtn.textContent = texts.confirmBtn;
+                        }
+                    }, 500);
                 }, 1500);
             }, 1500);
         }

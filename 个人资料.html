@@ -613,20 +613,10 @@
                 <div class="profile-body">
                     <!-- 系统设置 -->
                     <div class="settings-section">
-                        <div class="settings-item" id="otaUpgrade">
-                            <div class="settings-icon">🔋</div>
-                            <div class="settings-content">
-                                <span class="settings-label">OTA升级</span>
-                                <div style="display: flex; align-items: center;">
-                                    <span class="settings-value" id="versionText">V1.0.0</span>
-                                    <span class="settings-arrow">›</span>
-                                </div>
-                            </div>
-                        </div>
                         <div class="settings-item" id="ota1Upgrade">
                             <div class="settings-icon">🔋</div>
                             <div class="settings-content">
-                                <span class="settings-label">OTA1</span>
+                                <span class="settings-label">OTA升级</span>
                                 <div style="display: flex; align-items: center;">
                                     <span class="settings-value" id="version1Text">V1.0.0</span>
                                     <span class="settings-arrow">›</span>
@@ -639,28 +629,6 @@
                                 <span class="settings-label">语言</span>
                                 <div>
                                     <span class="settings-value" id="currentLanguage">简体中文</span>
-                                    <span class="settings-arrow">›</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 其他设置 -->
-                    <div class="settings-section">
-                        <div class="settings-item" id="instructionManual">
-                            <div class="settings-icon">📄</div>
-                            <div class="settings-content">
-                                <span class="settings-label">说明书</span>
-                                <div>
-                                    <span class="settings-arrow">›</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="settings-item" id="userManual">
-                            <div class="settings-icon">📖</div>
-                            <div class="settings-content">
-                                <span class="settings-label">设备手册</span>
-                                <div>
                                     <span class="settings-arrow">›</span>
                                 </div>
                             </div>
@@ -716,7 +684,6 @@
                         <h3>选择语言</h3>
                     </div>
                     <div class="language-option selected" data-lang="zh-CN">简体中文</div>
-                    <div class="language-option" data-lang="zh-TW">繁體中文</div>
                     <div class="language-option" data-lang="en">English</div>
                 </div>
             </div>
@@ -746,11 +713,6 @@
         });
 
         // OTA升级
-        document.getElementById('otaUpgrade').addEventListener('click', () => {
-            window.location.href = 'OTA升级.html';
-        });
-
-        // OTA1升级
         document.getElementById('ota1Upgrade').addEventListener('click', () => {
             window.location.href = 'OTA1升级.html';
         });
@@ -761,18 +723,14 @@
 
         const languageNames = {
             'zh-CN': '简体中文',
-            'zh-TW': '繁體中文',
             'en': 'English'
         };
 
         const translations = {
             'zh-CN': {
                 title: '我的',
-                otaUpgrade: 'OTA升级',
-                ota1Upgrade: 'OTA1',
+                ota1Upgrade: 'OTA升级',
                 language: '语言',
-                instructionManual: '说明书',
-                userManual: '设备手册',
                 privacyPolicy: '隐私政策',
                 currentVersion: 'V1.0.0',
                 navDevice: '设备',
@@ -780,27 +738,10 @@
                 navProfile: '我的',
                 selectLanguage: '选择语言'
             },
-            'zh-TW': {
-                title: '我的',
-                otaUpgrade: 'OTA升級',
-                ota1Upgrade: 'OTA1',
-                language: '語言',
-                instructionManual: '說明書',
-                userManual: '設備手冊',
-                privacyPolicy: '隱私政策',
-                currentVersion: 'V1.0.0',
-                navDevice: '設備',
-                navAlert: '告警',
-                navProfile: '我的',
-                selectLanguage: '選擇語言'
-            },
             'en': {
                 title: 'Profile',
-                otaUpgrade: 'OTA Upgrade',
-                ota1Upgrade: 'OTA1',
+                ota1Upgrade: 'OTA Upgrade',
                 language: 'Language',
-                instructionManual: 'Instruction Manual',
-                userManual: 'User Manual',
                 privacyPolicy: 'Privacy Policy',
                 currentVersion: 'V1.0.0',
                 navDevice: 'Device',
@@ -817,12 +758,9 @@
         function updatePageText(lang) {
             const texts = translations[lang];
             document.querySelector('.profile-title').textContent = texts.title;
-            document.querySelectorAll('.settings-label')[0].textContent = texts.otaUpgrade;
-            document.querySelectorAll('.settings-label')[1].textContent = texts.ota1Upgrade;
-            document.querySelectorAll('.settings-label')[2].textContent = texts.language;
-            document.querySelectorAll('.settings-label')[3].textContent = texts.instructionManual;
-            document.querySelectorAll('.settings-label')[4].textContent = texts.userManual;
-            document.querySelectorAll('.settings-label')[5].textContent = texts.privacyPolicy;
+            document.querySelectorAll('.settings-label')[0].textContent = texts.ota1Upgrade;
+            document.querySelectorAll('.settings-label')[1].textContent = texts.language;
+            document.querySelectorAll('.settings-label')[2].textContent = texts.privacyPolicy;
             document.querySelectorAll('.nav-text')[0].textContent = texts.navDevice;
             document.querySelectorAll('.nav-text')[1].textContent = texts.navAlert;
             document.querySelectorAll('.nav-text')[2].textContent = texts.navProfile;
@@ -877,16 +815,6 @@
                 // 关闭弹窗
                 languageModal.classList.remove('active');
             });
-        });
-
-        // 说明书
-        document.getElementById('instructionManual').addEventListener('click', () => {
-            window.location.href = '说明手册.html';
-        });
-
-        // 设备手册
-        document.getElementById('userManual').addEventListener('click', () => {
-            window.location.href = '用户手册.html';
         });
 
         // 隐私政策

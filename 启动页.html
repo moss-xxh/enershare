@@ -416,8 +416,19 @@
             }
         };
 
+        // 语言版本控制 - 用于在更新后重置语言
+        const LANGUAGE_VERSION = '2.0'; // 版本号，更新后会重置语言
+        const savedVersion = localStorage.getItem('appLanguageVersion');
+
         // 当前语言 - 从localStorage读取，默认中文
-        let currentLanguage = localStorage.getItem('appLanguage') || 'zh-CN';
+        let currentLanguage = localStorage.getItem('appLanguage');
+
+        // 如果版本不匹配或没有保存的语言设置，重置为默认中文
+        if (savedVersion !== LANGUAGE_VERSION || !currentLanguage) {
+            currentLanguage = 'zh-CN';
+            localStorage.setItem('appLanguage', 'zh-CN');
+            localStorage.setItem('appLanguageVersion', LANGUAGE_VERSION);
+        }
 
         // 更新页面文本
         function updatePageText(lang) {

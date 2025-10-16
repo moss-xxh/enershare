@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>我的 - 爱尚</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            height: 100vh;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* iPhone 外壳 */
+        .iphone-frame {
+            width: 385px;
+            height: 822px;
+            background: #1d1d1f;
+            border-radius: 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            position: relative;
+        }
+
+        /* iPhone 屏幕容器 */
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 刘海 */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 28px;
+            background: #1d1d1f;
+            border-radius: 0 0 18px 18px;
+            z-index: 10;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            padding: 0 27px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 5;
+        }
+
+        .time {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .signal-icon {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            height: 12px;
+        }
+
+        .signal-dot {
+            width: 3px;
+            height: 3px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon {
+            width: 15px;
+            height: 11px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .wifi-icon::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border: 2px solid #000000;
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .battery-icon {
+            width: 25px;
+            height: 11.5px;
+            border: 1.5px solid #000000;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            opacity: 0.9;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5px;
+            height: 4px;
+            background: #000000;
+            border-radius: 0 2px 2px 0;
+            opacity: 0.5;
+        }
+
+        .battery-level {
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 1.5px;
+        }
+
+        /* 页面容器 */
+        .profile-page {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 页面头部 */
+        .profile-header {
+            padding: 12px 32px 20px;
+            background: #ffffff;
+            border-bottom: 8px solid #f9f9f9;
+        }
+
+        .profile-title {
+            font-size: 34px;
+            font-weight: 700;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+        }
+
+        /* 设置列表 */
+        .profile-body {
+            flex: 1;
+            overflow-y: auto;
+            padding-top: 0;
+            padding-bottom: 96px;
+        }
+
+        .settings-section {
+            background: #ffffff;
+            border-bottom: 8px solid #f9f9f9;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 32px;
+            border-bottom: 1px solid #f5f5f7;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            position: relative;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-item:active {
+            background: #f5f5f7;
+        }
+
+        .settings-icon {
+            width: 32px;
+            height: 32px;
+            background: #f5f5f7;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+
+        .settings-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .settings-label {
+            font-size: 17px;
+            color: #1d1d1f;
+            font-weight: 500;
+        }
+
+        .settings-value {
+            font-size: 15px;
+            color: #86868b;
+            margin-right: 8px;
+        }
+
+        .settings-arrow {
+            font-size: 18px;
+            color: #c7c7cc;
+        }
+
+        /* 语言选择弹窗 */
+        .language-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: flex-end;
+            z-index: 35;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .language-modal.active {
+            display: flex;
+        }
+
+        .language-content {
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px 20px 40px;
+            animation: slideUpModal 0.3s ease;
+        }
+
+        .language-header {
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 8px;
+        }
+
+        .language-header h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .language-option {
+            padding: 16px 20px;
+            font-size: 16px;
+            color: #1d1d1f;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease;
+            border-radius: 10px;
+        }
+
+        .language-option:active {
+            background: #f5f5f7;
+        }
+
+        .language-option.selected {
+            color: #34C759;
+        }
+
+        .language-option.selected::after {
+            content: "✓";
+            font-size: 20px;
+            font-weight: 700;
+            color: #34C759;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUpModal {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* 底部菜单栏 */
+        .bottom-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
+                        0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0;
+            border: 0.5px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 10px 0;
+            position: relative;
+        }
+
+        .nav-text {
+            font-size: 10px;
+            font-weight: 500;
+            color: #8e8e93;
+            transition: color 0.2s ease;
+        }
+
+        .nav-item.active .nav-text {
+            color: #34C759;
+        }
+
+        .nav-icon {
+            width: 28px;
+            height: 28px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-icon path,
+        .nav-icon rect,
+        .nav-icon circle,
+        .nav-icon line {
+            transition: all 0.2s ease;
+        }
+
+        .nav-item .nav-icon path,
+        .nav-item .nav-icon rect,
+        .nav-item .nav-icon circle,
+        .nav-item .nav-icon line {
+            stroke: #8e8e93;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .nav-item.active .nav-icon path,
+        .nav-item.active .nav-icon rect {
+            stroke: #34C759;
+            fill: #34C759;
+        }
+
+        .nav-item.active .nav-icon circle {
+            stroke: #34C759;
+            fill: #34C759;
+        }
+
+        .nav-item.active .nav-icon line {
+            stroke: #34C759;
+        }
+
+        .nav-item:active {
+            opacity: 0.6;
+        }
+
+        /* 自定义提示弹窗 */
+        .custom-alert {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .custom-alert.active {
+            display: flex;
+        }
+
+        .alert-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 280px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+
+        .alert-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .alert-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .alert-message {
+            font-size: 15px;
+            color: #6e6e73;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .alert-btn {
+            width: 100%;
+            height: 44px;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .alert-btn:active {
+            opacity: 0.8;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 400px) {
+            .iphone-frame {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                padding: 0;
+            }
+            .iphone-screen {
+                border-radius: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="iphone-screen">
+            <!-- 刘海 -->
+            <div class="notch"></div>
+
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time" id="time">9:41</div>
+                <div class="status-icons">
+                    <div class="signal-icon">
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                    </div>
+                    <div class="wifi-icon"></div>
+                    <div class="battery-icon">
+                        <div class="battery-level"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面内容 -->
+            <div class="profile-page">
+                <!-- 页面头部 -->
+                <div class="profile-header">
+                    <div class="profile-title">我的</div>
+                </div>
+
+                <!-- 设置列表 -->
+                <div class="profile-body">
+                    <!-- 系统设置 -->
+                    <div class="settings-section">
+                        <div class="settings-item" id="otaUpgrade">
+                            <div class="settings-icon">🔋</div>
+                            <div class="settings-content">
+                                <span class="settings-label">OTA升级</span>
+                                <div style="display: flex; align-items: center;">
+                                    <span class="settings-value" id="versionText">V1.0.0</span>
+                                    <span class="settings-arrow">›</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item" id="ota1Upgrade">
+                            <div class="settings-icon">🔋</div>
+                            <div class="settings-content">
+                                <span class="settings-label">OTA1</span>
+                                <div style="display: flex; align-items: center;">
+                                    <span class="settings-value" id="version1Text">V1.0.0</span>
+                                    <span class="settings-arrow">›</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item" id="languageSettings">
+                            <div class="settings-icon">🌐</div>
+                            <div class="settings-content">
+                                <span class="settings-label">语言</span>
+                                <div>
+                                    <span class="settings-value" id="currentLanguage">简体中文</span>
+                                    <span class="settings-arrow">›</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 其他设置 -->
+                    <div class="settings-section">
+                        <div class="settings-item" id="instructionManual">
+                            <div class="settings-icon">📄</div>
+                            <div class="settings-content">
+                                <span class="settings-label">说明书</span>
+                                <div>
+                                    <span class="settings-arrow">›</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item" id="userManual">
+                            <div class="settings-icon">📖</div>
+                            <div class="settings-content">
+                                <span class="settings-label">设备手册</span>
+                                <div>
+                                    <span class="settings-arrow">›</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item" id="privacyPolicy">
+                            <div class="settings-icon">🔒</div>
+                            <div class="settings-content">
+                                <span class="settings-label">隐私政策</span>
+                                <div>
+                                    <span class="settings-arrow">›</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 底部导航栏 -->
+                <div class="bottom-nav">
+                    <div class="nav-item" id="navDevice">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="7" y="3" width="10" height="18" rx="2" stroke-linejoin="round"/>
+                                <line x1="10" y1="18" x2="14" y2="18" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-text">设备</span>
+                    </div>
+                    <div class="nav-item active" id="navProfile">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="8" r="4" stroke-linejoin="round"/>
+                                <path d="M6 20C6 16.6863 8.68629 14 12 14C15.3137 14 18 16.6863 18 20" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-text">我的</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 语言选择弹窗 -->
+            <div class="language-modal" id="languageModal">
+                <div class="language-content">
+                    <div class="language-header">
+                        <h3>选择语言</h3>
+                    </div>
+                    <div class="language-option selected" data-lang="zh-CN">简体中文</div>
+                    <div class="language-option" data-lang="zh-TW">繁體中文</div>
+                    <div class="language-option" data-lang="en">English</div>
+                </div>
+            </div>
+
+            <!-- 自定义提示弹窗 -->
+            <div class="custom-alert" id="customAlert">
+                <div class="alert-content">
+                    <div class="alert-icon">⚠️</div>
+                    <div class="alert-title" id="alertTitle">提示</div>
+                    <div class="alert-message" id="alertMessage">请先连接设备</div>
+                    <button class="alert-btn" id="alertBtn">确定</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // 自定义提示框
+        const customAlert = document.getElementById('customAlert');
+        const alertTitle = document.getElementById('alertTitle');
+        const alertMessage = document.getElementById('alertMessage');
+        const alertBtn = document.getElementById('alertBtn');
+
+        function showAlert(title, message) {
+            alertTitle.textContent = title;
+            alertMessage.textContent = message;
+            customAlert.classList.add('active');
+        }
+
+        alertBtn.addEventListener('click', () => {
+            customAlert.classList.remove('active');
+        });
+
+        // 点击背景关闭提示框
+        customAlert.addEventListener('click', (e) => {
+            if (e.target === customAlert) {
+                customAlert.classList.remove('active');
+            }
+        });
+
+        // 导航功能
+        document.getElementById('navDevice').addEventListener('click', () => {
+            window.location.href = '连接设备.html';
+        });
+
+        // OTA升级
+        document.getElementById('otaUpgrade').addEventListener('click', () => {
+            showAlert('提示', '请先连接设备');
+        });
+
+        // OTA1升级
+        document.getElementById('ota1Upgrade').addEventListener('click', () => {
+            showAlert('提示', '请先连接设备');
+        });
+
+        // 语言设置
+        const languageModal = document.getElementById('languageModal');
+        const currentLanguageDisplay = document.getElementById('currentLanguage');
+
+        const languageNames = {
+            'zh-CN': '简体中文',
+            'zh-TW': '繁體中文',
+            'en': 'English'
+        };
+
+        const translations = {
+            'zh-CN': {
+                title: '我的',
+                otaUpgrade: 'OTA升级',
+                ota1Upgrade: 'OTA1',
+                language: '语言',
+                instructionManual: '说明书',
+                userManual: '设备手册',
+                privacyPolicy: '隐私政策',
+                currentVersion: 'V1.0.0',
+                navDevice: '设备',
+                navAlert: '告警',
+                navProfile: '我的',
+                selectLanguage: '选择语言'
+            },
+            'zh-TW': {
+                title: '我的',
+                otaUpgrade: 'OTA升級',
+                ota1Upgrade: 'OTA1',
+                language: '語言',
+                instructionManual: '說明書',
+                userManual: '設備手冊',
+                privacyPolicy: '隱私政策',
+                currentVersion: 'V1.0.0',
+                navDevice: '設備',
+                navAlert: '告警',
+                navProfile: '我的',
+                selectLanguage: '選擇語言'
+            },
+            'en': {
+                title: 'Profile',
+                otaUpgrade: 'OTA Upgrade',
+                ota1Upgrade: 'OTA1',
+                language: 'Language',
+                instructionManual: 'Instruction Manual',
+                userManual: 'User Manual',
+                privacyPolicy: 'Privacy Policy',
+                currentVersion: 'V1.0.0',
+                navDevice: 'Device',
+                navAlert: 'Alerts',
+                navProfile: 'Profile',
+                selectLanguage: 'Select Language'
+            }
+        };
+
+        // 读取保存的语言设置
+        let selectedLanguage = localStorage.getItem('appLanguage') || 'zh-CN';
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            const texts = translations[lang];
+            document.querySelector('.profile-title').textContent = texts.title;
+            document.querySelectorAll('.settings-label')[0].textContent = texts.otaUpgrade;
+            document.querySelectorAll('.settings-label')[1].textContent = texts.ota1Upgrade;
+            document.querySelectorAll('.settings-label')[2].textContent = texts.language;
+            document.querySelectorAll('.settings-label')[3].textContent = texts.instructionManual;
+            document.querySelectorAll('.settings-label')[4].textContent = texts.userManual;
+            document.querySelectorAll('.settings-label')[5].textContent = texts.privacyPolicy;
+            document.querySelectorAll('.nav-text')[0].textContent = texts.navDevice;
+            document.querySelectorAll('.nav-text')[1].textContent = texts.navProfile;
+            document.querySelector('.language-header h3').textContent = texts.selectLanguage;
+        }
+
+        // 初始化语言
+        currentLanguageDisplay.textContent = languageNames[selectedLanguage];
+        updatePageText(selectedLanguage);
+
+        // 更新选中状态
+        document.querySelectorAll('.language-option').forEach(opt => {
+            if (opt.getAttribute('data-lang') === selectedLanguage) {
+                opt.classList.add('selected');
+            } else {
+                opt.classList.remove('selected');
+            }
+        });
+
+        document.getElementById('languageSettings').addEventListener('click', () => {
+            languageModal.classList.add('active');
+        });
+
+        // 点击背景关闭弹窗
+        languageModal.addEventListener('click', (e) => {
+            if (e.target === languageModal) {
+                languageModal.classList.remove('active');
+            }
+        });
+
+        // 选择语言
+        document.querySelectorAll('.language-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const lang = option.getAttribute('data-lang');
+                selectedLanguage = lang;
+
+                // 保存到localStorage
+                localStorage.setItem('appLanguage', lang);
+
+                // 更新选中状态
+                document.querySelectorAll('.language-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                option.classList.add('selected');
+
+                // 更新显示的语言
+                currentLanguageDisplay.textContent = languageNames[lang];
+
+                // 更新页面文本
+                updatePageText(lang);
+
+                // 关闭弹窗
+                languageModal.classList.remove('active');
+            });
+        });
+
+        // 说明书
+        document.getElementById('instructionManual').addEventListener('click', () => {
+            window.location.href = '说明手册.html';
+        });
+
+        // 设备手册
+        document.getElementById('userManual').addEventListener('click', () => {
+            window.location.href = '用户手册.html';
+        });
+
+        // 隐私政策
+        document.getElementById('privacyPolicy').addEventListener('click', () => {
+            window.location.href = '隐私政策.html';
+        });
+    </script>
+</body>
+</html>

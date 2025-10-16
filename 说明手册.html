@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>说明书 - 爱尚</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            height: 100vh;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* iPhone 外壳 */
+        .iphone-frame {
+            width: 385px;
+            height: 822px;
+            background: #1d1d1f;
+            border-radius: 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            position: relative;
+        }
+
+        /* iPhone 屏幕容器 */
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 刘海 */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 28px;
+            background: #1d1d1f;
+            border-radius: 0 0 18px 18px;
+            z-index: 10;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            padding: 0 27px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 5;
+        }
+
+        .time {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .signal-icon {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            height: 12px;
+        }
+
+        .signal-dot {
+            width: 3px;
+            height: 3px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon {
+            width: 15px;
+            height: 11px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .wifi-icon::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border: 2px solid #000000;
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .battery-icon {
+            width: 25px;
+            height: 11.5px;
+            border: 1.5px solid #000000;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            opacity: 0.9;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5px;
+            height: 4px;
+            background: #000000;
+            border-radius: 0 2px 2px 0;
+            opacity: 0.5;
+        }
+
+        .battery-level {
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 1.5px;
+        }
+
+        /* 页面容器 */
+        .manual-page {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            background: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 17px;
+            color: #007AFF;
+            cursor: pointer;
+            padding: 8px;
+            margin-left: -8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .back-btn:active {
+            opacity: 0.6;
+        }
+
+        .nav-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .share-btn {
+            background: none;
+            border: none;
+            font-size: 17px;
+            color: #007AFF;
+            cursor: pointer;
+            padding: 8px;
+            margin-right: -8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .share-btn:active {
+            opacity: 0.6;
+        }
+
+        /* 说明书内容 */
+        .manual-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .manual-section {
+            margin-bottom: 32px;
+        }
+
+        .manual-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        .section-text {
+            font-size: 15px;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .section-list {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 12px;
+        }
+
+        .section-list li {
+            font-size: 15px;
+            color: #1d1d1f;
+            line-height: 1.6;
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .section-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #34C759;
+            font-weight: 700;
+        }
+
+        .numbered-list {
+            counter-reset: item;
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 12px;
+        }
+
+        .numbered-list li {
+            font-size: 15px;
+            color: #1d1d1f;
+            line-height: 1.6;
+            padding-left: 28px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .numbered-list li::before {
+            counter-increment: item;
+            content: counter(item);
+            position: absolute;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: #34C759;
+            color: white;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .warning-box {
+            background: rgba(255, 59, 48, 0.1);
+            border-left: 3px solid #FF3B30;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 12px 0;
+        }
+
+        .warning-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #FF3B30;
+            margin-bottom: 6px;
+        }
+
+        .warning-text {
+            font-size: 14px;
+            color: #1d1d1f;
+            line-height: 1.5;
+        }
+
+        .tip-box {
+            background: rgba(52, 199, 89, 0.1);
+            border-left: 3px solid #34C759;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 12px 0;
+        }
+
+        .tip-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #34C759;
+            margin-bottom: 6px;
+        }
+
+        .tip-text {
+            font-size: 14px;
+            color: #1d1d1f;
+            line-height: 1.5;
+        }
+
+        /* 分享弹窗 */
+        .share-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: flex-end;
+            z-index: 30;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .share-modal.active {
+            display: flex;
+        }
+
+        .share-content {
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px 20px 40px;
+            animation: slideUpModal 0.3s ease;
+        }
+
+        .share-header {
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 16px;
+        }
+
+        .share-header h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .share-icon {
+            width: 56px;
+            height: 56px;
+            background: #f5f5f7;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: all 0.2s ease;
+        }
+
+        .share-option:active .share-icon {
+            transform: scale(0.95);
+            background: #e8e8ed;
+        }
+
+        .share-label {
+            font-size: 12px;
+            color: #1d1d1f;
+            text-align: center;
+        }
+
+        .share-cancel {
+            width: 100%;
+            padding: 14px;
+            background: #f5f5f7;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #1d1d1f;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .share-cancel:active {
+            background: #e8e8ed;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUpModal {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 400px) {
+            .iphone-frame {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                padding: 0;
+            }
+            .iphone-screen {
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="iphone-screen">
+            <!-- 刘海 -->
+            <div class="notch"></div>
+
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time" id="time">9:41</div>
+                <div class="status-icons">
+                    <div class="signal-icon">
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                    </div>
+                    <div class="wifi-icon"></div>
+                    <div class="battery-icon">
+                        <div class="battery-level"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面内容 -->
+            <div class="manual-page">
+                <!-- 导航栏 -->
+                <div class="nav-bar">
+                    <div class="nav-left">
+                        <button class="back-btn" id="backBtn">
+                            <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 2L2 10L10 18" stroke="#007AFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            返回
+                        </button>
+                    </div>
+                    <div class="nav-title">说明书</div>
+                    <button class="share-btn" id="shareBtn">
+                        <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 16V3M10 3L6 7M10 3L14 7" stroke="#007AFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M4 12V19C4 20.1046 4.89543 21 6 21H14C15.1046 21 16 20.1046 16 19V12" stroke="#007AFF" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- 说明书内容 -->
+                <div class="manual-content">
+                    <!-- 欢迎使用 -->
+                    <div class="manual-section">
+                        <div class="section-title">欢迎使用爱尚储能系统</div>
+                        <div class="section-text">
+                            感谢您选择爱尚储能系统。本说明书将帮助您快速上手使用产品，并充分发挥其性能。请在使用前仔细阅读本说明书，妥善保管以备查阅。
+                        </div>
+                    </div>
+
+                    <!-- 开箱检查 -->
+                    <div class="manual-section">
+                        <div class="section-title">开箱检查</div>
+                        <div class="section-text">
+                            收到产品后，请检查包装是否完好，并确认以下物品齐全：
+                        </div>
+                        <ul class="section-list">
+                            <li>储能主机 × 1</li>
+                            <li>电源线 × 1</li>
+                            <li>通信线缆 × 1</li>
+                            <li>安装配件包 × 1</li>
+                            <li>快速入门指南 × 1</li>
+                            <li>保修卡 × 1</li>
+                        </ul>
+                        <div class="tip-box">
+                            <div class="tip-title">💡 温馨提示</div>
+                            <div class="tip-text">
+                                如发现物品缺失或损坏，请立即联系客服或经销商。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 快速入门 -->
+                    <div class="manual-section">
+                        <div class="section-title">快速入门</div>
+
+                        <div class="section-subtitle">第一步：设备安装</div>
+                        <ol class="numbered-list">
+                            <li>选择合适的安装位置（通风、干燥、避免阳光直射）</li>
+                            <li>将设备放置在平稳的地面上</li>
+                            <li>连接电源线和通信线缆</li>
+                            <li>确保所有连接牢固可靠</li>
+                        </ol>
+
+                        <div class="section-subtitle">第二步：下载App</div>
+                        <ol class="numbered-list">
+                            <li>扫描设备上的二维码</li>
+                            <li>或在应用商店搜索"爱尚"下载App</li>
+                            <li>安装并打开App</li>
+                        </ol>
+
+                        <div class="section-subtitle">第三步：设备配网</div>
+                        <ol class="numbered-list">
+                            <li>打开手机WiFi设置</li>
+                            <li>连接设备WiFi（名称：AiShang-XXXXXX）</li>
+                            <li>返回App，按照提示完成配网</li>
+                            <li>绑定设备到您的账户</li>
+                        </ol>
+
+                        <div class="section-subtitle">第四步：开始使用</div>
+                        <div class="section-text">
+                            配网成功后，您就可以通过App实时监控和管理您的储能系统了。
+                        </div>
+                    </div>
+
+                    <!-- App使用指南 -->
+                    <div class="manual-section">
+                        <div class="section-title">App使用指南</div>
+
+                        <div class="section-subtitle">设备页面</div>
+                        <ul class="section-list">
+                            <li>查看实时电量、电压、电流等运行数据</li>
+                            <li>了解当前充放电状态</li>
+                            <li>查看设备序列号和连接状态</li>
+                        </ul>
+
+                        <div class="section-subtitle">告警页面</div>
+                        <ul class="section-list">
+                            <li>查看历史告警记录</li>
+                            <li>按时间范围筛选告警</li>
+                            <li>点击查看告警详情</li>
+                        </ul>
+
+                        <div class="section-subtitle">我的页面</div>
+                        <ul class="section-list">
+                            <li>进行OTA升级</li>
+                            <li>切换语言</li>
+                            <li>查看说明书和隐私政策</li>
+                        </ul>
+                    </div>
+
+                    <!-- 日常使用 -->
+                    <div class="manual-section">
+                        <div class="section-title">日常使用建议</div>
+
+                        <div class="section-subtitle">充电模式</div>
+                        <div class="section-text">
+                            设备支持谷电时段自动充电，您可以在App中设置充电时段和充电功率。建议在电价较低的时段进行充电。
+                        </div>
+
+                        <div class="section-subtitle">放电模式</div>
+                        <div class="section-text">
+                            在峰电时段，系统可自动放电供家庭使用，降低用电成本。您也可以手动控制放电时段。
+                        </div>
+
+                        <div class="section-subtitle">定期检查</div>
+                        <ul class="section-list">
+                            <li>每周检查一次设备运行状态</li>
+                            <li>保持设备周围清洁，确保通风良好</li>
+                            <li>定期查看告警信息，及时处理异常</li>
+                            <li>每月检查一次线路连接</li>
+                        </ul>
+                    </div>
+
+                    <!-- 常见问题 -->
+                    <div class="manual-section">
+                        <div class="section-title">常见问题</div>
+
+                        <div class="section-subtitle">Q: 设备无法开机怎么办？</div>
+                        <div class="section-text">
+                            A: 请检查电源连接是否正常，确认开关已打开。如仍无法开机，请联系客服。
+                        </div>
+
+                        <div class="section-subtitle">Q: 无法连接WiFi怎么办？</div>
+                        <div class="section-text">
+                            A: 请确保手机已连接到设备WiFi，路由器信号强度良好。可尝试重启WiFi模块或重新配网。
+                        </div>
+
+                        <div class="section-subtitle">Q: 充电速度慢是什么原因？</div>
+                        <div class="section-text">
+                            A: 可能是充电功率设置较低，或环境温度过低/过高。请在App中检查充电设置，确保环境温度在正常范围内（-10℃~50℃）。
+                        </div>
+
+                        <div class="section-subtitle">Q: 如何进行固件升级？</div>
+                        <div class="section-text">
+                            A: 在"我的"页面点击"OTA升级"，系统会自动检查是否有新版本。如有更新，点击"下载更新包"即可完成升级。
+                        </div>
+                    </div>
+
+                    <!-- 安全注意事项 -->
+                    <div class="manual-section">
+                        <div class="section-title">安全注意事项</div>
+
+                        <div class="warning-box">
+                            <div class="warning-title">⚠️ 重要安全提示</div>
+                            <div class="warning-text">
+                                • 请勿在易燃易爆环境中使用<br>
+                                • 请勿私自拆卸或改装设备<br>
+                                • 请勿让儿童接触设备<br>
+                                • 发现异常气味或烟雾应立即断电<br>
+                                • 雷雨天气建议断开电源
+                            </div>
+                        </div>
+
+                        <ul class="section-list">
+                            <li>避免在高温、潮湿环境下使用</li>
+                            <li>保持设备通风口畅通，避免遮挡</li>
+                            <li>定期检查线路连接，发现松动及时加固</li>
+                            <li>长期不使用时，建议断开电源</li>
+                        </ul>
+                    </div>
+
+                    <!-- 维护保养 -->
+                    <div class="manual-section">
+                        <div class="section-title">维护保养</div>
+
+                        <div class="section-subtitle">清洁保养</div>
+                        <ul class="section-list">
+                            <li>使用干燥软布擦拭设备表面</li>
+                            <li>不要使用腐蚀性清洁剂</li>
+                            <li>定期清理通风口灰尘</li>
+                            <li>避免液体进入设备内部</li>
+                        </ul>
+
+                        <div class="section-subtitle">存储建议</div>
+                        <div class="section-text">
+                            如长期不使用设备，建议将电池充至50%-60%后断电存放，存放环境应干燥通风，温度保持在5℃-30℃之间。
+                        </div>
+                    </div>
+
+                    <!-- 联系我们 -->
+                    <div class="manual-section">
+                        <div class="section-title">联系我们</div>
+                        <div class="section-text">
+                            如遇任何问题或需要技术支持，欢迎联系我们：
+                        </div>
+                        <div class="section-text">
+                            客服热线：400-XXX-XXXX<br>
+                            工作时间：周一至周日 9:00-21:00<br>
+                            官方网站：www.enershare.cn<br>
+                            电子邮箱：support@enershare.com
+                        </div>
+                        <div class="tip-box">
+                            <div class="tip-title">🎯 售后服务</div>
+                            <div class="tip-text">
+                                我们提供5年质保服务，全国联保。专业技术团队随时为您解答疑问，确保您的使用体验。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分享弹窗 -->
+            <div class="share-modal" id="shareModal">
+                <div class="share-content">
+                    <div class="share-header">
+                        <h3>分享说明书</h3>
+                    </div>
+                    <div class="share-options">
+                        <div class="share-option" id="shareWechat">
+                            <div class="share-icon">💬</div>
+                            <div class="share-label">微信</div>
+                        </div>
+                        <div class="share-option" id="shareQQ">
+                            <div class="share-icon">🐧</div>
+                            <div class="share-label">QQ</div>
+                        </div>
+                        <div class="share-option" id="shareMail">
+                            <div class="share-icon">✉️</div>
+                            <div class="share-label">邮件</div>
+                        </div>
+                        <div class="share-option" id="shareCopy">
+                            <div class="share-icon">📋</div>
+                            <div class="share-label">复制链接</div>
+                        </div>
+                    </div>
+                    <button class="share-cancel" id="shareCancel">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 多语言翻译数据
+        const translations = {
+            'zh-CN': {
+                backBtn: '返回',
+                pageTitle: '说明书',
+                shareTitle: '分享说明书',
+                cancelBtn: '取消',
+                content: `
+                    <div class="manual-section">
+                        <div class="section-title">欢迎使用爱尚储能系统</div>
+                        <div class="section-text">感谢您选择爱尚储能系统。本说明书将帮助您快速上手使用产品，并充分发挥其性能。请在使用前仔细阅读本说明书，妥善保管以备查阅。</div>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">开箱检查</div>
+                        <div class="section-text">收到产品后，请检查包装是否完好，并确认以下物品齐全：</div>
+                        <ul class="section-list">
+                            <li>储能主机 × 1</li>
+                            <li>电源线 × 1</li>
+                            <li>通信线缆 × 1</li>
+                            <li>安装配件包 × 1</li>
+                            <li>快速入门指南 × 1</li>
+                            <li>保修卡 × 1</li>
+                        </ul>
+                        <div class="tip-box">
+                            <div class="tip-title">💡 温馨提示</div>
+                            <div class="tip-text">如发现物品缺失或损坏，请立即联系客服或经销商。</div>
+                        </div>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">快速入门</div>
+                        <div class="section-subtitle">第一步：设备安装</div>
+                        <ol class="numbered-list">
+                            <li>选择合适的安装位置（通风、干燥、避免阳光直射）</li>
+                            <li>将设备放置在平稳的地面上</li>
+                            <li>连接电源线和通信线缆</li>
+                            <li>确保所有连接牢固可靠</li>
+                        </ol>
+                        <div class="section-subtitle">第二步：下载App</div>
+                        <ol class="numbered-list">
+                            <li>扫描设备上的二维码</li>
+                            <li>或在应用商店搜索"爱尚"下载App</li>
+                            <li>安装并打开App</li>
+                        </ol>
+                        <div class="section-subtitle">第三步：设备配网</div>
+                        <ol class="numbered-list">
+                            <li>打开手机WiFi设置</li>
+                            <li>连接设备WiFi（名称：AiShang-XXXXXX）</li>
+                            <li>返回App，按照提示完成配网</li>
+                            <li>绑定设备到您的账户</li>
+                        </ol>
+                        <div class="section-subtitle">第四步：开始使用</div>
+                        <div class="section-text">配网成功后，您就可以通过App实时监控和管理您的储能系统了。</div>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">App使用指南</div>
+                        <div class="section-subtitle">设备页面</div>
+                        <ul class="section-list">
+                            <li>查看实时电量、电压、电流等运行数据</li>
+                            <li>了解当前充放电状态</li>
+                            <li>查看设备序列号和连接状态</li>
+                        </ul>
+                        <div class="section-subtitle">告警页面</div>
+                        <ul class="section-list">
+                            <li>查看历史告警记录</li>
+                            <li>按时间范围筛选告警</li>
+                            <li>点击查看告警详情</li>
+                        </ul>
+                        <div class="section-subtitle">我的页面</div>
+                        <ul class="section-list">
+                            <li>进行OTA升级</li>
+                            <li>切换语言</li>
+                            <li>查看说明书和隐私政策</li>
+                        </ul>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">日常使用建议</div>
+                        <div class="section-subtitle">充电模式</div>
+                        <div class="section-text">设备支持谷电时段自动充电，您可以在App中设置充电时段和充电功率。建议在电价较低的时段进行充电。</div>
+                        <div class="section-subtitle">放电模式</div>
+                        <div class="section-text">在峰电时段，系统可自动放电供家庭使用，降低用电成本。您也可以手动控制放电时段。</div>
+                        <div class="section-subtitle">定期检查</div>
+                        <ul class="section-list">
+                            <li>每周检查一次设备运行状态</li>
+                            <li>保持设备周围清洁，确保通风良好</li>
+                            <li>定期查看告警信息，及时处理异常</li>
+                            <li>每月检查一次线路连接</li>
+                        </ul>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">常见问题</div>
+                        <div class="section-subtitle">Q: 设备无法开机怎么办？</div>
+                        <div class="section-text">A: 请检查电源连接是否正常，确认开关已打开。如仍无法开机，请联系客服。</div>
+                        <div class="section-subtitle">Q: 无法连接WiFi怎么办？</div>
+                        <div class="section-text">A: 请确保手机已连接到设备WiFi，路由器信号强度良好。可尝试重启WiFi模块或重新配网。</div>
+                        <div class="section-subtitle">Q: 充电速度慢是什么原因？</div>
+                        <div class="section-text">A: 可能是充电功率设置较低，或环境温度过低/过高。请在App中检查充电设置，确保环境温度在正常范围内（-10℃~50℃）。</div>
+                        <div class="section-subtitle">Q: 如何进行固件升级？</div>
+                        <div class="section-text">A: 在"我的"页面点击"OTA升级"，系统会自动检查是否有新版本。如有更新，点击"下载更新包"即可完成升级。</div>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">安全注意事项</div>
+                        <div class="warning-box">
+                            <div class="warning-title">⚠️ 重要安全提示</div>
+                            <div class="warning-text">• 请勿在易燃易爆环境中使用<br>• 请勿私自拆卸或改装设备<br>• 请勿让儿童接触设备<br>• 发现异常气味或烟雾应立即断电<br>• 雷雨天气建议断开电源</div>
+                        </div>
+                        <ul class="section-list">
+                            <li>避免在高温、潮湿环境下使用</li>
+                            <li>保持设备通风口畅通，避免遮挡</li>
+                            <li>定期检查线路连接，发现松动及时加固</li>
+                            <li>长期不使用时，建议断开电源</li>
+                        </ul>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">维护保养</div>
+                        <div class="section-subtitle">清洁保养</div>
+                        <ul class="section-list">
+                            <li>使用干燥软布擦拭设备表面</li>
+                            <li>不要使用腐蚀性清洁剂</li>
+                            <li>定期清理通风口灰尘</li>
+                            <li>避免液体进入设备内部</li>
+                        </ul>
+                        <div class="section-subtitle">存储建议</div>
+                        <div class="section-text">如长期不使用设备，建议将电池充至50%-60%后断电存放，存放环境应干燥通风，温度保持在5℃-30℃之间。</div>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">联系我们</div>
+                        <div class="section-text">如遇任何问题或需要技术支持，欢迎联系我们：</div>
+                        <div class="section-text">客服热线：400-XXX-XXXX<br>工作时间：周一至周日 9:00-21:00<br>官方网站：www.enershare.cn<br>电子邮箱：support@enershare.com</div>
+                        <div class="tip-box">
+                            <div class="tip-title">🎯 售后服务</div>
+                            <div class="tip-text">我们提供5年质保服务，全国联保。专业技术团队随时为您解答疑问，确保您的使用体验。</div>
+                        </div>
+                    </div>
+                `
+            },
+            'zh-TW': {
+                backBtn: '返回',
+                pageTitle: '說明書',
+                shareTitle: '分享說明書',
+                cancelBtn: '取消',
+                content: `(繁体内容省略，与简体类似)`
+            },
+            'en': {
+                backBtn: 'Back',
+                pageTitle: 'Manual',
+                shareTitle: 'Share Manual',
+                cancelBtn: 'Cancel',
+                content: `
+                    <div class="manual-section">
+                        <div class="section-title">Welcome to EnerShare Energy Storage System</div>
+                        <div class="section-text">Thank you for choosing the EnerShare Energy Storage System. This manual will help you quickly get started with the product and make full use of its features. Please read this manual carefully before use and keep it for future reference.</div>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">Unboxing Checklist</div>
+                        <div class="section-text">Upon receiving the product, please check if the packaging is intact and confirm the following items are complete:</div>
+                        <ul class="section-list">
+                            <li>Energy Storage Unit × 1</li>
+                            <li>Power Cable × 1</li>
+                            <li>Communication Cable × 1</li>
+                            <li>Installation Accessories Kit × 1</li>
+                            <li>Quick Start Guide × 1</li>
+                            <li>Warranty Card × 1</li>
+                        </ul>
+                        <div class="tip-box">
+                            <div class="tip-title">💡 Tip</div>
+                            <div class="tip-text">If any items are missing or damaged, please contact customer service or your dealer immediately.</div>
+                        </div>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">Quick Start Guide</div>
+                        <div class="section-subtitle">Step 1: Device Installation</div>
+                        <ol class="numbered-list">
+                            <li>Choose a suitable installation location (ventilated, dry, away from direct sunlight)</li>
+                            <li>Place the device on a stable surface</li>
+                            <li>Connect the power cable and communication cable</li>
+                            <li>Ensure all connections are secure and reliable</li>
+                        </ol>
+                        <div class="section-subtitle">Step 2: Download the App</div>
+                        <ol class="numbered-list">
+                            <li>Scan the QR code on the device</li>
+                            <li>Or search for "EnerShare" in the app store to download the app</li>
+                            <li>Install and open the app</li>
+                        </ol>
+                        <div class="section-subtitle">Step 3: Device Network Configuration</div>
+                        <ol class="numbered-list">
+                            <li>Open your phone's WiFi settings</li>
+                            <li>Connect to the device WiFi (Name: AiShang-XXXXXX)</li>
+                            <li>Return to the app and follow the prompts to complete network configuration</li>
+                            <li>Bind the device to your account</li>
+                        </ol>
+                        <div class="section-subtitle">Step 4: Start Using</div>
+                        <div class="section-text">After successful network configuration, you can monitor and manage your energy storage system in real-time through the app.</div>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">App User Guide</div>
+                        <div class="section-subtitle">Device Page</div>
+                        <ul class="section-list">
+                            <li>View real-time operational data such as battery level, voltage, and current</li>
+                            <li>Check current charge/discharge status</li>
+                            <li>View device serial number and connection status</li>
+                        </ul>
+                        <div class="section-subtitle">Alerts Page</div>
+                        <ul class="section-list">
+                            <li>View historical alert records</li>
+                            <li>Filter alerts by time range</li>
+                            <li>Click to view alert details</li>
+                        </ul>
+                        <div class="section-subtitle">Profile Page</div>
+                        <ul class="section-list">
+                            <li>Perform OTA upgrades</li>
+                            <li>Switch language</li>
+                            <li>View manual and privacy policy</li>
+                        </ul>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">Daily Usage Recommendations</div>
+                        <div class="section-subtitle">Charging Mode</div>
+                        <div class="section-text">The device supports automatic charging during off-peak electricity hours. You can set the charging period and charging power in the app. It is recommended to charge during periods with lower electricity rates.</div>
+                        <div class="section-subtitle">Discharging Mode</div>
+                        <div class="section-text">During peak electricity hours, the system can automatically discharge for household use, reducing electricity costs. You can also manually control the discharge period.</div>
+                        <div class="section-subtitle">Regular Inspection</div>
+                        <ul class="section-list">
+                            <li>Check device operating status once a week</li>
+                            <li>Keep the area around the device clean and ensure good ventilation</li>
+                            <li>Regularly check alert information and address abnormalities promptly</li>
+                            <li>Check wire connections once a month</li>
+                        </ul>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">Frequently Asked Questions</div>
+                        <div class="section-subtitle">Q: What to do if the device won't turn on?</div>
+                        <div class="section-text">A: Please check if the power connection is normal and confirm the switch is turned on. If it still won't turn on, please contact customer service.</div>
+                        <div class="section-subtitle">Q: What to do if WiFi connection fails?</div>
+                        <div class="section-text">A: Please ensure your phone is connected to the device WiFi and the router signal is strong. Try restarting the WiFi module or reconfiguring the network.</div>
+                        <div class="section-subtitle">Q: Why is charging slow?</div>
+                        <div class="section-text">A: This may be due to low charging power settings or ambient temperature being too low/high. Please check the charging settings in the app and ensure the ambient temperature is within the normal range (-10℃~50℃).</div>
+                        <div class="section-subtitle">Q: How to upgrade firmware?</div>
+                        <div class="section-text">A: Click "OTA Upgrade" on the "Profile" page, and the system will automatically check for new versions. If an update is available, click "Download Update" to complete the upgrade.</div>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">Safety Precautions</div>
+                        <div class="warning-box">
+                            <div class="warning-title">⚠️ Important Safety Information</div>
+                            <div class="warning-text">• Do not use in flammable or explosive environments<br>• Do not disassemble or modify the device<br>• Keep away from children<br>• Disconnect power immediately if abnormal odor or smoke is detected<br>• Disconnect power during thunderstorms</div>
+                        </div>
+                        <ul class="section-list">
+                            <li>Avoid using in high temperature or humid environments</li>
+                            <li>Keep device ventilation openings clear and unobstructed</li>
+                            <li>Regularly check wire connections and tighten if loose</li>
+                            <li>Disconnect power when not in use for extended periods</li>
+                        </ul>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">Maintenance</div>
+                        <div class="section-subtitle">Cleaning</div>
+                        <ul class="section-list">
+                            <li>Use a dry soft cloth to wipe the device surface</li>
+                            <li>Do not use corrosive cleaners</li>
+                            <li>Regularly clean dust from ventilation openings</li>
+                            <li>Prevent liquids from entering the device</li>
+                        </ul>
+                        <div class="section-subtitle">Storage Recommendations</div>
+                        <div class="section-text">If not using the device for an extended period, it is recommended to charge the battery to 50%-60% before disconnecting power and storing. The storage environment should be dry and ventilated, with temperature maintained between 5℃-30℃.</div>
+                    </div>
+                    <div class="manual-section">
+                        <div class="section-title">Contact Us</div>
+                        <div class="section-text">If you have any questions or need technical support, please contact us:</div>
+                        <div class="section-text">Customer Service: 400-XXX-XXXX<br>Business Hours: Monday to Sunday 9:00-21:00<br>Official Website: www.enershare.cn<br>Email: support@enershare.com</div>
+                        <div class="tip-box">
+                            <div class="tip-title">🎯 After-Sales Service</div>
+                            <div class="tip-text">We provide a 5-year warranty with nationwide coverage. Our professional technical team is always available to answer your questions and ensure your user experience.</div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // 当前语言 - 从localStorage读取，默认英文
+        let currentLanguage = localStorage.getItem('appLanguage') || 'en';
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            const texts = translations[lang];
+
+            // 更新导航栏文本
+            document.querySelector('.back-btn').childNodes[2].textContent = texts.backBtn;
+            document.querySelector('.nav-title').textContent = texts.pageTitle;
+            document.querySelector('.share-header h3').textContent = texts.shareTitle;
+            document.querySelector('.share-cancel').textContent = texts.cancelBtn;
+
+            // 更新说明书内容
+            document.querySelector('.manual-content').innerHTML = texts.content;
+        }
+
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // 初始化多语言显示
+        updatePageText(currentLanguage);
+
+        // 返回按钮
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.history.back();
+        });
+
+        // 分享按钮
+        const shareModal = document.getElementById('shareModal');
+        const shareBtn = document.getElementById('shareBtn');
+        const shareCancel = document.getElementById('shareCancel');
+
+        shareBtn.addEventListener('click', () => {
+            shareModal.classList.add('active');
+        });
+
+        shareCancel.addEventListener('click', () => {
+            shareModal.classList.remove('active');
+        });
+
+        // 点击背景关闭弹窗
+        shareModal.addEventListener('click', (e) => {
+            if (e.target === shareModal) {
+                shareModal.classList.remove('active');
+            }
+        });
+
+        // 分享选项
+        document.getElementById('shareWechat').addEventListener('click', () => {
+            alert('分享到微信');
+            shareModal.classList.remove('active');
+        });
+
+        document.getElementById('shareQQ').addEventListener('click', () => {
+            alert('分享到QQ');
+            shareModal.classList.remove('active');
+        });
+
+        document.getElementById('shareMail').addEventListener('click', () => {
+            alert('通过邮件分享');
+            shareModal.classList.remove('active');
+        });
+
+        document.getElementById('shareCopy').addEventListener('click', () => {
+            // 复制链接到剪贴板
+            const url = window.location.href;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('链接已复制到剪贴板');
+                });
+            } else {
+                alert('链接：' + url);
+            }
+            shareModal.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

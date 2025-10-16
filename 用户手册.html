@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>设备手册 - 爱尚</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            height: 100vh;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* iPhone 外壳 */
+        .iphone-frame {
+            width: 385px;
+            height: 822px;
+            background: #1d1d1f;
+            border-radius: 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            position: relative;
+        }
+
+        /* iPhone 屏幕容器 */
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 刘海 */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 28px;
+            background: #1d1d1f;
+            border-radius: 0 0 18px 18px;
+            z-index: 10;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            padding: 0 27px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 5;
+        }
+
+        .time {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .signal-icon {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            height: 12px;
+        }
+
+        .signal-dot {
+            width: 3px;
+            height: 3px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon {
+            width: 15px;
+            height: 11px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .wifi-icon::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border: 2px solid #000000;
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .battery-icon {
+            width: 25px;
+            height: 11.5px;
+            border: 1.5px solid #000000;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            opacity: 0.9;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5px;
+            height: 4px;
+            background: #000000;
+            border-radius: 0 2px 2px 0;
+            opacity: 0.5;
+        }
+
+        .battery-level {
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 1.5px;
+        }
+
+        /* 页面容器 */
+        .manual-page {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            background: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 17px;
+            color: #007AFF;
+            cursor: pointer;
+            padding: 8px;
+            margin-left: -8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .back-btn:active {
+            opacity: 0.6;
+        }
+
+        .nav-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .share-btn {
+            background: none;
+            border: none;
+            font-size: 17px;
+            color: #007AFF;
+            cursor: pointer;
+            padding: 8px;
+            margin-right: -8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .share-btn:active {
+            opacity: 0.6;
+        }
+
+        /* 手册内容 */
+        .manual-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .manual-section {
+            margin-bottom: 32px;
+        }
+
+        .manual-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        .section-text {
+            font-size: 15px;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .section-list {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 12px;
+        }
+
+        .section-list li {
+            font-size: 15px;
+            color: #1d1d1f;
+            line-height: 1.6;
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .section-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #34C759;
+            font-weight: 700;
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        .spec-table tr {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .spec-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .spec-table td {
+            padding: 12px 8px;
+            font-size: 14px;
+        }
+
+        .spec-table td:first-child {
+            color: #86868b;
+            width: 40%;
+        }
+
+        .spec-table td:last-child {
+            color: #1d1d1f;
+            font-weight: 500;
+        }
+
+        .warning-box {
+            background: rgba(255, 59, 48, 0.1);
+            border-left: 3px solid #FF3B30;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 12px 0;
+        }
+
+        .warning-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #FF3B30;
+            margin-bottom: 6px;
+        }
+
+        .warning-text {
+            font-size: 14px;
+            color: #1d1d1f;
+            line-height: 1.5;
+        }
+
+        /* 分享弹窗 */
+        .share-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: flex-end;
+            z-index: 30;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .share-modal.active {
+            display: flex;
+        }
+
+        .share-content {
+            width: 100%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px 20px 40px;
+            animation: slideUpModal 0.3s ease;
+        }
+
+        .share-header {
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 16px;
+        }
+
+        .share-header h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .share-icon {
+            width: 56px;
+            height: 56px;
+            background: #f5f5f7;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: all 0.2s ease;
+        }
+
+        .share-option:active .share-icon {
+            transform: scale(0.95);
+            background: #e8e8ed;
+        }
+
+        .share-label {
+            font-size: 12px;
+            color: #1d1d1f;
+            text-align: center;
+        }
+
+        .share-cancel {
+            width: 100%;
+            padding: 14px;
+            background: #f5f5f7;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #1d1d1f;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .share-cancel:active {
+            background: #e8e8ed;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUpModal {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 400px) {
+            .iphone-frame {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                padding: 0;
+            }
+            .iphone-screen {
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="iphone-screen">
+            <!-- 刘海 -->
+            <div class="notch"></div>
+
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time" id="time">9:41</div>
+                <div class="status-icons">
+                    <div class="signal-icon">
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                    </div>
+                    <div class="wifi-icon"></div>
+                    <div class="battery-icon">
+                        <div class="battery-level"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面内容 -->
+            <div class="manual-page">
+                <!-- 导航栏 -->
+                <div class="nav-bar">
+                    <div class="nav-left">
+                        <button class="back-btn" id="backBtn">
+                            <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 2L2 10L10 18" stroke="#007AFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            返回
+                        </button>
+                    </div>
+                    <div class="nav-title">设备手册</div>
+                    <button class="share-btn" id="shareBtn">
+                        <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 16V3M10 3L6 7M10 3L14 7" stroke="#007AFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M4 12V19C4 20.1046 4.89543 21 6 21H14C15.1046 21 16 20.1046 16 19V12" stroke="#007AFF" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- 手册内容 -->
+                <div class="manual-content">
+                    <!-- 产品概述 -->
+                    <div class="manual-section">
+                        <div class="section-title">产品概述</div>
+                        <div class="section-text">
+                            爱尚储能系统是一款高性能、高安全性的家用储能解决方案。采用先进的锂电池技术，为家庭提供可靠的电力储存和管理服务。
+                        </div>
+                    </div>
+
+                    <!-- 主要特点 -->
+                    <div class="manual-section">
+                        <div class="section-title">主要特点</div>
+                        <ul class="section-list">
+                            <li>高容量储能，满足家庭日常用电需求</li>
+                            <li>智能BMS电池管理系统，确保安全稳定运行</li>
+                            <li>支持WiFi远程监控，随时掌握设备状态</li>
+                            <li>模块化设计，便于安装和维护</li>
+                            <li>长寿命设计，循环次数可达6000次以上</li>
+                        </ul>
+                    </div>
+
+                    <!-- 技术规格 -->
+                    <div class="manual-section">
+                        <div class="section-title">技术规格</div>
+                        <table class="spec-table">
+                            <tr>
+                                <td>额定容量</td>
+                                <td>5.12 kWh</td>
+                            </tr>
+                            <tr>
+                                <td>额定电压</td>
+                                <td>51.2V</td>
+                            </tr>
+                            <tr>
+                                <td>最大充电功率</td>
+                                <td>2.5 kW</td>
+                            </tr>
+                            <tr>
+                                <td>最大放电功率</td>
+                                <td>2.5 kW</td>
+                            </tr>
+                            <tr>
+                                <td>工作温度</td>
+                                <td>-10℃ ~ 50℃</td>
+                            </tr>
+                            <tr>
+                                <td>循环寿命</td>
+                                <td>≥6000次 (80% DOD)</td>
+                            </tr>
+                            <tr>
+                                <td>通信方式</td>
+                                <td>WiFi / CAN</td>
+                            </tr>
+                            <tr>
+                                <td>防护等级</td>
+                                <td>IP54</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 安装说明 -->
+                    <div class="manual-section">
+                        <div class="section-title">安装说明</div>
+
+                        <div class="section-subtitle">安装位置要求</div>
+                        <ul class="section-list">
+                            <li>选择通风良好、干燥的室内环境</li>
+                            <li>避免阳光直射和高温环境</li>
+                            <li>保持周围至少30cm的散热空间</li>
+                            <li>确保地面平整稳固</li>
+                        </ul>
+
+                        <div class="section-subtitle">连接步骤</div>
+                        <ul class="section-list">
+                            <li>断开所有电源，确保安全</li>
+                            <li>按照接线图连接电池和逆变器</li>
+                            <li>连接通信线缆和WiFi模块</li>
+                            <li>检查所有连接无误后上电</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <div class="warning-title">⚠️ 安全警告</div>
+                            <div class="warning-text">
+                                安装和维护必须由专业人员进行。错误的安装可能导致设备损坏或安全事故。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 使用说明 -->
+                    <div class="manual-section">
+                        <div class="section-title">使用说明</div>
+
+                        <div class="section-subtitle">首次使用</div>
+                        <ul class="section-list">
+                            <li>下载并安装爱尚App</li>
+                            <li>连接设备WiFi进行配网</li>
+                            <li>完成设备绑定和初始设置</li>
+                            <li>开始正常使用</li>
+                        </ul>
+
+                        <div class="section-subtitle">日常维护</div>
+                        <ul class="section-list">
+                            <li>定期检查设备运行状态</li>
+                            <li>保持设备清洁，避免灰尘积累</li>
+                            <li>确保通风口畅通</li>
+                            <li>及时处理告警信息</li>
+                        </ul>
+                    </div>
+
+                    <!-- 故障排除 -->
+                    <div class="manual-section">
+                        <div class="section-title">故障排除</div>
+
+                        <div class="section-subtitle">无法开机</div>
+                        <ul class="section-list">
+                            <li>检查电源连接是否正常</li>
+                            <li>检查开关是否打开</li>
+                            <li>检查电池电压是否正常</li>
+                        </ul>
+
+                        <div class="section-subtitle">通信故障</div>
+                        <ul class="section-list">
+                            <li>检查WiFi连接状态</li>
+                            <li>确认网络信号强度</li>
+                            <li>尝试重启WiFi模块</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <div class="warning-title">📞 技术支持</div>
+                            <div class="warning-text">
+                                如遇无法解决的问题，请联系技术支持：400-XXX-XXXX
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 保修信息 -->
+                    <div class="manual-section">
+                        <div class="section-title">保修信息</div>
+                        <div class="section-text">
+                            本产品提供5年质保服务。保修期内因产品质量问题导致的故障，我们将免费提供维修或更换服务。
+                        </div>
+                        <div class="section-text">
+                            保修范围不包括：人为损坏、自然灾害、未按说明书使用导致的故障。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分享弹窗 -->
+            <div class="share-modal" id="shareModal">
+                <div class="share-content">
+                    <div class="share-header">
+                        <h3>分享手册</h3>
+                    </div>
+                    <div class="share-options">
+                        <div class="share-option" id="shareWechat">
+                            <div class="share-icon">💬</div>
+                            <div class="share-label">微信</div>
+                        </div>
+                        <div class="share-option" id="shareQQ">
+                            <div class="share-icon">🐧</div>
+                            <div class="share-label">QQ</div>
+                        </div>
+                        <div class="share-option" id="shareMail">
+                            <div class="share-icon">✉️</div>
+                            <div class="share-label">邮件</div>
+                        </div>
+                        <div class="share-option" id="shareCopy">
+                            <div class="share-icon">📋</div>
+                            <div class="share-label">复制链接</div>
+                        </div>
+                    </div>
+                    <button class="share-cancel" id="shareCancel">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 多语言翻译数据
+        const translations = {
+            'zh-CN': {
+                backBtn: '返回',
+                pageTitle: '设备手册',
+                shareTitle: '分享手册',
+                cancelBtn: '取消',
+                shareWechat: '微信',
+                shareQQ: 'QQ',
+                shareMail: '邮件',
+                shareCopy: '复制链接',
+                content: `
+                    <!-- 产品概述 -->
+                    <div class="manual-section">
+                        <div class="section-title">产品概述</div>
+                        <div class="section-text">
+                            爱尚储能系统是一款高性能、高安全性的家用储能解决方案。采用先进的锂电池技术,为家庭提供可靠的电力储存和管理服务。
+                        </div>
+                    </div>
+
+                    <!-- 主要特点 -->
+                    <div class="manual-section">
+                        <div class="section-title">主要特点</div>
+                        <ul class="section-list">
+                            <li>高容量储能,满足家庭日常用电需求</li>
+                            <li>智能BMS电池管理系统,确保安全稳定运行</li>
+                            <li>支持WiFi远程监控,随时掌握设备状态</li>
+                            <li>模块化设计,便于安装和维护</li>
+                            <li>长寿命设计,循环次数可达6000次以上</li>
+                        </ul>
+                    </div>
+
+                    <!-- 技术规格 -->
+                    <div class="manual-section">
+                        <div class="section-title">技术规格</div>
+                        <table class="spec-table">
+                            <tr>
+                                <td>额定容量</td>
+                                <td>5.12 kWh</td>
+                            </tr>
+                            <tr>
+                                <td>额定电压</td>
+                                <td>51.2V</td>
+                            </tr>
+                            <tr>
+                                <td>最大充电功率</td>
+                                <td>2.5 kW</td>
+                            </tr>
+                            <tr>
+                                <td>最大放电功率</td>
+                                <td>2.5 kW</td>
+                            </tr>
+                            <tr>
+                                <td>工作温度</td>
+                                <td>-10℃ ~ 50℃</td>
+                            </tr>
+                            <tr>
+                                <td>循环寿命</td>
+                                <td>≥6000次 (80% DOD)</td>
+                            </tr>
+                            <tr>
+                                <td>通信方式</td>
+                                <td>WiFi / CAN</td>
+                            </tr>
+                            <tr>
+                                <td>防护等级</td>
+                                <td>IP54</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 安装说明 -->
+                    <div class="manual-section">
+                        <div class="section-title">安装说明</div>
+
+                        <div class="section-subtitle">安装位置要求</div>
+                        <ul class="section-list">
+                            <li>选择通风良好、干燥的室内环境</li>
+                            <li>避免阳光直射和高温环境</li>
+                            <li>保持周围至少30cm的散热空间</li>
+                            <li>确保地面平整稳固</li>
+                        </ul>
+
+                        <div class="section-subtitle">连接步骤</div>
+                        <ul class="section-list">
+                            <li>断开所有电源,确保安全</li>
+                            <li>按照接线图连接电池和逆变器</li>
+                            <li>连接通信线缆和WiFi模块</li>
+                            <li>检查所有连接无误后上电</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <div class="warning-title">⚠️ 安全警告</div>
+                            <div class="warning-text">
+                                安装和维护必须由专业人员进行。错误的安装可能导致设备损坏或安全事故。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 使用说明 -->
+                    <div class="manual-section">
+                        <div class="section-title">使用说明</div>
+
+                        <div class="section-subtitle">首次使用</div>
+                        <ul class="section-list">
+                            <li>下载并安装爱尚App</li>
+                            <li>连接设备WiFi进行配网</li>
+                            <li>完成设备绑定和初始设置</li>
+                            <li>开始正常使用</li>
+                        </ul>
+
+                        <div class="section-subtitle">日常维护</div>
+                        <ul class="section-list">
+                            <li>定期检查设备运行状态</li>
+                            <li>保持设备清洁,避免灰尘积累</li>
+                            <li>确保通风口畅通</li>
+                            <li>及时处理告警信息</li>
+                        </ul>
+                    </div>
+
+                    <!-- 故障排除 -->
+                    <div class="manual-section">
+                        <div class="section-title">故障排除</div>
+
+                        <div class="section-subtitle">无法开机</div>
+                        <ul class="section-list">
+                            <li>检查电源连接是否正常</li>
+                            <li>检查开关是否打开</li>
+                            <li>检查电池电压是否正常</li>
+                        </ul>
+
+                        <div class="section-subtitle">通信故障</div>
+                        <ul class="section-list">
+                            <li>检查WiFi连接状态</li>
+                            <li>确认网络信号强度</li>
+                            <li>尝试重启WiFi模块</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <div class="warning-title">📞 技术支持</div>
+                            <div class="warning-text">
+                                如遇无法解决的问题,请联系技术支持:400-XXX-XXXX
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 保修信息 -->
+                    <div class="manual-section">
+                        <div class="section-title">保修信息</div>
+                        <div class="section-text">
+                            本产品提供5年质保服务。保修期内因产品质量问题导致的故障,我们将免费提供维修或更换服务。
+                        </div>
+                        <div class="section-text">
+                            保修范围不包括:人为损坏、自然灾害、未按说明书使用导致的故障。
+                        </div>
+                    </div>
+                `
+            },
+            'zh-TW': {
+                backBtn: '返回',
+                pageTitle: '設備手冊',
+                shareTitle: '分享手冊',
+                cancelBtn: '取消',
+                shareWechat: '微信',
+                shareQQ: 'QQ',
+                shareMail: '郵件',
+                shareCopy: '複製連結',
+                content: `
+                    <!-- 產品概述 -->
+                    <div class="manual-section">
+                        <div class="section-title">產品概述</div>
+                        <div class="section-text">
+                            愛尚儲能系統是一款高性能、高安全性的家用儲能解決方案。採用先進的鋰電池技術,為家庭提供可靠的電力儲存和管理服務。
+                        </div>
+                    </div>
+
+                    <!-- 主要特點 -->
+                    <div class="manual-section">
+                        <div class="section-title">主要特點</div>
+                        <ul class="section-list">
+                            <li>高容量儲能,滿足家庭日常用電需求</li>
+                            <li>智能BMS電池管理系統,確保安全穩定運行</li>
+                            <li>支持WiFi遠程監控,隨時掌握設備狀態</li>
+                            <li>模塊化設計,便於安裝和維護</li>
+                            <li>長壽命設計,循環次數可達6000次以上</li>
+                        </ul>
+                    </div>
+
+                    <!-- 技術規格 -->
+                    <div class="manual-section">
+                        <div class="section-title">技術規格</div>
+                        <table class="spec-table">
+                            <tr>
+                                <td>額定容量</td>
+                                <td>5.12 kWh</td>
+                            </tr>
+                            <tr>
+                                <td>額定電壓</td>
+                                <td>51.2V</td>
+                            </tr>
+                            <tr>
+                                <td>最大充電功率</td>
+                                <td>2.5 kW</td>
+                            </tr>
+                            <tr>
+                                <td>最大放電功率</td>
+                                <td>2.5 kW</td>
+                            </tr>
+                            <tr>
+                                <td>工作溫度</td>
+                                <td>-10℃ ~ 50℃</td>
+                            </tr>
+                            <tr>
+                                <td>循環壽命</td>
+                                <td>≥6000次 (80% DOD)</td>
+                            </tr>
+                            <tr>
+                                <td>通信方式</td>
+                                <td>WiFi / CAN</td>
+                            </tr>
+                            <tr>
+                                <td>防護等級</td>
+                                <td>IP54</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- 安裝說明 -->
+                    <div class="manual-section">
+                        <div class="section-title">安裝說明</div>
+
+                        <div class="section-subtitle">安裝位置要求</div>
+                        <ul class="section-list">
+                            <li>選擇通風良好、乾燥的室內環境</li>
+                            <li>避免陽光直射和高溫環境</li>
+                            <li>保持周圍至少30cm的散熱空間</li>
+                            <li>確保地面平整穩固</li>
+                        </ul>
+
+                        <div class="section-subtitle">連接步驟</div>
+                        <ul class="section-list">
+                            <li>斷開所有電源,確保安全</li>
+                            <li>按照接線圖連接電池和逆變器</li>
+                            <li>連接通信線纜和WiFi模塊</li>
+                            <li>檢查所有連接無誤後上電</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <div class="warning-title">⚠️ 安全警告</div>
+                            <div class="warning-text">
+                                安裝和維護必須由專業人員進行。錯誤的安裝可能導致設備損壞或安全事故。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 使用說明 -->
+                    <div class="manual-section">
+                        <div class="section-title">使用說明</div>
+
+                        <div class="section-subtitle">首次使用</div>
+                        <ul class="section-list">
+                            <li>下載並安裝愛尚App</li>
+                            <li>連接設備WiFi進行配網</li>
+                            <li>完成設備綁定和初始設置</li>
+                            <li>開始正常使用</li>
+                        </ul>
+
+                        <div class="section-subtitle">日常維護</div>
+                        <ul class="section-list">
+                            <li>定期檢查設備運行狀態</li>
+                            <li>保持設備清潔,避免灰塵積累</li>
+                            <li>確保通風口暢通</li>
+                            <li>及時處理告警信息</li>
+                        </ul>
+                    </div>
+
+                    <!-- 故障排除 -->
+                    <div class="manual-section">
+                        <div class="section-title">故障排除</div>
+
+                        <div class="section-subtitle">無法開機</div>
+                        <ul class="section-list">
+                            <li>檢查電源連接是否正常</li>
+                            <li>檢查開關是否打開</li>
+                            <li>檢查電池電壓是否正常</li>
+                        </ul>
+
+                        <div class="section-subtitle">通信故障</div>
+                        <ul class="section-list">
+                            <li>檢查WiFi連接狀態</li>
+                            <li>確認網絡信號強度</li>
+                            <li>嘗試重啟WiFi模塊</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <div class="warning-title">📞 技術支持</div>
+                            <div class="warning-text">
+                                如遇無法解決的問題,請聯繫技術支持:400-XXX-XXXX
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 保修信息 -->
+                    <div class="manual-section">
+                        <div class="section-title">保修信息</div>
+                        <div class="section-text">
+                            本產品提供5年質保服務。保修期內因產品質量問題導致的故障,我們將免費提供維修或更換服務。
+                        </div>
+                        <div class="section-text">
+                            保修範圍不包括:人為損壞、自然災害、未按說明書使用導致的故障。
+                        </div>
+                    </div>
+                `
+            },
+            'en': {
+                backBtn: 'Back',
+                pageTitle: 'Device Manual',
+                shareTitle: 'Share Manual',
+                cancelBtn: 'Cancel',
+                shareWechat: 'WeChat',
+                shareQQ: 'QQ',
+                shareMail: 'Email',
+                shareCopy: 'Copy Link',
+                content: `
+                    <!-- Product Overview -->
+                    <div class="manual-section">
+                        <div class="section-title">Product Overview</div>
+                        <div class="section-text">
+                            The EnerShare Energy Storage System is a high-performance, high-security home energy storage solution. Using advanced lithium battery technology, it provides reliable power storage and management services for households.
+                        </div>
+                    </div>
+
+                    <!-- Main Features -->
+                    <div class="manual-section">
+                        <div class="section-title">Main Features</div>
+                        <ul class="section-list">
+                            <li>High-capacity energy storage to meet daily household electricity needs</li>
+                            <li>Intelligent BMS battery management system ensuring safe and stable operation</li>
+                            <li>WiFi remote monitoring support for real-time device status tracking</li>
+                            <li>Modular design for easy installation and maintenance</li>
+                            <li>Long-life design with over 6000 charge cycles</li>
+                        </ul>
+                    </div>
+
+                    <!-- Technical Specifications -->
+                    <div class="manual-section">
+                        <div class="section-title">Technical Specifications</div>
+                        <table class="spec-table">
+                            <tr>
+                                <td>Rated Capacity</td>
+                                <td>5.12 kWh</td>
+                            </tr>
+                            <tr>
+                                <td>Rated Voltage</td>
+                                <td>51.2V</td>
+                            </tr>
+                            <tr>
+                                <td>Max Charging Power</td>
+                                <td>2.5 kW</td>
+                            </tr>
+                            <tr>
+                                <td>Max Discharging Power</td>
+                                <td>2.5 kW</td>
+                            </tr>
+                            <tr>
+                                <td>Operating Temperature</td>
+                                <td>-10℃ ~ 50℃</td>
+                            </tr>
+                            <tr>
+                                <td>Cycle Life</td>
+                                <td>≥6000 cycles (80% DOD)</td>
+                            </tr>
+                            <tr>
+                                <td>Communication</td>
+                                <td>WiFi / CAN</td>
+                            </tr>
+                            <tr>
+                                <td>Protection Rating</td>
+                                <td>IP54</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Installation Instructions -->
+                    <div class="manual-section">
+                        <div class="section-title">Installation Instructions</div>
+
+                        <div class="section-subtitle">Installation Location Requirements</div>
+                        <ul class="section-list">
+                            <li>Choose a well-ventilated, dry indoor environment</li>
+                            <li>Avoid direct sunlight and high-temperature environments</li>
+                            <li>Maintain at least 30cm clearance around the unit for heat dissipation</li>
+                            <li>Ensure the floor is level and stable</li>
+                        </ul>
+
+                        <div class="section-subtitle">Connection Steps</div>
+                        <ul class="section-list">
+                            <li>Disconnect all power sources to ensure safety</li>
+                            <li>Connect the battery and inverter according to the wiring diagram</li>
+                            <li>Connect communication cables and WiFi module</li>
+                            <li>Power on after verifying all connections are correct</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <div class="warning-title">⚠️ Safety Warning</div>
+                            <div class="warning-text">
+                                Installation and maintenance must be performed by qualified professionals. Improper installation may result in equipment damage or safety incidents.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Usage Instructions -->
+                    <div class="manual-section">
+                        <div class="section-title">Usage Instructions</div>
+
+                        <div class="section-subtitle">First-Time Use</div>
+                        <ul class="section-list">
+                            <li>Download and install the EnerShare App</li>
+                            <li>Connect to the device WiFi for network configuration</li>
+                            <li>Complete device binding and initial setup</li>
+                            <li>Begin normal operation</li>
+                        </ul>
+
+                        <div class="section-subtitle">Regular Maintenance</div>
+                        <ul class="section-list">
+                            <li>Regularly check device operation status</li>
+                            <li>Keep the device clean and prevent dust accumulation</li>
+                            <li>Ensure ventilation ports remain unobstructed</li>
+                            <li>Address alarm notifications promptly</li>
+                        </ul>
+                    </div>
+
+                    <!-- Troubleshooting -->
+                    <div class="manual-section">
+                        <div class="section-title">Troubleshooting</div>
+
+                        <div class="section-subtitle">Unable to Power On</div>
+                        <ul class="section-list">
+                            <li>Check if power connections are secure</li>
+                            <li>Verify the power switch is turned on</li>
+                            <li>Check if battery voltage is normal</li>
+                        </ul>
+
+                        <div class="section-subtitle">Communication Failure</div>
+                        <ul class="section-list">
+                            <li>Check WiFi connection status</li>
+                            <li>Confirm network signal strength</li>
+                            <li>Try restarting the WiFi module</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <div class="warning-title">📞 Technical Support</div>
+                            <div class="warning-text">
+                                If you encounter unresolvable issues, please contact technical support: 400-XXX-XXXX
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Warranty Information -->
+                    <div class="manual-section">
+                        <div class="section-title">Warranty Information</div>
+                        <div class="section-text">
+                            This product comes with a 5-year warranty. During the warranty period, we will provide free repair or replacement services for failures caused by product quality issues.
+                        </div>
+                        <div class="section-text">
+                            The warranty does not cover: human-caused damage, natural disasters, or failures resulting from not following the instruction manual.
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // 当前语言 - 从localStorage读取,默认英文
+        let currentLanguage = localStorage.getItem('appLanguage') || 'en';
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            const texts = translations[lang];
+
+            // 更新导航栏文本
+            document.querySelector('.back-btn').childNodes[2].textContent = texts.backBtn;
+            document.querySelector('.nav-title').textContent = texts.pageTitle;
+            document.querySelector('.share-header h3').textContent = texts.shareTitle;
+            document.querySelector('.share-cancel').textContent = texts.cancelBtn;
+
+            // 更新分享选项
+            document.querySelectorAll('.share-label')[0].textContent = texts.shareWechat;
+            document.querySelectorAll('.share-label')[1].textContent = texts.shareQQ;
+            document.querySelectorAll('.share-label')[2].textContent = texts.shareMail;
+            document.querySelectorAll('.share-label')[3].textContent = texts.shareCopy;
+
+            // 更新手册内容
+            document.querySelector('.manual-content').innerHTML = texts.content;
+        }
+
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // 初始化多语言显示
+        updatePageText(currentLanguage);
+
+        // 返回按钮
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.history.back();
+        });
+
+        // 分享按钮
+        const shareModal = document.getElementById('shareModal');
+        const shareBtn = document.getElementById('shareBtn');
+        const shareCancel = document.getElementById('shareCancel');
+
+        shareBtn.addEventListener('click', () => {
+            shareModal.classList.add('active');
+        });
+
+        shareCancel.addEventListener('click', () => {
+            shareModal.classList.remove('active');
+        });
+
+        // 点击背景关闭弹窗
+        shareModal.addEventListener('click', (e) => {
+            if (e.target === shareModal) {
+                shareModal.classList.remove('active');
+            }
+        });
+
+        // 分享选项
+        document.getElementById('shareWechat').addEventListener('click', () => {
+            alert('分享到微信');
+            shareModal.classList.remove('active');
+        });
+
+        document.getElementById('shareQQ').addEventListener('click', () => {
+            alert('分享到QQ');
+            shareModal.classList.remove('active');
+        });
+
+        document.getElementById('shareMail').addEventListener('click', () => {
+            alert('通过邮件分享');
+            shareModal.classList.remove('active');
+        });
+
+        document.getElementById('shareCopy').addEventListener('click', () => {
+            // 复制链接到剪贴板
+            const url = window.location.href;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('链接已复制到剪贴板');
+                });
+            } else {
+                alert('链接：' + url);
+            }
+            shareModal.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

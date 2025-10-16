@@ -1041,109 +1041,6 @@
             opacity: 0.9;
         }
 
-        /* 导出格式选择弹窗 */
-        .export-modal {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 60;
-            animation: fadeIn 0.2s ease;
-        }
-
-        .export-modal.active {
-            display: flex;
-        }
-
-        .export-content {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            width: 280px;
-            animation: scaleIn 0.3s ease;
-        }
-
-        .export-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1d1d1f;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .export-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .export-option {
-            padding: 16px;
-            background: #f5f5f7;
-            border: 2px solid transparent;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 500;
-            color: #1d1d1f;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-
-        .export-option:hover {
-            background: #e8e8ed;
-        }
-
-        .export-option:active {
-            transform: scale(0.98);
-        }
-
-        .export-option.selected {
-            background: rgba(52, 199, 89, 0.1);
-            border-color: #34C759;
-            color: #34C759;
-        }
-
-        .export-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .export-cancel,
-        .export-confirm {
-            flex: 1;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: none;
-        }
-
-        .export-cancel {
-            background: #f5f5f7;
-            color: #1d1d1f;
-        }
-
-        .export-cancel:active {
-            background: #e8e8ed;
-        }
-
-        .export-confirm {
-            background: #007AFF;
-            color: white;
-        }
-
-        .export-confirm:active {
-            opacity: 0.8;
-        }
     </style>
 </head>
 <body>
@@ -1239,28 +1136,6 @@
                             </svg>
                         </div>
                         <span class="nav-text" data-i18n="navProfile">我的</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 导出格式选择弹窗 -->
-            <div class="export-modal" id="exportModal">
-                <div class="export-content">
-                    <div class="export-title" data-i18n="exportTitle">选择导出格式</div>
-                    <div class="export-options">
-                        <div class="export-option selected" data-format="csv">
-                            📊 CSV 格式
-                        </div>
-                        <div class="export-option" data-format="json">
-                            📄 JSON 格式
-                        </div>
-                        <div class="export-option" data-format="excel">
-                            📈 Excel 格式
-                        </div>
-                    </div>
-                    <div class="export-actions">
-                        <button class="export-cancel" data-i18n="cancel">取消</button>
-                        <button class="export-confirm" data-i18n="exportConfirm">导出</button>
                     </div>
                 </div>
             </div>
@@ -1937,47 +1812,14 @@
 
         // 导出功能
         const exportIconBtn = document.getElementById('exportIconBtn');
-        const exportModal = document.getElementById('exportModal');
-        const exportOptions = document.querySelectorAll('.export-option');
-        const exportCancel = document.querySelector('.export-cancel');
-        const exportConfirm = document.querySelector('.export-confirm');
-        let selectedFormat = 'csv';
 
-        // 显示导出弹窗
+        // 点击导出按钮直接导出CSV格式
         exportIconBtn.addEventListener('click', () => {
-            exportModal.classList.add('active');
+            exportAlerts();
         });
 
-        // 选择导出格式
-        exportOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                exportOptions.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                selectedFormat = option.dataset.format;
-            });
-        });
-
-        // 取消导出
-        exportCancel.addEventListener('click', () => {
-            exportModal.classList.remove('active');
-        });
-
-        // 点击背景关闭弹窗
-        exportModal.addEventListener('click', (e) => {
-            if (e.target === exportModal) {
-                exportModal.classList.remove('active');
-            }
-        });
-
-        // 确认导出
-        exportConfirm.addEventListener('click', () => {
-            exportAlerts(selectedFormat);
-            exportModal.classList.remove('active');
-        });
-
-        // 导出告警数据
-        function exportAlerts(format) {
-            const texts = translations[currentLanguage];
+        // 导出告警数据（CSV格式）
+        function exportAlerts() {
             const startDate = startTimeDisplay.textContent;
             const endDate = endTimeDisplay.textContent;
             const fileName = `alerts_${startDate}_to_${endDate}`;
@@ -1993,25 +1835,10 @@
                 return;
             }
 
-            let content, mimeType, fileExtension;
-
-            switch (format) {
-                case 'csv':
-                    content = exportToCSV(currentAlerts);
-                    mimeType = 'text/csv;charset=utf-8;';
-                    fileExtension = 'csv';
-                    break;
-                case 'json':
-                    content = exportToJSON(currentAlerts);
-                    mimeType = 'application/json;charset=utf-8;';
-                    fileExtension = 'json';
-                    break;
-                case 'excel':
-                    content = exportToExcel(currentAlerts);
-                    mimeType = 'application/vnd.ms-excel;charset=utf-8;';
-                    fileExtension = 'xls';
-                    break;
-            }
+            // 导出为CSV格式
+            const content = exportToCSV(currentAlerts);
+            const mimeType = 'text/csv;charset=utf-8;';
+            const fileExtension = 'csv';
 
             // 创建下载链接
             const blob = new Blob([content], { type: mimeType });
@@ -2026,7 +1853,7 @@
             document.body.removeChild(link);
 
             // 显示成功提示
-            alert(texts.exportSuccess + '!\n' + texts.exportSuccessMsg);
+            alert('导出成功');
         }
 
         // 导出为CSV格式
@@ -2047,66 +1874,6 @@
 
             // 添加BOM以支持Excel正确显示中文
             return '\uFEFF' + csvContent;
-        }
-
-        // 导出为JSON格式
-        function exportToJSON(data) {
-            return JSON.stringify(data, null, 2);
-        }
-
-        // 导出为Excel格式(简单的HTML表格格式)
-        function exportToExcel(data) {
-            const htmlContent = `
-                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
-                <head>
-                    <meta charset="UTF-8">
-                    <!--[if gte mso 9]>
-                    <xml>
-                        <x:ExcelWorkbook>
-                            <x:ExcelWorksheets>
-                                <x:ExcelWorksheet>
-                                    <x:Name>告警数据</x:Name>
-                                    <x:WorksheetOptions>
-                                        <x:DisplayGridlines/>
-                                    </x:WorksheetOptions>
-                                </x:ExcelWorksheet>
-                            </x:ExcelWorksheets>
-                        </x:ExcelWorkbook>
-                    </xml>
-                    <![endif]-->
-                    <style>
-                        table { border-collapse: collapse; width: 100%; }
-                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                        th { background-color: #4CAF50; color: white; }
-                    </style>
-                </head>
-                <body>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>时间</th>
-                                <th>代码</th>
-                                <th>类型</th>
-                                <th>描述</th>
-                                <th>数据</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${data.map(alert => `
-                                <tr>
-                                    <td>${alert.time}</td>
-                                    <td>${alert.code}</td>
-                                    <td>${alert.type}</td>
-                                    <td>${alert.description}</td>
-                                    <td>${alert.data}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </body>
-                </html>
-            `;
-            return htmlContent;
         }
 
     </script>

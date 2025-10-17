@@ -332,14 +332,82 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 32px 0 24px;
-            max-width: 280px;
+            padding: 24px 20px 20px;
+            max-width: 320px;
             margin: 0 auto;
+        }
+
+        .step-icon {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            margin-bottom: 16px;
+        }
+
+        .step-title-large {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+            text-align: center;
+            letter-spacing: -0.3px;
+        }
+
+        .step-description-text {
+            font-size: 15px;
+            color: #6e6e73;
+            line-height: 1.5;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        /* 步骤3的额外样式 */
+        #step3Content .step-content-wrapper {
+            max-width: 100%;
+            padding: 20px 20px 16px;
+        }
+
+        #step3Content .step-icon {
+            margin-bottom: 12px;
+        }
+
+        #step3Content .step-title-large {
+            margin-bottom: 8px;
+        }
+
+        #step3Content .step-description-text {
+            margin-bottom: 6px;
+        }
+
+        #step3Content .network-status {
+            margin: 16px 0 14px;
+            padding: 14px 16px;
+        }
+
+        #step3Content .network-status-item {
+            padding: 9px 0;
+        }
+
+        #step3Content .network-status-label {
+            font-size: 14px;
+        }
+
+        #step3Content .network-status-value {
+            font-size: 14px;
+        }
+
+        .step-links-row {
+            margin-top: 16px;
+            margin-bottom: 14px;
         }
 
         .step-action-btn {
             width: 100%;
-            height: 50px;
+            height: 48px;
             background: #34C759;
             color: white;
             border: none;
@@ -349,7 +417,16 @@
             cursor: pointer;
             box-shadow: 0 4px 16px rgba(52, 199, 89, 0.25);
             transition: all 0.2s ease;
-            margin-top: 32px;
+            margin-top: 16px;
+        }
+
+        .step-back-link {
+            color: #86868b;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 14px;
+            display: inline-block;
         }
 
         .step-action-btn:active {
@@ -376,15 +453,6 @@
             transform: scale(0.98);
         }
 
-        .step-back-link {
-            color: #86868b;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            margin-top: 16px;
-            display: inline-block;
-        }
-
         .step-back-link:active {
             opacity: 0.6;
         }
@@ -401,6 +469,51 @@
             opacity: 0.6;
         }
 
+        /* 网络状态样式 */
+        .network-status {
+            background: #f5f5f7;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .network-status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e5ea;
+        }
+
+        .network-status-item:last-child {
+            border-bottom: none;
+        }
+
+        .network-status-label {
+            font-size: 15px;
+            color: #6e6e73;
+            font-weight: 500;
+        }
+
+        .network-status-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .network-status-value.connected {
+            color: #34C759;
+        }
+
+        .network-status-value.disconnected {
+            color: #FF3B30;
+        }
+
+        .network-status-value.checking {
+            color: #007AFF;
+        }
+
         .step-links-row {
             display: flex;
             align-items: center;
@@ -410,31 +523,6 @@
             align-self: flex-start;
         }
 
-        .step-icon {
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 64px;
-            margin-bottom: 24px;
-        }
-
-        .step-title-large {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1d1d1f;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .step-description-text {
-            font-size: 16px;
-            color: #6e6e73;
-            line-height: 1.6;
-            text-align: center;
-            width: 100%;
-        }
 
         .quick-steps {
             list-style: none;
@@ -792,6 +880,32 @@
             opacity: 0.8;
         }
 
+        /* WiFi密码显示框 */
+        .wifi-password-box {
+            width: 100%;
+            background: #f5f5f7;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .wifi-password-label {
+            font-size: 13px;
+            color: #6e6e73;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .wifi-password-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: 2px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -921,6 +1035,411 @@
 
         .privacy-btn:active {
             transform: scale(0.98);
+        }
+
+        /* OTA下载弹窗 */
+        .ota-download-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 70;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .ota-download-modal.active {
+            display: flex;
+        }
+
+        .ota-download-content {
+            background: white;
+            border-radius: 20px;
+            padding: 32px 24px 24px;
+            width: 85%;
+            max-width: 320px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .ota-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #34C759 0%, #30D158 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3);
+        }
+
+        .ota-download-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+        }
+
+        .ota-download-desc {
+            font-size: 15px;
+            color: #6e6e73;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .ota-version-info {
+            background: #f5f5f7;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .ota-version-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .ota-version-row:not(:last-child) {
+            border-bottom: 1px solid #e5e5ea;
+        }
+
+        .ota-version-label {
+            font-size: 14px;
+            color: #6e6e73;
+        }
+
+        .ota-version-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .ota-download-progress {
+            width: 100%;
+            height: 6px;
+            background: #e5e5ea;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .ota-download-progress.active {
+            display: block;
+        }
+
+        .ota-download-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #34C759, #30D158);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .ota-download-status {
+            font-size: 13px;
+            color: #6e6e73;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .ota-download-status.active {
+            display: block;
+        }
+
+        .ota-download-btn {
+            width: 100%;
+            height: 50px;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(52, 199, 89, 0.3);
+        }
+
+        .ota-download-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .ota-download-btn:disabled {
+            background: #86868b;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* QR扫描器弹窗 */
+        .qr-scanner-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000000;
+            display: none;
+            flex-direction: column;
+            z-index: 80;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .qr-scanner-modal.active {
+            display: flex;
+        }
+
+        .qr-scanner-header {
+            padding: 50px 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .qr-scanner-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .qr-scanner-close {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .qr-scanner-close:active {
+            opacity: 0.6;
+            transform: scale(0.95);
+        }
+
+        .qr-scanner-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 30px 80px;
+            position: relative;
+        }
+
+        .qr-scanner-frame {
+            width: 260px;
+            height: 260px;
+            position: relative;
+            border: 2px solid rgba(52, 199, 89, 0.5);
+            border-radius: 16px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+            margin-bottom: 40px;
+        }
+
+        /* 扫描框四角 */
+        .qr-scanner-corner {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #34C759;
+        }
+
+        .qr-scanner-corner.top-left {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 16px 0 0 0;
+        }
+
+        .qr-scanner-corner.top-right {
+            top: -2px;
+            right: -2px;
+            border-left: none;
+            border-bottom: none;
+            border-radius: 0 16px 0 0;
+        }
+
+        .qr-scanner-corner.bottom-left {
+            bottom: -2px;
+            left: -2px;
+            border-right: none;
+            border-top: none;
+            border-radius: 0 0 0 16px;
+        }
+
+        .qr-scanner-corner.bottom-right {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+            border-radius: 0 0 16px 0;
+        }
+
+        /* 扫描线动画 */
+        .qr-scanner-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #34C759, transparent);
+            box-shadow: 0 0 10px rgba(52, 199, 89, 0.8);
+            animation: scanLine 2s linear infinite;
+        }
+
+        @keyframes scanLine {
+            0% {
+                top: 0;
+            }
+            50% {
+                top: calc(100% - 2px);
+            }
+            100% {
+                top: 0;
+            }
+        }
+
+        .qr-scanner-desc {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .qr-scanner-cancel {
+            width: 180px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 40px;
+        }
+
+        .qr-scanner-cancel:active {
+            transform: scale(0.97);
+            opacity: 0.8;
+        }
+
+        /* 相机权限弹窗 - iOS风格 */
+        .camera-permission-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 75;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .camera-permission-modal.active {
+            display: flex;
+        }
+
+        .camera-permission-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 14px;
+            width: 270px;
+            text-align: center;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .camera-permission-header {
+            padding: 20px 16px 10px;
+        }
+
+        .camera-permission-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .camera-permission-desc {
+            font-size: 13px;
+            color: #6e6e73;
+            line-height: 1.4;
+        }
+
+        .camera-permission-buttons {
+            border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .camera-permission-btn {
+            width: 100%;
+            height: 44px;
+            background: transparent;
+            border: none;
+            font-size: 17px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .camera-permission-btn:last-child {
+            border-bottom: none;
+        }
+
+        .camera-permission-btn.deny {
+            color: #007AFF;
+            font-weight: 400;
+        }
+
+        .camera-permission-btn.once {
+            color: #007AFF;
+            font-weight: 400;
+        }
+
+        .camera-permission-btn.allow {
+            color: #007AFF;
+            font-weight: 600;
+        }
+
+        .camera-permission-btn:active {
+            background: rgba(0, 0, 0, 0.05);
         }
 
         /* 底部导航栏 */
@@ -1112,6 +1631,7 @@
                             <div class="step-title-large" data-i18n="step2Title">查看设备WiFi信息</div>
                             <div class="step-description-text" data-i18n="step2Desc">在设备标签上找到WiFi名称和密码</div>
                             <div class="step-links-row">
+                                <button class="step-action-btn secondary-btn" id="scanQRBtn" data-i18n="scanQRBtn">扫一扫</button>
                                 <a class="example-image-link" id="exampleImageLink" data-i18n="exampleImage">示例图片</a>
                             </div>
                             <button class="step-action-btn" id="step2Btn" data-i18n="step1Btn">我已准备好，继续</button>
@@ -1124,7 +1644,20 @@
                         <div class="step-content-wrapper">
                             <div class="step-icon step-3">📶</div>
                             <div class="step-title-large" data-i18n="step3Title">连接设备WiFi</div>
-                            <div class="step-description-text" data-i18n="step3Desc">打开手机WiFi设置，连接设备wifi</div>
+                            <div class="step-description-text" data-i18n="step3Desc">打开手机WiFi设置,连接设备wifi</div>
+
+                            <!-- 网络连接状态 -->
+                            <div class="network-status">
+                                <div class="network-status-item">
+                                    <div class="network-status-label">当前网络</div>
+                                    <div class="network-status-value disconnected" id="currentWifiName">未连接</div>
+                                </div>
+                                <div class="network-status-item">
+                                    <div class="network-status-label">连接状态</div>
+                                    <div class="network-status-value checking" id="connectionStatus">检测中...</div>
+                                </div>
+                            </div>
+
                             <div class="step-links-row">
                                 <button class="step-action-btn secondary-btn" id="settingsBtn" data-i18n="settingsBtn">网络设置</button>
                                 <a class="example-image-link" id="exampleImageLink2" data-i18n="exampleImage">示例图片</a>
@@ -1239,6 +1772,54 @@
                     </div>
                 </div>
             </div>
+
+            <!-- OTA下载弹窗 -->
+            <div class="ota-download-modal" id="otaDownloadModal">
+                <div class="ota-download-content">
+                    <div class="ota-icon">📦</div>
+                    <div class="ota-download-title" data-i18n="otaDownloadTitle">发现新版本</div>
+                    <div class="ota-download-desc" data-i18n="otaDownloadDesc">检测到新的固件版本,为了更好的使用体验,请先下载更新包</div>
+                    <div class="ota-download-progress" id="otaDownloadProgress">
+                        <div class="ota-download-progress-bar" id="otaDownloadProgressBar"></div>
+                    </div>
+                    <div class="ota-download-status" id="otaDownloadStatus">正在下载... 0%</div>
+                    <button class="ota-download-btn" id="otaDownloadBtn" data-i18n="otaDownloadBtn">立即下载</button>
+                </div>
+            </div>
+
+            <!-- 相机权限弹窗 - iOS风格 -->
+            <div class="camera-permission-modal" id="cameraPermissionModal">
+                <div class="camera-permission-content">
+                    <div class="camera-permission-header">
+                        <div class="camera-permission-title" data-i18n="cameraPermissionTitle">"爱尚"想访问您的相机</div>
+                        <div class="camera-permission-desc" data-i18n="cameraPermissionDesc">用于扫描设备上的二维码以获取WiFi信息</div>
+                    </div>
+                    <div class="camera-permission-buttons">
+                        <button class="camera-permission-btn deny" id="cameraPermissionDeny" data-i18n="cameraPermissionDeny">不允许</button>
+                        <button class="camera-permission-btn once" id="cameraPermissionOnce" data-i18n="cameraPermissionOnce">仅使用一次</button>
+                        <button class="camera-permission-btn allow" id="cameraPermissionAllow" data-i18n="cameraPermissionAllow">允许</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QR扫描器弹窗 -->
+            <div class="qr-scanner-modal" id="qrScannerModal">
+                <div class="qr-scanner-header">
+                    <div class="qr-scanner-title" data-i18n="scanQRTitle">扫描二维码</div>
+                    <div class="qr-scanner-close" id="qrScannerClose">×</div>
+                </div>
+                <div class="qr-scanner-body">
+                    <div class="qr-scanner-frame">
+                        <div class="qr-scanner-corner top-left"></div>
+                        <div class="qr-scanner-corner top-right"></div>
+                        <div class="qr-scanner-corner bottom-left"></div>
+                        <div class="qr-scanner-corner bottom-right"></div>
+                        <div class="qr-scanner-line"></div>
+                    </div>
+                    <div class="qr-scanner-desc" data-i18n="scanQRDesc">将二维码放入框内，自动获取WiFi密码</div>
+                    <button class="qr-scanner-cancel" id="qrScannerCancel" data-i18n="scanQRCancel">取消</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1256,10 +1837,25 @@
                 step1Desc: '请确保您的储能设备已开机',
                 step1Btn: '我已准备好，继续',
                 step2Title: '查看设备WiFi信息',
-                step2Desc: '在设备标签上找到WiFi名称和密码',
+                step2Desc: '在设备标签上找到WiFi名称和密码，或用扫一扫<strong style="color: #000000; font-weight: 700;">读取并复制</strong>WiFi密码',
                 step3Title: '连接设备WiFi',
                 step3Desc: '打开手机WiFi设置，连接设备wifi',
                 exampleImage: '示例图片',
+                scanQRBtn: '扫一扫',
+                scanQRTitle: '扫描二维码',
+                scanQRDesc: '将二维码放入框内，自动获取WiFi密码',
+                scanQRCancel: '取消',
+                scanQRSuccess: '识别成功',
+                scanQRSuccessDesc: '已成功获取WiFi密码',
+                wifiPasswordLabel: 'WiFi密码',
+                scanQRError: '扫描失败',
+                scanQRErrorDesc: '无法识别二维码，请重试',
+                closeBtn: '关闭',
+                cameraPermissionTitle: '"爱尚"想访问您的相机',
+                cameraPermissionDesc: '用于扫描设备上的二维码以获取WiFi信息',
+                cameraPermissionDeny: '不允许',
+                cameraPermissionOnce: '仅使用一次',
+                cameraPermissionAllow: '允许',
                 settingsBtn: '网络设置',
                 backBtn: '上一步',
                 connectBtn: '开始连接',
@@ -1287,6 +1883,15 @@
                 settingsAlert: '请手动打开手机的设置 > WiFi，连接您设备的WiFi网络',
                 privacyTitle: '隐私协议',
                 privacyAgreeBtn: '同意',
+                otaDownloadTitle: '发现新版本',
+                otaDownloadDesc: '检测到新的固件版本,为了更好的使用体验,请先下载更新包',
+                otaCurrentVersion: '当前版本',
+                otaNewVersion: '最新版本',
+                otaPackageSize: '安装包大小',
+                otaDownloadBtn: '立即下载',
+                otaDownloading: '正在下载...',
+                otaDownloadComplete: '下载完成',
+                otaContinue: '继续',
                 privacyContent: `
                     <p style="margin-bottom: 8px; color: #86868b; font-size: 13px;">最后更新日期：2025年1月15日</p>
                     <p>欢迎使用爱尚储能系统及配套应用程序（以下简称"爱尚App"）。我们深知个人信息对您的重要性，您的信赖对我们非常重要，我们将严格遵守法律法规要求采取相应的安全保护措施，致力于保护您的个人信息安全可控。</p>
@@ -1323,10 +1928,25 @@
                 step1Desc: '請確保您的儲能設備已開機',
                 step1Btn: '我已準備好，繼續',
                 step2Title: '查看設備WiFi信息',
-                step2Desc: '在設備標籤上找到WiFi名稱和密碼',
+                step2Desc: '在設備標籤上找到WiFi名稱和密碼，或用掃一掃<strong style="color: #000000; font-weight: 700;">讀取並複製</strong>WiFi密碼',
                 step3Title: '連接設備WiFi',
                 step3Desc: '打開手機WiFi設置，連接設備wifi',
                 exampleImage: '示例圖片',
+                scanQRBtn: '掃一掃',
+                scanQRTitle: '掃描二維碼',
+                scanQRDesc: '將二維碼放入框內，自動獲取WiFi密碼',
+                scanQRCancel: '取消',
+                scanQRSuccess: '識別成功',
+                scanQRSuccessDesc: '已成功獲取WiFi密碼',
+                wifiPasswordLabel: 'WiFi密碼',
+                scanQRError: '掃描失敗',
+                scanQRErrorDesc: '無法識別二維碼，請重試',
+                closeBtn: '關閉',
+                cameraPermissionTitle: '"愛尚"想訪問您的相機',
+                cameraPermissionDesc: '用於掃描設備上的二維碼以獲取WiFi信息',
+                cameraPermissionDeny: '不允許',
+                cameraPermissionOnce: '僅使用一次',
+                cameraPermissionAllow: '允許',
                 settingsBtn: '網絡設置',
                 backBtn: '上一步',
                 connectBtn: '開始連接',
@@ -1354,6 +1974,15 @@
                 settingsAlert: '請手動打開手機的設置 > WiFi，連接您設備的WiFi網絡',
                 privacyTitle: '隱私協議',
                 privacyAgreeBtn: '同意',
+                otaDownloadTitle: '發現新版本',
+                otaDownloadDesc: '檢測到新的固件版本,為了更好的使用體驗,請先下載更新包',
+                otaCurrentVersion: '當前版本',
+                otaNewVersion: '最新版本',
+                otaPackageSize: '安裝包大小',
+                otaDownloadBtn: '立即下載',
+                otaDownloading: '正在下載...',
+                otaDownloadComplete: '下載完成',
+                otaContinue: '繼續',
                 privacyContent: `
                     <p style="margin-bottom: 8px; color: #86868b; font-size: 13px;">最後更新日期：2025年1月15日</p>
                     <p>歡迎使用愛尚儲能系統及配套應用程序（以下簡稱"愛尚App"）。我們深知個人信息對您的重要性，您的信賴對我們非常重要，我們將嚴格遵守法律法規要求採取相應的安全保護措施，致力於保護您的個人信息安全可控。</p>
@@ -1390,10 +2019,25 @@
                 step1Desc: 'Please ensure your energy storage device is powered on',
                 step1Btn: "I'm ready, continue",
                 step2Title: 'View Device WiFi Info',
-                step2Desc: 'Find WiFi name and password on device label',
+                step2Desc: 'Find WiFi name and password on device label, or scan QR code to <strong style="color: #000000; font-weight: 700;">read and copy</strong> WiFi password',
                 step3Title: 'Connect Device WiFi',
                 step3Desc: 'Open phone WiFi settings and connect to device wifi',
                 exampleImage: 'Example Image',
+                scanQRBtn: 'Scan QR',
+                scanQRTitle: 'Scan QR Code',
+                scanQRDesc: 'Place QR code in frame to get WiFi password',
+                scanQRCancel: 'Cancel',
+                scanQRSuccess: 'Recognition Successful',
+                scanQRSuccessDesc: 'WiFi password obtained successfully',
+                wifiPasswordLabel: 'WiFi Password',
+                scanQRError: 'Scan Failed',
+                scanQRErrorDesc: 'Unable to recognize QR code, please try again',
+                closeBtn: 'Close',
+                cameraPermissionTitle: '"EnerShare" Would Like to Access the Camera',
+                cameraPermissionDesc: 'To scan QR codes on the device for WiFi information',
+                cameraPermissionDeny: "Don't Allow",
+                cameraPermissionOnce: 'Allow Once',
+                cameraPermissionAllow: 'Allow',
                 settingsBtn: 'Network Settings',
                 backBtn: 'Back',
                 connectBtn: 'Start Connection',
@@ -1421,6 +2065,15 @@
                 settingsAlert: 'Please manually open your phone Settings > WiFi and connect to your device WiFi network',
                 privacyTitle: 'Privacy Policy',
                 privacyAgreeBtn: 'Agree',
+                otaDownloadTitle: 'New Version Available',
+                otaDownloadDesc: 'A new firmware version has been detected. Please download the update package for a better experience',
+                otaCurrentVersion: 'Current Version',
+                otaNewVersion: 'Latest Version',
+                otaPackageSize: 'Package Size',
+                otaDownloadBtn: 'Download Now',
+                otaDownloading: 'Downloading...',
+                otaDownloadComplete: 'Download Complete',
+                otaContinue: 'Continue',
                 privacyContent: `
                     <p style="margin-bottom: 8px; color: #86868b; font-size: 13px;">Last Updated: January 15, 2025</p>
                     <p>Welcome to the EnerShare Energy Storage System and its companion application (hereinafter referred to as "EnerShare App"). We understand the importance of your personal information, and your trust is very important to us. We will strictly comply with legal and regulatory requirements and take appropriate security measures to protect your personal information.</p>
@@ -1457,7 +2110,12 @@
             document.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
                 if (texts[key]) {
-                    element.textContent = texts[key];
+                    // 如果包含HTML标签，使用innerHTML，否则使用textContent
+                    if (texts[key].includes('<')) {
+                        element.innerHTML = texts[key];
+                    } else {
+                        element.textContent = texts[key];
+                    }
                 }
             });
 
@@ -1753,7 +2411,76 @@
         step3BackBtn.addEventListener('click', () => updateStepProgress(2));
 
         // 初始化步骤进度
-        updateStepProgress(1);
+        // 检查URL参数中是否指定了步骤
+        const urlParams = new URLSearchParams(window.location.search);
+        const stepParam = urlParams.get('step');
+        const initialStep = stepParam ? parseInt(stepParam) : 1;
+        updateStepProgress(initialStep);
+
+        // 网络状态检测
+        let networkCheckInterval = null;
+
+        function checkNetworkStatus() {
+            const currentWifiName = document.getElementById('currentWifiName');
+            const connectionStatus = document.getElementById('connectionStatus');
+
+            // 模拟检测WiFi连接状态
+            // 实际应用中应该通过原生接口获取真实的WiFi信息
+            if (navigator.onLine) {
+                // 模拟检测到设备WiFi连接
+                setTimeout(() => {
+                    const deviceWifi = 'Battery-5G'; // 这应该是实际的设备WiFi名称
+                    currentWifiName.textContent = deviceWifi;
+                    currentWifiName.classList.remove('disconnected', 'checking');
+                    currentWifiName.classList.add('connected');
+
+                    connectionStatus.textContent = '已连接';
+                    connectionStatus.classList.remove('checking', 'disconnected');
+                    connectionStatus.classList.add('connected');
+                }, 2000);
+            } else {
+                currentWifiName.textContent = '未连接';
+                currentWifiName.classList.remove('connected', 'checking');
+                currentWifiName.classList.add('disconnected');
+
+                connectionStatus.textContent = '未连接';
+                connectionStatus.classList.remove('checking', 'connected');
+                connectionStatus.classList.add('disconnected');
+            }
+        }
+
+        // 当切换到步骤3时开始检测网络状态
+        const originalUpdateStepProgress = updateStepProgress;
+        updateStepProgress = function(step) {
+            originalUpdateStepProgress(step);
+
+            // 如果是步骤3,启动网络状态检测
+            if (step === 3) {
+                // 重置状态
+                const currentWifiName = document.getElementById('currentWifiName');
+                const connectionStatus = document.getElementById('connectionStatus');
+
+                currentWifiName.textContent = '未连接';
+                currentWifiName.className = 'network-status-value disconnected';
+                connectionStatus.textContent = '检测中...';
+                connectionStatus.className = 'network-status-value checking';
+
+                // 开始检测
+                checkNetworkStatus();
+
+                // 定期检测网络状态
+                if (networkCheckInterval) {
+                    clearInterval(networkCheckInterval);
+                }
+                networkCheckInterval = setInterval(checkNetworkStatus, 5000);
+            } else {
+                // 停止检测
+                if (networkCheckInterval) {
+                    clearInterval(networkCheckInterval);
+                    networkCheckInterval = null;
+                }
+            }
+        };
 
         // 底部导航功能
         document.getElementById('navProfile').addEventListener('click', () => {
@@ -1765,11 +2492,12 @@
         const privacyAgree = document.getElementById('privacyAgree');
 
         // 检查URL参数
-        const urlParams = new URLSearchParams(window.location.search);
         const fromStartup = urlParams.get('from') === 'startup';
+        const fromScanResult = urlParams.get('step') === '2';
 
         // 只要从启动页进来就显示隐私协议（不管是否已同意过）
-        if (fromStartup) {
+        // 但从扫描结果返回时不显示
+        if (fromStartup && !fromScanResult) {
             // 页面加载后自动显示隐私协议
             setTimeout(() => {
                 privacyModal.classList.add('active');
@@ -1780,7 +2508,237 @@
         privacyAgree.addEventListener('click', () => {
             localStorage.setItem('privacyAgreed', 'true');
             privacyModal.classList.remove('active');
+
+            // 同意后显示OTA下载弹窗
+            setTimeout(() => {
+                showOTADownloadModal();
+            }, 300);
         });
+
+        // OTA下载弹窗功能
+        const otaDownloadModal = document.getElementById('otaDownloadModal');
+        const otaDownloadBtn = document.getElementById('otaDownloadBtn');
+        const otaDownloadProgress = document.getElementById('otaDownloadProgress');
+        const otaDownloadProgressBar = document.getElementById('otaDownloadProgressBar');
+        const otaDownloadStatus = document.getElementById('otaDownloadStatus');
+
+        function showOTADownloadModal() {
+            otaDownloadModal.classList.add('active');
+        }
+
+        // 模拟OTA下载过程
+        function simulateOTADownload() {
+            const texts = translations[currentLanguage];
+            let progress = 0;
+
+            // 禁用按钮
+            otaDownloadBtn.disabled = true;
+            otaDownloadBtn.textContent = texts.otaDownloading;
+
+            // 显示进度条和状态
+            otaDownloadProgress.classList.add('active');
+            otaDownloadStatus.classList.add('active');
+
+            // 模拟下载进度
+            const downloadInterval = setInterval(() => {
+                progress += Math.random() * 15;
+
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(downloadInterval);
+
+                    // 下载完成
+                    otaDownloadProgressBar.style.width = '100%';
+                    otaDownloadStatus.textContent = texts.otaDownloadComplete;
+                    otaDownloadBtn.disabled = false;
+                    otaDownloadBtn.textContent = texts.otaContinue;
+
+                    // 按钮点击后关闭弹窗
+                    otaDownloadBtn.onclick = () => {
+                        otaDownloadModal.classList.remove('active');
+                        // 标记OTA已下载
+                        localStorage.setItem('otaDownloaded', 'true');
+                    };
+                } else {
+                    otaDownloadProgressBar.style.width = progress + '%';
+                    otaDownloadStatus.textContent = `${texts.otaDownloading} ${Math.floor(progress)}%`;
+                }
+            }, 300);
+        }
+
+        // 点击下载按钮
+        otaDownloadBtn.addEventListener('click', () => {
+            if (!otaDownloadBtn.disabled && otaDownloadBtn.textContent !== translations[currentLanguage].otaContinue) {
+                simulateOTADownload();
+            }
+        });
+
+        // 相机权限弹窗功能
+        const cameraPermissionModal = document.getElementById('cameraPermissionModal');
+        const cameraPermissionDeny = document.getElementById('cameraPermissionDeny');
+        const cameraPermissionOnce = document.getElementById('cameraPermissionOnce');
+        const cameraPermissionAllow = document.getElementById('cameraPermissionAllow');
+
+        // QR扫描器功能
+        const qrScannerModal = document.getElementById('qrScannerModal');
+        const qrScannerClose = document.getElementById('qrScannerClose');
+        const qrScannerCancel = document.getElementById('qrScannerCancel');
+        const scanQRBtn = document.getElementById('scanQRBtn');
+
+        // 点击扫一扫按钮 - 先检查权限
+        scanQRBtn.addEventListener('click', () => {
+            // 每次都显示权限弹窗（方便测试）
+            // 如果需要记住权限，取消下面的注释，删除 cameraPermissionModal.classList.add('active');
+
+            // const cameraPermission = localStorage.getItem('cameraPermission');
+            // if (cameraPermission === 'allowed') {
+            //     openQRScanner();
+            // } else if (cameraPermission === 'denied') {
+            //     alert('相机权限已被拒绝，请在设置中允许访问相机');
+            // } else {
+            //     cameraPermissionModal.classList.add('active');
+            // }
+
+            // 暂时每次都显示权限弹窗
+            cameraPermissionModal.classList.add('active');
+        });
+
+        // 不允许
+        cameraPermissionDeny.addEventListener('click', () => {
+            localStorage.setItem('cameraPermission', 'denied');
+            cameraPermissionModal.classList.remove('active');
+        });
+
+        // 仅使用一次
+        cameraPermissionOnce.addEventListener('click', () => {
+            // 不保存权限设置，下次还会询问
+            cameraPermissionModal.classList.remove('active');
+            openQRScanner();
+        });
+
+        // 允许
+        cameraPermissionAllow.addEventListener('click', () => {
+            localStorage.setItem('cameraPermission', 'allowed');
+            cameraPermissionModal.classList.remove('active');
+            openQRScanner();
+        });
+
+        // 打开QR扫描器
+        function openQRScanner() {
+            qrScannerModal.classList.add('active');
+            // 模拟扫描成功（2-3秒后自动识别）
+            simulateQRScan();
+        }
+
+        // 关闭QR扫描器
+        function closeQRScanner() {
+            qrScannerModal.classList.remove('active');
+        }
+
+        qrScannerClose.addEventListener('click', closeQRScanner);
+        qrScannerCancel.addEventListener('click', closeQRScanner);
+
+        // 模拟QR扫描过程
+        function simulateQRScan() {
+            // 模拟扫描延迟（2-3秒随机）
+            const scanDelay = 2000 + Math.random() * 1000;
+
+            setTimeout(() => {
+                // 90% 成功率
+                const isSuccess = Math.random() > 0.1;
+
+                if (isSuccess) {
+                    // 扫描成功 - 生成设备信息
+                    const deviceInfo = generateDeviceInfo();
+
+                    // 关闭扫描器
+                    closeQRScanner();
+
+                    // 跳转到扫描结果页面
+                    window.location.href = `扫描结果.html?result=${encodeURIComponent(deviceInfo)}`;
+                } else {
+                    // 扫描失败
+                    const texts = translations[currentLanguage];
+
+                    // 关闭扫描器
+                    closeQRScanner();
+
+                    // 显示失败提示
+                    const errorModal = document.getElementById('connectingModal');
+                    const errorIcon = document.getElementById('connectingIcon');
+                    const errorTitle = document.getElementById('connectingTitle');
+                    const errorDesc = document.getElementById('connectingDesc');
+                    const errorBtn = document.getElementById('connectingBtn');
+                    const errorProgress = document.getElementById('connectingProgress');
+                    const errorSteps = document.getElementById('connectingSteps');
+
+                    errorModal.classList.add('active');
+                    errorIcon.innerHTML = '<div class="connecting-error">✕</div>';
+                    errorTitle.textContent = texts.scanQRError;
+                    errorDesc.textContent = texts.scanQRErrorDesc;
+                    errorProgress.style.display = 'none';
+                    errorSteps.style.display = 'none';
+                    errorBtn.style.display = 'block';
+                    errorBtn.textContent = texts.confirmBtn;
+
+                    // 点击确定后关闭
+                    errorBtn.onclick = () => {
+                        errorModal.classList.remove('active');
+                        // 恢复按钮状态
+                        errorSteps.style.display = 'block';
+                    };
+                }
+            }, scanDelay);
+        }
+
+        // 生成设备信息（模拟扫描结果）
+        function generateDeviceInfo() {
+            // 生成随机MAC地址
+            const generateMAC = () => {
+                const hex = '0123456789ABCDEF';
+                let mac = '';
+                for (let i = 0; i < 12; i++) {
+                    mac += hex.charAt(Math.floor(Math.random() * hex.length));
+                }
+                return mac;
+            };
+
+            // 生成随机SSID后缀
+            const generateSSID = () => {
+                const hex = '0123456789ABCDEF';
+                let suffix = '';
+                for (let i = 0; i < 4; i++) {
+                    suffix += hex.charAt(Math.floor(Math.random() * hex.length));
+                }
+                return `WTS-${suffix}`;
+            };
+
+            // 生成随机WiFi密码
+            const generatePassword = () => {
+                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#$';
+                let password = '';
+                for (let i = 0; i < 8; i++) {
+                    password += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return password;
+            };
+
+            // 生成随机日期
+            const generateDate = () => {
+                const year = 2023;
+                const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+                const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+                return `${year}${month}${day}`;
+            };
+
+            const wifiMAC = generateMAC();
+            const ssid = generateSSID();
+            const wifiPW = generatePassword();
+            const rj45MAC = generateMAC();
+            const dataP = generateDate();
+
+            return `Software Ver:V1.0 Hardware Ver:V1.0 WIFI MAC:${wifiMAC} SSID:${ssid} WIFI PW:${wifiPW} RJ45 MAC:${rj45MAC} DATA-P:${dataP}`;
+        }
     </script>
 </body>
 </html>

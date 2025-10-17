@@ -235,6 +235,107 @@
             background: #e8e8ed;
         }
 
+        /* 帮助模态框 */
+        .help-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: flex-end;
+            z-index: 30;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .help-modal.active {
+            display: flex;
+        }
+
+        .help-content {
+            width: 100%;
+            max-height: 85%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 25px 20px 40px;
+            overflow-y: auto;
+            animation: slideUpModal 0.3s ease;
+        }
+
+        .help-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .help-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .close-modal {
+            width: 32px;
+            height: 32px;
+            background: #f5f5f7;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #86868b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .close-modal:active {
+            background: #e8e8ed;
+            transform: scale(0.95);
+        }
+
+        .step-item {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: #34C759;
+            color: white;
+            border-radius: 14px;
+            text-align: center;
+            line-height: 28px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            font-size: 15px;
+            color: #6e6e73;
+            line-height: 1.6;
+        }
+
         /* OTA内容 */
         .ota-content {
             flex: 1;
@@ -1349,14 +1450,14 @@
     <!-- 测试按钮 -->
     <button class="test-btn" id="testBtn">连接失败</button>
 
-    <!-- 连接失败弹窗 -->
+    <!-- 提示弹窗 -->
     <div class="error-modal" id="errorModal">
         <div class="error-overlay"></div>
         <div class="error-dialog">
-            <div class="error-icon">⚠️</div>
-            <div class="error-title">设备连接失败</div>
-            <div class="error-message">请重新连接</div>
-            <button class="error-btn" id="reconnectBtn">重新连接</button>
+            <div class="error-icon" id="modalIcon">⚠️</div>
+            <div class="error-title" id="modalTitle">提示</div>
+            <div class="error-message" id="modalMessage">提示信息</div>
+            <button class="error-btn" id="modalBtn">确定</button>
         </div>
     </div>
     <div class="iphone-frame">
@@ -1392,6 +1493,7 @@
                         返回
                     </button>
                     <div class="nav-title">OTA升级</div>
+                    <button class="help-btn" id="helpBtn" style="display: none;">?</button>
                 </div>
 
                 <!-- OTA内容 -->
@@ -1448,6 +1550,26 @@
                 </div>
             </div>
 
+            <!-- 帮助模态框 -->
+            <div class="help-modal" id="helpModal">
+                <div class="help-content">
+                    <div class="help-header">
+                        <h2>OTA升级流程</h2>
+                        <div class="close-modal" id="closeModal">×</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-title">选择固件文件</div>
+                        <div class="step-desc">点击文件选择区域，从您的设备中选择要更新的固件文件</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-title">开始升级</div>
+                        <div class="step-desc">选择文件后，点击"开始升级"按钮启动更新过程，系统将自动完成更新</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1466,6 +1588,28 @@
         // 返回按钮
         document.getElementById('backBtn').addEventListener('click', () => {
             window.history.back();
+        });
+
+        // 帮助按钮
+        const helpModal = document.getElementById('helpModal');
+        const helpBtn = document.getElementById('helpBtn');
+        const closeModal = document.getElementById('closeModal');
+
+        // 打开帮助模态框
+        helpBtn.addEventListener('click', () => {
+            helpModal.classList.add('active');
+        });
+
+        // 关闭帮助模态框
+        closeModal.addEventListener('click', () => {
+            helpModal.classList.remove('active');
+        });
+
+        // 点击模态框背景关闭
+        helpModal.addEventListener('click', (e) => {
+            if (e.target === helpModal) {
+                helpModal.classList.remove('active');
+            }
         });
 
         // 文件选择功能
@@ -1520,9 +1664,31 @@
             { name: 'resources.pak', size: '0.5 MB' }
         ];
 
+        // 模态框工具函数
+        const errorModal = document.getElementById('errorModal');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalBtn = document.getElementById('modalBtn');
+
+        function showModal(icon, title, message) {
+            modalIcon.textContent = icon;
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            errorModal.classList.add('active');
+        }
+
+        function hideModal() {
+            errorModal.classList.remove('active');
+        }
+
+        // 关闭模态框
+        modalBtn.addEventListener('click', hideModal);
+        document.querySelector('.error-overlay').addEventListener('click', hideModal);
+
         startUpdateBtn.addEventListener('click', () => {
             if (!selectedFile) {
-                alert('请先选择更新文件');
+                showModal('📦', '未找到升级包', '若没有升级包,退出App可以重新下载升级包');
                 return;
             }
 
@@ -1661,23 +1827,10 @@
             }, 300);
         });
 
-        // 测试按钮 - 显示连接失败弹窗
+        // 测试按钮 - 显示提示弹窗
         const testBtn = document.getElementById('testBtn');
-        const errorModal = document.getElementById('errorModal');
-        const reconnectBtn = document.getElementById('reconnectBtn');
-
         testBtn.addEventListener('click', () => {
-            errorModal.classList.add('active');
-        });
-
-        // 重新连接按钮 - 跳转到连接页面
-        reconnectBtn.addEventListener('click', () => {
-            window.location.href = '连接设备.html';
-        });
-
-        // 点击遮罩层关闭弹窗
-        document.querySelector('.error-overlay').addEventListener('click', () => {
-            errorModal.classList.remove('active');
+            showModal('⚠️', '连接失败', '设备连接已断开,请重新连接设备');
         });
     </script>
 </body>

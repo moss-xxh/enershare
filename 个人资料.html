@@ -613,10 +613,20 @@
                 <div class="profile-body">
                     <!-- 系统设置 -->
                     <div class="settings-section">
-                        <div class="settings-item" id="ota1Upgrade">
-                            <div class="settings-icon">🔋</div>
+                        <div class="settings-item" id="otaUpgrade">
+                            <div class="settings-icon">🔄</div>
                             <div class="settings-content">
                                 <span class="settings-label">OTA升级</span>
+                                <div style="display: flex; align-items: center;">
+                                    <span class="settings-value" id="versionText">V1.0.0</span>
+                                    <span class="settings-arrow">›</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item" id="ota1Upgrade" style="display: none;">
+                            <div class="settings-icon">🔋</div>
+                            <div class="settings-content">
+                                <span class="settings-label">OTA1.1升级</span>
                                 <div style="display: flex; align-items: center;">
                                     <span class="settings-value" id="version1Text">V1.0.0</span>
                                     <span class="settings-arrow">›</span>
@@ -629,6 +639,28 @@
                                 <span class="settings-label">语言</span>
                                 <div>
                                     <span class="settings-value" id="currentLanguage">简体中文</span>
+                                    <span class="settings-arrow">›</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 其他设置 -->
+                    <div class="settings-section">
+                        <div class="settings-item" id="userManual">
+                            <div class="settings-icon">📖</div>
+                            <div class="settings-content">
+                                <span class="settings-label">用户手册</span>
+                                <div>
+                                    <span class="settings-arrow">›</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item" id="instructionManual">
+                            <div class="settings-icon">📋</div>
+                            <div class="settings-content">
+                                <span class="settings-label">说明手册</span>
+                                <div>
                                     <span class="settings-arrow">›</span>
                                 </div>
                             </div>
@@ -714,6 +746,10 @@
 
         // OTA升级
         document.getElementById('ota1Upgrade').addEventListener('click', () => {
+            window.location.href = 'OTA升级.html';
+        });
+
+        document.getElementById('otaUpgrade').addEventListener('click', () => {
             window.location.href = 'OTA1升级.html';
         });
 
@@ -729,9 +765,12 @@
         const translations = {
             'zh-CN': {
                 title: '我的',
-                ota1Upgrade: 'OTA升级',
+                ota1Upgrade: 'OTA1.1升级',
+                otaUpgrade: 'OTA升级',
                 language: '语言',
                 privacyPolicy: '隐私政策',
+                userManual: '用户手册',
+                instructionManual: '说明手册',
                 currentVersion: 'V1.0.0',
                 navDevice: '设备',
                 navAlert: '告警',
@@ -740,9 +779,12 @@
             },
             'en': {
                 title: 'Profile',
-                ota1Upgrade: 'OTA Upgrade',
+                ota1Upgrade: 'OTA1.1 Upgrade',
+                otaUpgrade: 'OTA Upgrade',
                 language: 'Language',
                 privacyPolicy: 'Privacy Policy',
+                userManual: 'User Manual',
+                instructionManual: 'Instruction Manual',
                 currentVersion: 'V1.0.0',
                 navDevice: 'Device',
                 navAlert: 'Alerts',
@@ -758,9 +800,12 @@
         function updatePageText(lang) {
             const texts = translations[lang];
             document.querySelector('.profile-title').textContent = texts.title;
-            document.querySelectorAll('.settings-label')[0].textContent = texts.ota1Upgrade;
-            document.querySelectorAll('.settings-label')[1].textContent = texts.language;
-            document.querySelectorAll('.settings-label')[2].textContent = texts.privacyPolicy;
+            document.querySelectorAll('.settings-label')[0].textContent = texts.otaUpgrade;
+            document.querySelectorAll('.settings-label')[1].textContent = texts.ota1Upgrade;
+            document.querySelectorAll('.settings-label')[2].textContent = texts.language;
+            document.querySelectorAll('.settings-label')[3].textContent = texts.userManual;
+            document.querySelectorAll('.settings-label')[4].textContent = texts.instructionManual;
+            document.querySelectorAll('.settings-label')[5].textContent = texts.privacyPolicy;
             document.querySelectorAll('.nav-text')[0].textContent = texts.navDevice;
             document.querySelectorAll('.nav-text')[1].textContent = texts.navAlert;
             document.querySelectorAll('.nav-text')[2].textContent = texts.navProfile;
@@ -820,6 +865,16 @@
         // 隐私政策
         document.getElementById('privacyPolicy').addEventListener('click', () => {
             window.location.href = '隐私政策.html';
+        });
+
+        // 用户手册
+        document.getElementById('userManual').addEventListener('click', () => {
+            window.location.href = '用户手册.html';
+        });
+
+        // 说明手册
+        document.getElementById('instructionManual').addEventListener('click', () => {
+            window.location.href = '说明手册.html';
         });
 
         // 测试按钮 - 显示连接失败弹窗

@@ -1186,14 +1186,14 @@
     <!-- 测试按钮 -->
     <button class="test-btn" id="testBtn">连接失败</button>
 
-    <!-- 连接失败弹窗 -->
+    <!-- 提示弹窗 -->
     <div class="error-modal" id="errorModal">
         <div class="error-overlay"></div>
         <div class="error-dialog">
-            <div class="error-icon">⚠️</div>
-            <div class="error-title">设备连接失败</div>
-            <div class="error-message">请重新连接</div>
-            <button class="error-btn" id="reconnectBtn">重新连接</button>
+            <div class="error-icon" id="modalIcon">⚠️</div>
+            <div class="error-title" id="modalTitle">提示</div>
+            <div class="error-message" id="modalMessage">提示信息</div>
+            <button class="error-btn" id="modalBtn">确定</button>
         </div>
     </div>
     <div class="iphone-frame">
@@ -1597,7 +1597,7 @@
 
         startUpdateBtn.addEventListener('click', () => {
             if (!selectedFile) {
-                alert('请先选择更新文件');
+                showModal('📦', '未找到升级包', '若没有升级包,退出App可以重新下载升级包');
                 return;
             }
 
@@ -1677,23 +1677,34 @@
             }, 300);
         });
 
-        // 测试按钮 - 显示连接失败弹窗
-        const testBtn = document.getElementById('testBtn');
+        // 通用弹窗函数
         const errorModal = document.getElementById('errorModal');
-        const reconnectBtn = document.getElementById('reconnectBtn');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalBtn = document.getElementById('modalBtn');
 
-        testBtn.addEventListener('click', () => {
+        function showModal(icon, title, message) {
+            modalIcon.textContent = icon;
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
             errorModal.classList.add('active');
-        });
+        }
 
-        // 重新连接按钮 - 跳转到连接页面
-        reconnectBtn.addEventListener('click', () => {
-            window.location.href = '连接设备.html';
-        });
+        function hideModal() {
+            errorModal.classList.remove('active');
+        }
+
+        // 模态框按钮点击
+        modalBtn.addEventListener('click', hideModal);
 
         // 点击遮罩层关闭弹窗
-        document.querySelector('.error-overlay').addEventListener('click', () => {
-            errorModal.classList.remove('active');
+        document.querySelector('.error-overlay').addEventListener('click', hideModal);
+
+        // 测试按钮
+        const testBtn = document.getElementById('testBtn');
+        testBtn.addEventListener('click', () => {
+            showModal('⚠️', '设备连接失败', '请重新连接');
         });
     </script>
 </body>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>扫描结果 - 爱尚</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            height: 100vh;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* iPhone 外壳 */
+        .iphone-frame {
+            width: 385px;
+            height: 822px;
+            background: #1d1d1f;
+            border-radius: 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            position: relative;
+        }
+
+        /* iPhone 屏幕容器 */
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 刘海 */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 28px;
+            background: #1d1d1f;
+            border-radius: 0 0 18px 18px;
+            z-index: 10;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            padding: 0 27px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 5;
+            background: #f5f5f5;
+        }
+
+        .time {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .signal-icon {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            height: 12px;
+        }
+
+        .signal-dot {
+            width: 3px;
+            height: 3px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon {
+            width: 15px;
+            height: 11px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .wifi-icon::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border: 2px solid #000000;
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .battery-icon {
+            width: 25px;
+            height: 11.5px;
+            border: 1.5px solid #000000;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            opacity: 0.9;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5px;
+            height: 4px;
+            background: #000000;
+            border-radius: 0 2px 2px 0;
+            opacity: 0.5;
+        }
+
+        .battery-level {
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 1.5px;
+        }
+
+        .battery-percent {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000000;
+            margin-left: 4px;
+        }
+
+        /* 扫描结果页面 */
+        .scan-result-page {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部导航栏 */
+        .scan-header {
+            height: 60px;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .close-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 28px;
+            color: #1d1d1f;
+            font-weight: 300;
+        }
+
+        .close-btn:active {
+            opacity: 0.5;
+        }
+
+        .scan-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        /* 扫描结果内容 */
+        .scan-result-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .scan-result-text {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #1d1d1f;
+            word-wrap: break-word;
+            word-break: break-all;
+            white-space: pre-wrap;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 底部横条 */
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 5px;
+            background: #000000;
+            border-radius: 3px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 400px) {
+            .iphone-frame {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                padding: 0;
+            }
+            .iphone-screen {
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="iphone-screen">
+            <!-- 刘海 -->
+            <div class="notch"></div>
+
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time" id="time">11:39</div>
+                <div class="status-icons">
+                    <div class="signal-icon">
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                    </div>
+                    <div class="wifi-icon"></div>
+                    <div class="battery-icon">
+                        <div class="battery-level"></div>
+                    </div>
+                    <div class="battery-percent">99</div>
+                </div>
+            </div>
+
+            <!-- 扫描结果页面 -->
+            <div class="scan-result-page">
+                <!-- 顶部导航 -->
+                <div class="scan-header">
+                    <div class="close-btn" id="closeBtn">×</div>
+                    <div class="scan-title" data-i18n="scanResultTitle">扫描结果</div>
+                </div>
+
+                <!-- 扫描结果内容 -->
+                <div class="scan-result-content">
+                    <div class="scan-result-text" id="scanResultText">Software Ver:V1.0 Hardware Ver:V1.0 WIFI MAC:40D63C8F24A9 SSID:WTS-24A9 WIFI PW:9Su8@PSF RJ45 MAC:40D63C8F24AA DATA-P:20230203</div>
+                </div>
+
+                <!-- 底部横条 -->
+                <div class="home-indicator"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 多语言翻译数据
+        const translations = {
+            'zh-CN': {
+                scanResultTitle: '扫描结果'
+            },
+            'zh-TW': {
+                scanResultTitle: '掃描結果'
+            },
+            'en': {
+                scanResultTitle: 'Scan Result'
+            }
+        };
+
+        // 当前语言 - 从localStorage读取，默认中文
+        let currentLanguage = localStorage.getItem('appLanguage') || 'zh-CN';
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            const texts = translations[lang];
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (texts[key]) {
+                    element.textContent = texts[key];
+                }
+            });
+        }
+
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // 初始化多语言显示
+        updatePageText(currentLanguage);
+
+        // 关闭按钮
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            // 返回到连接设备页面的第二步
+            window.location.href = '连接设备.html?step=2';
+        });
+
+        // 从URL参数获取扫描结果
+        const urlParams = new URLSearchParams(window.location.search);
+        const scanResult = urlParams.get('result');
+        if (scanResult) {
+            document.getElementById('scanResultText').textContent = decodeURIComponent(scanResult);
+        }
+    </script>
+</body>
+</html>

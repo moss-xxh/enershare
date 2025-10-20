@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>System Dashboard - Core Link+</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            height: 100vh;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* iPhone 外壳 */
+        .iphone-frame {
+            width: 385px;
+            height: 822px;
+            background: #1d1d1f;
+            border-radius: 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            position: relative;
+        }
+
+        /* iPhone 屏幕容器 */
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 刘海 */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 28px;
+            background: #1d1d1f;
+            border-radius: 0 0 18px 18px;
+            z-index: 10;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            padding: 0 27px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 5;
+        }
+
+        .time {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .signal-icon {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            height: 12px;
+        }
+
+        .signal-dot {
+            width: 3px;
+            height: 3px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon {
+            width: 15px;
+            height: 11px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .wifi-icon::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border: 2px solid #000000;
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .battery-icon {
+            width: 25px;
+            height: 11.5px;
+            border: 1.5px solid #000000;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            opacity: 0.9;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5px;
+            height: 4px;
+            background: #000000;
+            border-radius: 0 2px 2px 0;
+            opacity: 0.5;
+        }
+
+        .battery-level {
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 1.5px;
+        }
+
+        /* 页面容器 */
+        .dashboard-page {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 页面头部 */
+        .dashboard-header {
+            padding: 12px 32px 28px;
+            background: #ffffff;
+            position: sticky;
+            top: 44px;
+            z-index: 10;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .dashboard-header.scrolled {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0;
+        }
+
+        .header-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .device-sn-display {
+            font-size: 15px;
+            color: #1d1d1f;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 5px;
+            height: 5px;
+            background: #34C759;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-text {
+            font-size: 12px;
+            color: #34C759;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .disconnect-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid #e5e5ea;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #FF3B30;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .disconnect-btn:active {
+            background: #f9f9f9;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* 断开连接确认弹窗 */
+        .disconnect-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 40;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .disconnect-modal.active {
+            display: flex;
+        }
+
+        .disconnect-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 280px;
+            text-align: center;
+        }
+
+        .disconnect-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+        }
+
+        .disconnect-message {
+            font-size: 14px;
+            color: #86868b;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .disconnect-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .disconnect-cancel,
+        .disconnect-confirm {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .disconnect-cancel {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .disconnect-cancel:active {
+            background: #e8e8ed;
+        }
+
+        .disconnect-confirm {
+            background: #FF3B30;
+            color: white;
+        }
+
+        .disconnect-confirm:active {
+            opacity: 0.8;
+        }
+
+        /* 页面内容 */
+        .dashboard-body {
+            flex: 1;
+            padding: 0;
+            padding-bottom: 96px;
+            overflow-y: auto;
+        }
+
+        /* 底部菜单栏 - 悬浮设计 */
+        .bottom-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
+                        0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0;
+            border: 0.5px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 10px 0;
+            position: relative;
+        }
+
+        .nav-text {
+            font-size: 10px;
+            font-weight: 500;
+            color: #8e8e93;
+            transition: color 0.2s ease;
+        }
+
+        .nav-item.active .nav-text {
+            color: #34C759;
+        }
+
+        .nav-icon {
+            width: 28px;
+            height: 28px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-icon path,
+        .nav-icon rect,
+        .nav-icon circle,
+        .nav-icon line {
+            transition: all 0.2s ease;
+        }
+
+        .nav-item .nav-icon path,
+        .nav-item .nav-icon rect,
+        .nav-item .nav-icon circle,
+        .nav-item .nav-icon line {
+            stroke: #8e8e93;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .nav-item.active .nav-icon path,
+        .nav-item.active .nav-icon rect {
+            stroke: #34C759;
+            fill: #34C759;
+        }
+
+        .nav-item.active .nav-icon circle {
+            stroke: #34C759;
+            fill: #34C759;
+        }
+
+        .nav-item.active .nav-icon line {
+            stroke: #34C759;
+        }
+
+        .nav-item:active {
+            opacity: 0.6;
+        }
+
+        /* 卡片样式 */
+        .info-card {
+            background: #ffffff;
+            border: none;
+            border-radius: 0;
+            padding: 20px 32px;
+            margin-bottom: 0;
+            box-shadow: none;
+            border-bottom: 8px solid #f9f9f9;
+        }
+
+        .info-card:last-child {
+            border-bottom: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: -0.3px;
+        }
+
+        .card-badge {
+            font-size: 12px;
+            color: #34C759;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-weight: 500;
+        }
+
+        /* 卡片底部信息 */
+        .card-footer-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            padding-bottom: 10px;
+            margin-top: 5px;  /* 从-15px改为5px，向下移动20px */
+            position: relative;
+        }
+
+        .footer-date {
+            font-size: 11px;
+            color: #86868b;
+            font-weight: 500;
+            margin-left: -10px;  /* 左移30像素相对于原32px内边距 */
+        }
+
+        .footer-fw {
+            font-size: 11px;
+            color: #86868b;
+            font-weight: 500;
+            margin-right: -25px;  /* 右移45像素相对于原20px内边距 */
+        }
+
+        /* 能量流动系统显示 - 完全重新设计 */
+        .energy-flow-system {
+            display: flex;
+            align-items: flex-start;  /* 顶部对齐，确保图标水平对齐 */
+            justify-content: center;
+            gap: 30px;
+            padding: 0 20px 10px;  /* 减少底部padding到10px */
+            position: relative;
+            margin-top: -30px;  /* 电池和逆变器主体再上移20px，总共上移70px */
+        }
+
+        /* 电池状态 */
+        .battery-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .battery-icon-large {
+            width: 70px;
+            height: 120px;  /* 增加高度容纳电极 */
+            position: relative;
+            padding-top: 10px;  /* 顶部内边距 */
+        }
+
+        .battery-body {
+            width: 70px;
+            height: 100px;
+            border: 2.5px solid #1d1d1f;
+            border-radius: 8px;
+            position: relative;
+            overflow: visible;  /* 允许电极显示 */
+            background: #ffffff;
+        }
+
+        .battery-head {
+            width: 30px;
+            height: 10px;
+            background: #1d1d1f;
+            border-radius: 4px 4px 0 0;
+            position: absolute;
+            top: -10px;  /* 电极保持原位，因为容器上移了20px，所以从-30px改为-10px */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .battery-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #34C759;
+            transition: height 0.5s ease;
+        }
+
+        /* 电池内部百分比显示 */
+        .battery-soc-inner {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            z-index: 3;
+        }
+
+        /* 电池内部详情按钮 */
+        .detail-btn-inner {
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 2px 0;
+            background: transparent;
+            color: #86868b;
+            border: none;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 4;
+            letter-spacing: 0.5px;
+            text-decoration: underline;
+            white-space: nowrap;
+        }
+
+        .detail-btn-inner:active {
+            transform: translateX(-50%) scale(0.95);
+            opacity: 0.8;
+        }
+
+
+
+        .battery-info {
+            text-align: center;
+            color: #1d1d1f;
+        }
+
+        /* 品牌文字样式 */
+        .brand-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        /* 详情按钮 */
+        .detail-btn {
+            padding: 6px 16px;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .detail-btn:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+
+        /* 逆变器显示 - 重新设计 */
+        .inverter-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* 逆变器大图标 - 调整高度与电池对齐 */
+        .inverter-icon-large {
+            width: 70px;
+            height: 120px;
+            position: relative;
+            padding-top: 10px;  /* 与电池对齐 */
+        }
+
+        .inverter-body {
+            width: 70px;
+            height: 100px;
+            border: 2.5px solid #c7c7cc;
+            border-radius: 8px;
+            position: relative;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Inverter文字 */
+        .inverter-text {
+            font-size: 10px;
+            font-weight: 600;
+            color: #86868b;
+            letter-spacing: 0.5px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        .inverter-info {
+            text-align: center;
+            color: #86868b;
+        }
+
+        .inverter-power {
+            font-size: 20px;
+            font-weight: 600;
+            color: #86868b;
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+        }
+
+        /* 连接线包装容器 - 简化设计 */
+        .connection-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;  /* 减小间距让COMM离虚线更近 */
+            margin-top: 55px;  /* 调整到图标中心位置 */
+        }
+
+        /* 连接线容器 */
+        .connection-line {
+            width: 80px;
+            height: 40px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 虚线 */
+        .connection-line::before {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 0;
+            border-top: 2px dashed #1d1d1f;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 放电动画 - 绿色箭头在虚线上方从右往左流动 */
+        .connection-wrapper.discharging::before {
+            content: '←';
+            position: absolute;
+            top: -20px;  /* 真正在虚线上方 */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            color: #34C759;
+            opacity: 0;
+            z-index: 3;
+            pointer-events: none;
+            animation: arrowLeftDischarge 1.5s ease-in-out infinite;
+        }
+
+        /* 左箭头 */
+        .connection-line::after {
+            content: '◀';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1d1d1f;
+            font-size: 12px;
+        }
+
+        /* 右箭头 */
+        .connection-line .right-arrow {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1d1d1f;
+            font-size: 12px;
+        }
+
+        .connection-line .right-arrow::before {
+            content: '▶';
+        }
+
+        /* COMM文字 */
+        .connection-text {
+            font-size: 11px;
+            color: #1d1d1f;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* 功率显示 - 在箭头上方 */
+        .power-display {
+            position: absolute;
+            top: -45px;  /* 在绿色箭头上方 */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d1d1f;
+            white-space: nowrap;
+            opacity: 0;  /* 默认隐藏 */
+            transition: opacity 0.3s ease;
+        }
+
+        /* 放电时显示功率 */
+        .connection-wrapper.discharging .power-display,
+        .connection-wrapper.charging .power-display {
+            opacity: 1;
+        }
+
+        /* 能量流动动画 - 隐藏 */
+        .energy-flow {
+            display: none;
+        }
+
+
+        @keyframes flowRight {
+            from {
+                left: -40px;
+            }
+            to {
+                left: 100%;
+            }
+        }
+
+        @keyframes flowLeft {
+            from {
+                left: 100%;
+            }
+            to {
+                left: -40px;
+            }
+        }
+
+        @keyframes arrowLeftDischarge {
+            0% {
+                left: 75%;
+                opacity: 0;
+                transform: translateX(-50%);
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                left: 25%;
+                opacity: 0;
+                transform: translateX(-50%);
+            }
+        }
+
+        .battery-soc {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+
+        .battery-flow-power {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .battery-flow {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #f5f5f7;
+            padding: 6px 12px;
+            border-radius: 12px;
+            margin-bottom: 4px;
+        }
+
+        .power-value-inline {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: -0.2px;
+        }
+
+        .power-unit-inline {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .flow-icon {
+            font-size: 16px;
+            display: none;
+        }
+
+        .flow-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .battery-flow.charging {
+            background: rgba(52, 199, 89, 0.1);
+            color: #34C759;
+        }
+
+        .battery-flow.charging .flow-text {
+            color: #34C759;
+        }
+
+        .battery-flow.discharging {
+            background: rgba(255, 149, 0, 0.1);
+            color: #FF9500;
+        }
+
+        .battery-flow.discharging .flow-text {
+            color: #FF9500;
+        }
+
+        .battery-flow.standby {
+            background: #f5f5f7;
+            color: #86868b;
+        }
+
+        .battery-flow.standby .flow-text {
+            color: #86868b;
+        }
+
+        /* 数据网格 */
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .data-item {
+            background: transparent;
+            border-radius: 0;
+            padding: 18px 0;
+            border-bottom: 1px solid #f5f5f7;
+        }
+
+        .data-item:nth-last-child(-n+2) {
+            border-bottom: none;
+        }
+
+        .data-item:nth-child(odd) {
+            padding-right: 16px;
+        }
+
+        .data-item:nth-child(even) {
+            padding-left: 16px;
+            border-left: 1px solid #f5f5f7;
+        }
+
+        .data-label {
+            font-size: 12px;
+            color: #86868b;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .data-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .data-unit {
+            font-size: 14px;
+            font-weight: 400;
+            color: #86868b;
+        }
+
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUpModal {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 400px) {
+            .iphone-frame {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                padding: 0;
+            }
+            .iphone-screen {
+                border-radius: 0;
+            }
+        }
+
+        /* 测试按钮 - 在屏幕外 */
+        .test-btn {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            padding: 12px 24px;
+            background: #FF3B30;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+            transition: all 0.2s ease;
+            z-index: 9999;
+        }
+
+        .test-btn:hover {
+            background: #FF2D1F;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .test-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* 连接失败弹窗 */
+        .error-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .error-modal.active {
+            display: flex;
+        }
+
+        .error-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .error-dialog {
+            background: white;
+            border-radius: 16px;
+            width: 320px;
+            padding: 32px 24px 24px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .error-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: #FFE5E5;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .error-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .error-message {
+            font-size: 15px;
+            color: #6e6e73;
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .error-btn {
+            width: 100%;
+            height: 48px;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .error-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <!-- 测试按钮 -->
+    <button class="test-btn" id="testBtn">Connection Failed</button>
+
+    <!-- 连接失败弹窗 -->
+    <div class="error-modal" id="errorModal">
+        <div class="error-overlay"></div>
+        <div class="error-dialog">
+            <div class="error-icon">⚠️</div>
+            <div class="error-title">Device Connection Failed</div>
+            <div class="error-message">Please reconnect</div>
+            <button class="error-btn" id="reconnectBtn">Reconnect</button>
+        </div>
+    </div>
+
+    <div class="iphone-frame">
+        <div class="iphone-screen">
+            <!-- 刘海 -->
+            <div class="notch"></div>
+
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time" id="time">9:41</div>
+                <div class="status-icons">
+                    <div class="signal-icon">
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                    </div>
+                    <div class="wifi-icon"></div>
+                    <div class="battery-icon">
+                        <div class="battery-level"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面内容 -->
+            <div class="dashboard-page">
+                <div class="dashboard-header">
+                    <div class="header-top">
+                        <div class="header-left">
+                            <div class="device-sn-display">
+                                <span id="headerDeviceSN">K21234567890123456</span>
+                            </div>
+                            <div class="connection-status">
+                                <div class="status-dot"></div>
+                                <span class="status-text" data-i18n="connected">Connecting</span>
+                            </div>
+                        </div>
+                        <div class="header-right">
+                            <button class="disconnect-btn" id="disconnectBtn" data-i18n="disconnect">Disconnect</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-body">
+                    <!-- 能量流动系统卡片 -->
+                    <div class="info-card">
+                        <div class="energy-flow-system">
+                            <!-- 逆变器状态（移到左侧） -->
+                            <div class="inverter-status">
+                                <div class="inverter-icon-large">
+                                    <div class="inverter-body">
+                                        <span class="inverter-text">INVERTER</span>
+                                    </div>
+                                </div>
+                                <div class="inverter-info">
+                                    <div class="brand-text">GOODWE</div>
+                                </div>
+                            </div>
+
+                            <!-- 连接线 -->
+                            <div class="connection-wrapper">
+                                <div class="power-display" id="powerDisplay">
+                                    <span id="flowPower">2.47</span> kW
+                                </div>
+                                <div class="connection-line" id="connectionLine">
+                                    <div class="energy-flow"></div>
+                                    <div class="right-arrow"></div>
+                                </div>
+                                <div class="connection-text">COMM</div>
+                            </div>
+
+                            <!-- 电池状态（移到右侧） -->
+                            <div class="battery-status">
+                                <div class="battery-icon-large" id="batteryIconLarge">
+                                    <div class="battery-body">
+                                        <div class="battery-head"></div>
+                                        <div class="battery-fill" id="batteryFill"></div>
+                                        <div class="battery-soc-inner" id="batterySoc">26%</div>
+                                        <button class="detail-btn-inner" id="batteryDetailBtn">Detail</button>
+                                    </div>
+                                </div>
+                                <div class="battery-info">
+                                    <div class="brand-text">Energy-CORE 1.0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 卡片底部信息 -->
+                        <div class="card-footer-info">
+                            <span class="footer-date" id="footerDate">2024-10-20 10:13:28</span>
+                            <span class="footer-fw">FW:1.8B-1.6A</span>
+                        </div>
+                    </div>
+
+                    <!-- 电池详细数据 -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <div class="card-title" data-i18n="batteryDetails">Runtime Data</div>
+                        </div>
+                        <div class="data-grid">
+                            <div class="data-item">
+                                <div class="data-label">BAT Vol</div>
+                                <div class="data-value">
+                                    <span id="batVol">202.8</span>
+                                    <span class="data-unit">V</span>
+                                </div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Pack Vol</div>
+                                <div class="data-value">
+                                    <span id="packVol">202.8</span>
+                                    <span class="data-unit">V</span>
+                                </div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Max Cell Vol</div>
+                                <div class="data-value">
+                                    <span id="maxCellVol">3407</span>
+                                    <span class="data-unit">mV</span>
+                                </div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Min Cell Vol</div>
+                                <div class="data-value">
+                                    <span id="minCellVol">3341</span>
+                                    <span class="data-unit">mV</span>
+                                </div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Max Cell Temp</div>
+                                <div class="data-value">
+                                    <span id="maxCellTemp">26</span>
+                                    <span class="data-unit">℃</span>
+                                </div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Min Cell Temp</div>
+                                <div class="data-value">
+                                    <span id="minCellTemp">24</span>
+                                    <span class="data-unit">℃</span>
+                                </div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Current</div>
+                                <div class="data-value">
+                                    <span id="batteryCurrent">-12.2</span>
+                                    <span class="data-unit">A</span>
+                                </div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Stack Number</div>
+                                <div class="data-value">
+                                    <span id="stackNumber">3</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 底部导航栏 -->
+                <div class="bottom-nav">
+                    <div class="nav-item active" id="navDevice">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="7" y="3" width="10" height="18" rx="2" stroke-linejoin="round"/>
+                                <line x1="10" y1="18" x2="14" y2="18" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-text" data-i18n="navDevice">Device</span>
+                    </div>
+                    <div class="nav-item" id="navAlert">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.5 5C9.5 3.61929 10.6193 2.5 12 2.5C13.3807 2.5 14.5 3.61929 14.5 5C15.9464 5.31536 17.0379 6.53892 17.2425 8.04883L18 14H6L6.75746 8.04883C6.96213 6.53892 8.05357 5.31536 9.5 5Z" stroke-linejoin="round"/>
+                                <path d="M9 14V16C9 17.6569 10.3431 19 12 19C13.6569 19 15 17.6569 15 16V14" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-text" data-i18n="navAlert">Alerts</span>
+                    </div>
+                    <div class="nav-item" id="navProfile">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="8" r="4" stroke-linejoin="round"/>
+                                <path d="M6 20C6 16.6863 8.68629 14 12 14C15.3137 14 18 16.6863 18 20" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-text" data-i18n="navProfile">Profile</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 断开连接确认弹窗 -->
+            <div class="disconnect-modal" id="disconnectModal">
+                <div class="disconnect-content">
+                    <div class="disconnect-title" data-i18n="disconnectTitle">Disconnect Device?</div>
+                    <div class="disconnect-message" data-i18n="disconnectMessage">You will not be able to view real-time device data after disconnection. Are you sure?</div>
+                    <div class="disconnect-actions">
+                        <button class="disconnect-cancel" id="disconnectCancel" data-i18n="cancel">Cancel</button>
+                        <button class="disconnect-confirm" id="disconnectConfirm" data-i18n="confirm">Disconnect</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 多语言翻译数据
+        const translations = {
+            'zh-CN': {
+                title: '系统信息',
+                deviceSN: '设备序列号',
+                deviceSNLabel: '设备SN:',
+                connected: '连接中',
+                disconnect: '断开连接',
+                disconnectTitle: '断开连接？',
+                disconnectMessage: '断开连接后将无法查看设备实时数据，确定要断开吗？',
+                cancel: '取消',
+                confirm: '断开',
+                batteryLabel: '电池状态',
+                batteryDetails: '运行数据',
+                currentPower: '当前功率',
+                current: '电流',
+                normal: '正常',
+                charging: '充电中',
+                discharging: '放电中',
+                standby: '待机',
+                navDevice: '设备',
+                navAlert: '告警',
+                navProfile: '我的',
+                selectLanguage: '选择语言'
+            },
+            'zh-TW': {
+                title: '系統信息',
+                deviceSN: '設備序列號',
+                deviceSNLabel: '設備SN:',
+                connected: '連接中',
+                disconnect: '斷開連接',
+                disconnectTitle: '斷開連接？',
+                disconnectMessage: '斷開連接後將無法查看設備實時數據，確定要斷開嗎？',
+                cancel: '取消',
+                confirm: '斷開',
+                batteryLabel: '電池狀態',
+                batteryDetails: '運行數據',
+                currentPower: '當前功率',
+                current: '電流',
+                normal: '正常',
+                charging: '充電中',
+                discharging: '放電中',
+                standby: '待機',
+                navDevice: '設備',
+                navAlert: '告警',
+                navProfile: '我的',
+                selectLanguage: '選擇語言'
+            },
+            'en': {
+                title: 'System Information',
+                deviceSN: 'Device Serial Number',
+                deviceSNLabel: 'Device SN:',
+                connected: 'Connecting',
+                disconnect: 'Disconnect',
+                disconnectTitle: 'Disconnect Device?',
+                disconnectMessage: 'You will not be able to view real-time device data after disconnection. Are you sure?',
+                cancel: 'Cancel',
+                confirm: 'Disconnect',
+                batteryLabel: 'Battery Status',
+                batteryDetails: 'Runtime Data',
+                currentPower: 'Current Power',
+                current: 'Current',
+                normal: 'Normal',
+                charging: 'Charging',
+                discharging: 'Discharging',
+                standby: 'Standby',
+                navDevice: 'Device',
+                navAlert: 'Alerts',
+                navProfile: 'Profile',
+                selectLanguage: 'Select Language'
+            }
+        };
+
+        // 当前语言 - 从localStorage读取，默认英文
+        let currentLanguage = localStorage.getItem('appLanguage') || 'en';
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            const texts = translations[lang];
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (texts[key]) {
+                    element.textContent = texts[key];
+                }
+            });
+        }
+
+        // 初始化语言
+        updatePageText(currentLanguage);
+
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // 更新底部日期为当前时间
+        function updateFooterDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            const footerDate = document.getElementById('footerDate');
+            if (footerDate) {
+                footerDate.textContent = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            }
+        }
+
+        updateFooterDate();
+        setInterval(updateFooterDate, 1000);
+
+        // 更新电池电量显示
+        function updateBatteryLevel(soc) {
+            const batteryFill = document.getElementById('batteryFill');
+            batteryFill.style.height = soc + '%';
+        }
+
+        // 更新电池流向显示
+        function updateBatteryFlow(current) {
+            const batteryIcon = document.getElementById('batteryIconLarge');
+            const connectionLine = document.getElementById('connectionLine');
+            const connectionWrapper = document.querySelector('.connection-wrapper');
+
+            // 移除所有状态类
+            batteryIcon.classList.remove('charging', 'discharging', 'standby');
+            connectionLine.classList.remove('charging', 'discharging', 'standby');
+            connectionWrapper.classList.remove('charging', 'discharging', 'standby');
+
+            // 更新连接线上方的功率显示
+            const powerValue = Math.abs(current * 202.8 / 1000).toFixed(2);
+            const flowPower = document.getElementById('flowPower');
+            if (flowPower) {
+                flowPower.textContent = powerValue;
+            }
+
+            if (current > 0.5) {
+                // 充电
+                batteryIcon.classList.add('charging');
+                connectionLine.classList.add('charging');
+                connectionWrapper.classList.add('charging');
+            } else if (current < -0.5) {
+                // 放电
+                batteryIcon.classList.add('discharging');
+                connectionLine.classList.add('discharging');
+                connectionWrapper.classList.add('discharging');
+            } else {
+                // 待机
+                batteryIcon.classList.add('standby');
+                connectionLine.classList.add('standby');
+                connectionWrapper.classList.add('standby');
+            }
+        }
+
+        // 初始化电池电量和流向
+        updateBatteryLevel(26);
+        updateBatteryFlow(-12.2);
+
+        // 监听滚动事件，添加头部阴影
+        const dashboardBody = document.querySelector('.dashboard-body');
+        const dashboardHeader = document.querySelector('.dashboard-header');
+
+        dashboardBody.addEventListener('scroll', () => {
+            if (dashboardBody.scrollTop > 10) {
+                dashboardHeader.classList.add('scrolled');
+            } else {
+                dashboardHeader.classList.remove('scrolled');
+            }
+        });
+
+        // 断开连接功能
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const disconnectModal = document.getElementById('disconnectModal');
+        const disconnectCancel = document.getElementById('disconnectCancel');
+        const disconnectConfirm = document.getElementById('disconnectConfirm');
+
+        // 点击断开连接按钮
+        disconnectBtn.addEventListener('click', () => {
+            disconnectModal.classList.add('active');
+        });
+
+        // 取消断开连接
+        disconnectCancel.addEventListener('click', () => {
+            disconnectModal.classList.remove('active');
+        });
+
+        // 点击背景关闭弹窗
+        disconnectModal.addEventListener('click', (e) => {
+            if (e.target === disconnectModal) {
+                disconnectModal.classList.remove('active');
+            }
+        });
+
+        // 确认断开连接
+        disconnectConfirm.addEventListener('click', () => {
+            // 这里可以添加实际的断开连接逻辑
+            console.log('断开连接');
+            // 跳转回连接页面
+            window.location.href = '连接设备.html';
+        });
+
+        // 详情按钮点击事件
+        const batteryDetailBtn = document.getElementById('batteryDetailBtn');
+        if (batteryDetailBtn) {
+            batteryDetailBtn.addEventListener('click', () => {
+                // 跳转到电池详情页面
+                window.location.href = '电池详情.html';
+            });
+        }
+
+        // 底部导航栏切换
+        const navItems = document.querySelectorAll('.nav-item');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // 移除所有active状态
+                navItems.forEach(nav => nav.classList.remove('active'));
+
+                // 添加active状态到当前点击项
+                item.classList.add('active');
+
+                // 这里可以添加页面切换逻辑
+                const navId = item.id;
+                if (navId === 'navDevice') {
+                    // 已经在设备页面
+                    console.log('设备页面');
+                } else if (navId === 'navAlert') {
+                    // 跳转到告警页面
+                    window.location.href = '警报.html';
+                } else if (navId === 'navProfile') {
+                    // 跳转到我的页面
+                    window.location.href = '个人资料.html';
+                }
+            });
+        });
+
+        // 模拟数据更新（可选）
+        setInterval(() => {
+            // 这里可以添加实时数据更新逻辑
+            // 例如通过 WebSocket 或 API 获取最新数据
+        }, 5000);
+
+        // 测试按钮 - 显示连接失败弹窗
+        const testBtn = document.getElementById('testBtn');
+        const errorModal = document.getElementById('errorModal');
+        const reconnectBtn = document.getElementById('reconnectBtn');
+
+        testBtn.addEventListener('click', () => {
+            errorModal.classList.add('active');
+        });
+
+        // 重新连接按钮 - 跳转到连接页面
+        reconnectBtn.addEventListener('click', () => {
+            window.location.href = '连接设备.html';
+        });
+
+        // 点击遮罩层关闭弹窗
+        document.querySelector('.error-overlay').addEventListener('click', () => {
+            errorModal.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Battery Details - Core Link+</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            height: 100vh;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* iPhone 外壳 */
+        .iphone-frame {
+            width: 385px;
+            height: 822px;
+            background: #1d1d1f;
+            border-radius: 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            position: relative;
+        }
+
+        /* iPhone 屏幕容器 */
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 刘海 */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 28px;
+            background: #1d1d1f;
+            border-radius: 0 0 18px 18px;
+            z-index: 10;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            padding: 0 27px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 5;
+        }
+
+        .time {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .signal-icon {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            height: 12px;
+        }
+
+        .signal-dot {
+            width: 3px;
+            height: 3px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon {
+            width: 15px;
+            height: 11px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .wifi-icon::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border: 2px solid #000000;
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .battery-icon {
+            width: 25px;
+            height: 11.5px;
+            border: 1.5px solid #000000;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            opacity: 0.9;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5px;
+            height: 4px;
+            background: #000000;
+            border-radius: 0 2px 2px 0;
+            opacity: 0.5;
+        }
+
+        .battery-level {
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 1.5px;
+        }
+
+        /* 页面容器 */
+        .details-page {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 页面头部 */
+        .details-header {
+            padding: 12px 32px 20px;
+            background: #ffffff;
+            position: sticky;
+            top: 44px;
+            z-index: 10;
+            transition: box-shadow 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .details-header.scrolled {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #34C759;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-btn:active {
+            opacity: 0.6;
+        }
+
+        .back-arrow {
+            font-size: 18px;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: -0.3px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* 页面内容 */
+        .details-body {
+            flex: 1;
+            padding: 0;
+            padding-bottom: 20px;
+            overflow-y: auto;
+        }
+
+        /* 电池组显示卡片 */
+        .battery-pack-card {
+            background: #ffffff;
+            border: none;
+            border-radius: 0;
+            padding: 28px 32px;
+            margin-bottom: 0;
+            box-shadow: none;
+            border-bottom: 8px solid #f9f9f9;
+        }
+
+        .battery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .battery-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .battery-cell-icon {
+            width: 70px;
+            height: 100px;
+            position: relative;
+        }
+
+        .battery-cell-body {
+            width: 100%;
+            height: 90px;
+            border: 3px solid #1d1d1f;
+            border-radius: 10px;
+            position: relative;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        .battery-cell-head {
+            width: 28px;
+            height: 10px;
+            background: #1d1d1f;
+            border-radius: 5px 5px 0 0;
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .battery-cell-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #34C759, #5AC77D);
+            transition: height 0.5s ease;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .battery-cell-soc {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            z-index: 2;
+        }
+
+        .battery-cell-info {
+            text-align: center;
+        }
+
+        .battery-cell-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .battery-cell-voltage {
+            font-size: 12px;
+            color: #86868b;
+            font-weight: 500;
+        }
+
+
+        /* 卡片样式 */
+        .info-card {
+            background: #ffffff;
+            border: none;
+            border-radius: 0;
+            padding: 28px 32px;
+            margin-bottom: 0;
+            box-shadow: none;
+            border-bottom: 8px solid #f9f9f9;
+        }
+
+        .info-card:last-child {
+            border-bottom: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: -0.3px;
+        }
+
+        /* 数据网格 */
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .data-item {
+            background: transparent;
+            border-radius: 0;
+            padding: 18px 0;
+            border-bottom: 1px solid #f5f5f7;
+        }
+
+        .data-item:nth-last-child(-n+2) {
+            border-bottom: none;
+        }
+
+        .data-item:nth-child(odd) {
+            padding-right: 16px;
+        }
+
+        .data-item:nth-child(even) {
+            padding-left: 16px;
+            border-left: 1px solid #f5f5f7;
+        }
+
+        .data-label {
+            font-size: 12px;
+            color: #86868b;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .data-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .data-unit {
+            font-size: 14px;
+            font-weight: 400;
+            color: #86868b;
+        }
+
+        /* 电池概览卡片 */
+        .battery-overview {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 20px 0;
+        }
+
+        .overview-item {
+            text-align: center;
+        }
+
+        .overview-label {
+            font-size: 12px;
+            color: #86868b;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .overview-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1d1d1f;
+            line-height: 1;
+        }
+
+        .overview-unit {
+            font-size: 14px;
+            font-weight: 500;
+            color: #86868b;
+            margin-left: 4px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(52, 199, 89, 0.1);
+            color: #34C759;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .status-badge.warning {
+            background: rgba(255, 149, 0, 0.1);
+            color: #FF9500;
+        }
+
+        .status-badge.error {
+            background: rgba(255, 59, 48, 0.1);
+            color: #FF3B30;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="iphone-screen">
+            <!-- 刘海 -->
+            <div class="notch"></div>
+
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time" id="time">9:41</div>
+                <div class="status-icons">
+                    <div class="signal-icon">
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                    </div>
+                    <div class="wifi-icon"></div>
+                    <div class="battery-icon">
+                        <div class="battery-level"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面内容 -->
+            <div class="details-page">
+                <div class="details-header">
+                    <div class="header-content">
+                        <button class="back-btn" id="backBtn">
+                            <span class="back-arrow">‹</span>
+                            <span data-i18n="back">返回</span>
+                        </button>
+                        <div class="page-title" data-i18n="batteryDetails">电池详情</div>
+                    </div>
+                </div>
+
+                <div class="details-body">
+                    <!-- BMS显示 -->
+                    <div class="battery-pack-card">
+                        <div class="card-header">
+                            <div class="card-title" data-i18n="batteryPack">BMS</div>
+                        </div>
+                        <div class="battery-grid">
+                            <!-- 电池1 -->
+                            <div class="battery-cell">
+                                <div class="battery-cell-icon">
+                                    <div class="battery-cell-body">
+                                        <div class="battery-cell-head"></div>
+                                        <div class="battery-cell-fill" style="height: 26%;"></div>
+                                        <div class="battery-cell-soc">26%</div>
+                                    </div>
+                                </div>
+                                <div class="battery-cell-info">
+                                    <div class="battery-cell-name">SOC 1</div>
+                                </div>
+                            </div>
+
+                            <!-- 电池2 -->
+                            <div class="battery-cell">
+                                <div class="battery-cell-icon">
+                                    <div class="battery-cell-body">
+                                        <div class="battery-cell-head"></div>
+                                        <div class="battery-cell-fill" style="height: 45%; background: #34C759;"></div>
+                                        <div class="battery-cell-soc">45%</div>
+                                    </div>
+                                </div>
+                                <div class="battery-cell-info">
+                                    <div class="battery-cell-name">SOC 2</div>
+                                </div>
+                            </div>
+
+                            <!-- 电池3 -->
+                            <div class="battery-cell">
+                                <div class="battery-cell-icon">
+                                    <div class="battery-cell-body">
+                                        <div class="battery-cell-head"></div>
+                                        <div class="battery-cell-fill" style="height: 68%; background: #34C759;"></div>
+                                        <div class="battery-cell-soc">68%</div>
+                                    </div>
+                                </div>
+                                <div class="battery-cell-info">
+                                    <div class="battery-cell-name">SOC 3</div>
+                                </div>
+                            </div>
+
+                            <!-- 电池4 -->
+                            <div class="battery-cell">
+                                <div class="battery-cell-icon">
+                                    <div class="battery-cell-body">
+                                        <div class="battery-cell-head"></div>
+                                        <div class="battery-cell-fill" style="height: 82%; background: #34C759;"></div>
+                                        <div class="battery-cell-soc">82%</div>
+                                    </div>
+                                </div>
+                                <div class="battery-cell-info">
+                                    <div class="battery-cell-name">SOC 4</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 多语言翻译数据
+        const translations = {
+            'zh-CN': {
+                back: '返回',
+                batteryDetails: '电池详情',
+                overview: '概览',
+                soc: '电量',
+                voltage: '电压',
+                current: '电流',
+                normal: '正常',
+                batteryPack: 'BMS',
+                cellInfo: '电芯信息',
+                tempInfo: '温度信息',
+                systemInfo: '系统信息',
+                navDevice: '设备',
+                navAlert: '告警',
+                navProfile: '我的'
+            },
+            'en': {
+                back: 'Back',
+                batteryDetails: 'Battery Details',
+                overview: 'Overview',
+                soc: 'SOC',
+                voltage: 'Voltage',
+                current: 'Current',
+                normal: 'Normal',
+                batteryPack: 'BMS',
+                cellInfo: 'Cell Information',
+                tempInfo: 'Temperature Information',
+                systemInfo: 'System Information',
+                navDevice: 'Device',
+                navAlert: 'Alerts',
+                navProfile: 'Profile'
+            }
+        };
+
+        // 当前语言 - 从localStorage读取，默认中文
+        let currentLanguage = localStorage.getItem('appLanguage') || 'zh-CN';
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            const texts = translations[lang];
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (texts[key]) {
+                    element.textContent = texts[key];
+                }
+            });
+        }
+
+        // 初始化语言
+        updatePageText(currentLanguage);
+
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // 返回按钮
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.location.href = '仪表盘.html';
+        });
+
+
+        // 监听滚动事件，添加头部阴影
+        const detailsBody = document.querySelector('.details-body');
+        const detailsHeader = document.querySelector('.details-header');
+
+        detailsBody.addEventListener('scroll', () => {
+            if (detailsBody.scrollTop > 10) {
+                detailsHeader.classList.add('scrolled');
+            } else {
+                detailsHeader.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

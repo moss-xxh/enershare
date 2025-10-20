@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>OTA升级 - 爱尚</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            height: 100vh;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* iPhone 外壳 */
+        .iphone-frame {
+            width: 385px;
+            height: 822px;
+            background: #1d1d1f;
+            border-radius: 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            position: relative;
+        }
+
+        /* iPhone 屏幕容器 */
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 刘海 */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 28px;
+            background: #1d1d1f;
+            border-radius: 0 0 18px 18px;
+            z-index: 10;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            padding: 0 27px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 5;
+        }
+
+        .time {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .signal-icon {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            height: 12px;
+        }
+
+        .signal-dot {
+            width: 3px;
+            height: 3px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon {
+            width: 15px;
+            height: 11px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .wifi-icon::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border: 2px solid #000000;
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .battery-icon {
+            width: 25px;
+            height: 11.5px;
+            border: 1.5px solid #000000;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            opacity: 0.9;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5px;
+            height: 4px;
+            background: #000000;
+            border-radius: 0 2px 2px 0;
+            opacity: 0.5;
+        }
+
+        .battery-level {
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 1.5px;
+        }
+
+        /* 页面容器 */
+        .ota-page {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            background: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 17px;
+            color: #007AFF;
+            cursor: pointer;
+            padding: 8px;
+            margin-left: -8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .back-btn:active {
+            opacity: 0.6;
+        }
+
+        .nav-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .help-btn {
+            background: none;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            background: #f5f5f7;
+            color: #86868b;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-btn:active {
+            background: #e8e8ed;
+        }
+
+        /* 帮助模态框 */
+        .help-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: flex-end;
+            z-index: 30;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .help-modal.active {
+            display: flex;
+        }
+
+        .help-content {
+            width: 100%;
+            max-height: 85%;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 25px 20px 40px;
+            overflow-y: auto;
+            animation: slideUpModal 0.3s ease;
+        }
+
+        .help-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .help-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .close-modal {
+            width: 32px;
+            height: 32px;
+            background: #f5f5f7;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #86868b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .close-modal:active {
+            background: #e8e8ed;
+            transform: scale(0.95);
+        }
+
+        .step-item {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: #34C759;
+            color: white;
+            border-radius: 14px;
+            text-align: center;
+            line-height: 28px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            font-size: 15px;
+            color: #6e6e73;
+            line-height: 1.6;
+        }
+
+        /* OTA内容 */
+        .ota-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        /* 步骤指示器 */
+        .steps-indicator {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #e5e5e7;
+            z-index: 0;
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            background: #e5e5e7;
+            color: #86868b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step.active .step-circle {
+            background: #34C759;
+            color: white;
+        }
+
+        .step.completed .step-circle {
+            background: #34C759;
+            color: transparent;
+            font-size: 0;
+        }
+
+        .step.completed .step-circle::before {
+            content: '✓';
+            font-size: 18px;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: #86868b;
+            text-align: center;
+        }
+
+        .step.active .step-label {
+            color: #34C759;
+            font-weight: 600;
+        }
+
+        .step.completed .step-label {
+            color: #34C759;
+        }
+
+        /* 步骤内容卡片 */
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .version-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 升级页面头部 */
+        .upgrade-header {
+            text-align: center;
+            padding: 30px 20px;
+            background: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .upgrade-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4A7BFF 0%, #5B8FFF 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 12px rgba(74, 123, 255, 0.3);
+        }
+
+        .upgrade-title-main {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .upgrade-subtitle {
+            font-size: 14px;
+            color: #86868b;
+        }
+
+        /* 文件选择卡片 */
+        .file-select-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .file-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 16px;
+        }
+
+        .file-select-area {
+            background: #f5f5f7;
+            border: 2px dashed #d1d1d6;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-select-area:hover {
+            border-color: #34C759;
+            background: #f9f9f9;
+        }
+
+        .file-select-text {
+            font-size: 15px;
+            color: #86868b;
+            margin-top: 12px;
+        }
+
+        .select-file-btn {
+            width: 100%;
+            height: 50px;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .select-file-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        /* 参数设置卡片 */
+        .param-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .param-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .param-left {
+            flex: 1;
+        }
+
+        .param-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .param-desc {
+            font-size: 13px;
+            color: #86868b;
+        }
+
+        .param-right {
+            position: relative;
+        }
+
+        .param-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: #f5f5f7;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 40px 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d1d1f;
+            cursor: pointer;
+            min-width: 100px;
+            text-align: right;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%2386868b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+
+        .param-select:focus {
+            outline: none;
+            background-color: #e8e8ed;
+        }
+
+        /* 开始升级按钮 */
+        .start-upgrade-btn {
+            width: calc(100% - 32px);
+            height: 50px;
+            background: #86868b;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: not-allowed;
+            margin: 0 16px 20px;
+            transition: all 0.2s ease;
+        }
+
+        .start-upgrade-btn:not(:disabled) {
+            background: #34C759;
+            cursor: pointer;
+        }
+
+        .start-upgrade-btn:not(:disabled):active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        /* 版本对比 */
+        .version-compare {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .version-item {
+            flex: 1;
+            text-align: center;
+            padding: 16px;
+            background: #f5f5f7;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .version-item.new {
+            background: linear-gradient(135deg, #34C759 0%, #30D158 100%);
+        }
+
+        .version-item.current .version-label {
+            color: #86868b;
+        }
+
+        .version-item.new .version-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .version-label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .version-number-small {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1d1d1f;
+            letter-spacing: -1px;
+        }
+
+        .version-number-small.new-color {
+            color: #ffffff;
+        }
+
+        .version-time {
+            font-size: 11px;
+            margin-top: 6px;
+            opacity: 0.7;
+        }
+
+        .version-item.current .version-time {
+            color: #6e6e73;
+        }
+
+        .version-item.new .version-time {
+            color: #ffffff;
+        }
+
+        .new-badge-small {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .version-arrow {
+            font-size: 24px;
+            color: #34C759;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* 更新详情头部 */
+        .update-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f5f5f7;
+        }
+
+        .detail-icon {
+            font-size: 28px;
+        }
+
+        .detail-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .wifi-icon-large {
+            font-size: 64px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .instruction-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .instruction-text {
+            font-size: 15px;
+            color: #6e6e73;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .network-status {
+            background: #f5f5f7;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .network-status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .network-status-label {
+            font-size: 14px;
+            color: #6e6e73;
+        }
+
+        .network-status-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .network-status-value.connected {
+            color: #34C759;
+        }
+
+        .network-status-value.disconnected {
+            color: #FF3B30;
+        }
+
+        .action-btn {
+            width: 100%;
+            height: 50px;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:active {
+            transform: scale(0.97);
+        }
+
+        .action-btn.success {
+            background: #34C759;
+        }
+
+        .action-btn.disabled {
+            background: #86868b;
+            pointer-events: none;
+        }
+
+        .skip-btn {
+            width: 100%;
+            height: 44px;
+            background: none;
+            color: #34C759;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .skip-btn:active {
+            opacity: 0.6;
+        }
+
+        .current-version {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .version-label {
+            font-size: 14px;
+            color: #86868b;
+            margin-bottom: 8px;
+        }
+
+        .version-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1d1d1f;
+            letter-spacing: -2px;
+        }
+
+        .check-btn {
+            width: 100%;
+            height: 50px;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .check-btn:active {
+            transform: scale(0.97);
+        }
+
+        .check-btn.checking {
+            background: #86868b;
+            pointer-events: none;
+        }
+
+        .update-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+
+        .update-card.show {
+            display: block;
+        }
+
+        .update-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .update-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .new-badge {
+            background: #FF3B30;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .update-version {
+            font-size: 32px;
+            font-weight: 700;
+            color: #34C759;
+            margin-bottom: 20px;
+        }
+
+        .update-info {
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f7;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #6e6e73;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #1d1d1f;
+            font-weight: 600;
+        }
+
+        .update-notes {
+            background: #f5f5f7;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .notes-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .notes-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-list li {
+            font-size: 14px;
+            color: #6e6e73;
+            line-height: 1.6;
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .notes-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #34C759;
+        }
+
+        .download-btn {
+            width: 100%;
+            height: 54px;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 0;
+        }
+
+        .download-btn:active {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
+
+        .download-btn.downloading {
+            background: #86868b;
+            pointer-events: none;
+            box-shadow: none;
+        }
+
+        .btn-icon {
+            font-size: 20px;
+            display: inline-block;
+        }
+
+        .latest-message {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+        }
+
+        .latest-message.show {
+            display: block;
+        }
+
+        .latest-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .latest-text {
+            font-size: 17px;
+            color: #34C759;
+            font-weight: 600;
+        }
+
+        /* 更新进度弹窗 */
+        .progress-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 40;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .progress-modal.active {
+            display: flex;
+        }
+
+        .progress-content {
+            width: 85%;
+            max-height: 70%;
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            overflow-y: auto;
+            animation: scaleIn 0.3s ease;
+        }
+
+        .progress-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .progress-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+        .progress-subtitle {
+            font-size: 14px;
+            color: #86868b;
+        }
+
+        .file-list {
+            margin-bottom: 20px;
+        }
+
+        .file-item {
+            background: #f5f5f7;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: #86868b;
+        }
+
+        .file-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .file-status.pending {
+            color: #86868b;
+        }
+
+        .file-status.updating {
+            color: #007AFF;
+        }
+
+        .file-status.success {
+            color: #34C759;
+        }
+
+        .file-status.failed {
+            color: #FF3B30;
+        }
+
+        .file-status .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #007AFF;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .progress-bar-container {
+            background: #e5e5e7;
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #34C759;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .cancel-progress-btn {
+            width: 100%;
+            height: 44px;
+            background: #FF3B30;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .cancel-progress-btn:active {
+            opacity: 0.8;
+        }
+
+        .cancel-progress-btn.hide {
+            display: none;
+        }
+
+        .close-progress-btn {
+            width: 100%;
+            height: 44px;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+        }
+
+        .close-progress-btn.show {
+            display: block;
+        }
+
+        .close-progress-btn:active {
+            background: #e8e8ed;
+        }
+
+        /* 确认弹窗 */
+        .confirm-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        .confirm-modal.active {
+            display: flex;
+        }
+
+        .confirm-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .confirm-dialog {
+            background: white;
+            border-radius: 16px;
+            width: 80%;
+            max-width: 280px;
+            padding: 24px 20px 20px;
+            position: relative;
+            z-index: 1;
+            animation: scaleIn 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .confirm-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1d1d1f;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .confirm-message {
+            font-size: 14px;
+            color: #6e6e73;
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .confirm-btn-cancel,
+        .confirm-btn-ok {
+            flex: 1;
+            height: 44px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .confirm-btn-cancel {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .confirm-btn-cancel:active {
+            background: #e8e8ed;
+        }
+
+        .confirm-btn-ok {
+            background: #FF3B30;
+            color: white;
+        }
+
+        .confirm-btn-ok:active {
+            opacity: 0.8;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUpModal {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 400px) {
+            .iphone-frame {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                padding: 0;
+            }
+            .iphone-screen {
+                border-radius: 0;
+            }
+        }
+
+        /* 测试按钮 - 在屏幕外 */
+        .test-btn {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            padding: 12px 24px;
+            background: #FF3B30;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+            transition: all 0.2s ease;
+            z-index: 9999;
+        }
+
+        .test-btn:hover {
+            background: #FF2D1F;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .test-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* 连接失败弹窗 */
+        .error-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .error-modal.active {
+            display: flex;
+        }
+
+        .error-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .error-dialog {
+            background: white;
+            border-radius: 16px;
+            width: 320px;
+            padding: 32px 24px 24px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .error-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: #FFE5E5;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .error-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .error-message {
+            font-size: 15px;
+            color: #6e6e73;
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .error-btn {
+            width: 100%;
+            height: 48px;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .error-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        /* 提示文字 */
+        .hint-text {
+            font-size: 12px;
+            color: #86868b;
+            text-align: left;
+            padding: 0 20px 12px;
+            line-height: 1.5;
+        }
+
+        .hint-link {
+            color: #34C759;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .hint-link:active {
+            opacity: 0.6;
+        }
+
+        /* 图片查看弹窗 */
+        .image-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 60;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .image-modal.active {
+            display: flex;
+        }
+
+        .image-container {
+            max-width: 90%;
+            max-height: 80%;
+            position: relative;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .close-image {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #1d1d1f;
+            cursor: pointer;
+        }
+
+        .close-image:active {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <!-- 测试按钮 -->
+    <button class="test-btn" id="testBtn">连接失败</button>
+
+    <!-- 提示弹窗 -->
+    <div class="error-modal" id="errorModal">
+        <div class="error-overlay"></div>
+        <div class="error-dialog">
+            <div class="error-icon" id="modalIcon">⚠️</div>
+            <div class="error-title" id="modalTitle">提示</div>
+            <div class="error-message" id="modalMessage">提示信息</div>
+            <button class="error-btn" id="modalBtn">确定</button>
+        </div>
+    </div>
+    <div class="iphone-frame">
+        <div class="iphone-screen">
+            <!-- 刘海 -->
+            <div class="notch"></div>
+
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time" id="time">9:41</div>
+                <div class="status-icons">
+                    <div class="signal-icon">
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                    </div>
+                    <div class="wifi-icon"></div>
+                    <div class="battery-icon">
+                        <div class="battery-level"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面内容 -->
+            <div class="ota-page">
+                <!-- 导航栏 -->
+                <div class="nav-bar">
+                    <button class="back-btn" id="backBtn">
+                        <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 2L2 10L10 18" stroke="#007AFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        返回
+                    </button>
+                    <div class="nav-title">OTA升级</div>
+                    <button class="help-btn" id="helpBtn" style="display: none;">?</button>
+                </div>
+
+                <!-- OTA内容 -->
+                <div class="ota-content">
+                    <!-- 文件选择卡片 -->
+                    <div class="file-select-card">
+                        <div class="file-select-area" id="fileSelectArea">
+                            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                                <circle cx="30" cy="30" r="28" stroke="#999999" stroke-width="2"/>
+                                <path d="M25 20H32C33.1046 20 34 20.8954 34 22V38C34 39.1046 33.1046 40 32 40H22C20.8954 40 20 39.1046 20 38V25L25 20Z" fill="#999999"/>
+                                <path d="M25 20V24C25 25.1046 24.1046 26 23 26H20" stroke="#EEEEEE" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            <div class="file-select-text" id="fileSelectText">请选择固件文件</div>
+                        </div>
+                        <input type="file" id="fileInput" style="display: none;">
+                    </div>
+
+                    <!-- 提示文字 -->
+                    <div class="hint-text">若没有下载升级包,可以断开设备连接,前往升级包下载<br><span class="hint-link" id="exampleLink">示例</span></div>
+
+                    <!-- 开始升级按钮 -->
+                    <button class="start-upgrade-btn" id="startUpdateBtn" disabled>开始升级</button>
+                </div>
+            </div>
+
+            <!-- 更新进度弹窗 -->
+            <div class="progress-modal" id="progressModal">
+                <div class="progress-content">
+                    <div class="progress-header">
+                        <div class="progress-title">正在更新</div>
+                        <div class="progress-subtitle">请勿关闭应用或断开网络</div>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+
+                    <div class="file-list" id="fileList">
+                        <!-- 文件更新状态将动态生成 -->
+                    </div>
+
+                    <button class="cancel-progress-btn" id="cancelProgressBtn">取消更新</button>
+                    <button class="close-progress-btn" id="closeProgressBtn">关闭</button>
+                </div>
+            </div>
+
+            <!-- 确认取消弹窗 -->
+            <div class="confirm-modal" id="confirmModal">
+                <div class="confirm-overlay"></div>
+                <div class="confirm-dialog">
+                    <div class="confirm-title">确定要取消更新吗？</div>
+                    <div class="confirm-message">取消后将停止当前更新进程</div>
+                    <div class="confirm-buttons">
+                        <button class="confirm-btn-cancel" id="confirmCancelBtn">取消</button>
+                        <button class="confirm-btn-ok" id="confirmOkBtn">确定</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 帮助模态框 -->
+            <div class="help-modal" id="helpModal">
+                <div class="help-content">
+                    <div class="help-header">
+                        <h2>OTA升级流程</h2>
+                        <div class="close-modal" id="closeModal">×</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-title">选择固件文件</div>
+                        <div class="step-desc">点击文件选择区域，从您的设备中选择要更新的固件文件</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-title">开始升级</div>
+                        <div class="step-desc">选择文件后，点击"开始升级"按钮启动更新过程，系统将自动完成更新</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图片查看弹窗 -->
+            <div class="image-modal" id="imageModal">
+                <div class="image-container">
+                    <div class="close-image" id="closeImage">×</div>
+                    <img src="5.jpg" alt="文件夹示例">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // 返回按钮
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.history.back();
+        });
+
+        // 帮助按钮
+        const helpModal = document.getElementById('helpModal');
+        const helpBtn = document.getElementById('helpBtn');
+        const closeModal = document.getElementById('closeModal');
+
+        // 打开帮助模态框
+        helpBtn.addEventListener('click', () => {
+            helpModal.classList.add('active');
+        });
+
+        // 关闭帮助模态框
+        closeModal.addEventListener('click', () => {
+            helpModal.classList.remove('active');
+        });
+
+        // 点击模态框背景关闭
+        helpModal.addEventListener('click', (e) => {
+            if (e.target === helpModal) {
+                helpModal.classList.remove('active');
+            }
+        });
+
+        // 文件选择功能
+        const fileInput = document.getElementById('fileInput');
+        const fileSelectArea = document.getElementById('fileSelectArea');
+        const fileSelectText = document.getElementById('fileSelectText');
+        const startUpdateBtn = document.getElementById('startUpdateBtn');
+        let selectedFile = null;
+
+        // 点击文件选择区域
+        fileSelectArea.addEventListener('click', () => {
+            console.log('点击文件选择区域');
+            fileInput.click();
+        });
+
+        // 文件选择处理
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                selectedFile = file;
+                console.log('文件已选择:', file.name);
+
+                // 更新显示文本
+                fileSelectText.textContent = file.name;
+                fileSelectText.style.color = '#34C759';
+                fileSelectText.style.fontWeight = '600';
+
+                // 更新选择区域样式
+                fileSelectArea.style.borderColor = '#34C759';
+                fileSelectArea.style.backgroundColor = '#f0fdf4';
+
+                // 启用更新按钮
+                startUpdateBtn.disabled = false;
+                console.log('开始升级按钮已启用');
+            }
+        });
+
+        // 开始更新
+        const progressModal = document.getElementById('progressModal');
+        const fileList = document.getElementById('fileList');
+        const progressBar = document.getElementById('progressBar');
+        const closeProgressBtn = document.getElementById('closeProgressBtn');
+        const cancelProgressBtn = document.getElementById('cancelProgressBtn');
+        let isCancelled = false;
+
+        // 更新文件列表
+        const updateFiles = [
+            { name: 'system.bin', size: '2.5 MB' },
+            { name: 'bootloader.bin', size: '1.2 MB' },
+            { name: 'firmware.bin', size: '3.8 MB' },
+            { name: 'config.dat', size: '0.5 MB' },
+            { name: 'resources.pak', size: '0.5 MB' }
+        ];
+
+        // 模态框工具函数
+        const errorModal = document.getElementById('errorModal');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalBtn = document.getElementById('modalBtn');
+
+        function showModal(icon, title, message) {
+            modalIcon.textContent = icon;
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            errorModal.classList.add('active');
+        }
+
+        function hideModal() {
+            errorModal.classList.remove('active');
+        }
+
+        // 关闭模态框
+        modalBtn.addEventListener('click', hideModal);
+        document.querySelector('.error-overlay').addEventListener('click', hideModal);
+
+        startUpdateBtn.addEventListener('click', () => {
+            if (!selectedFile) {
+                showModal('📦', '未找到升级包', '若没有下载升级包,可以断开设备连接,前往升级包下载');
+                return;
+            }
+
+            console.log('开始升级:', {
+                file: selectedFile.name,
+                size: (selectedFile.size / (1024 * 1024)).toFixed(2) + ' MB'
+            });
+
+            // 重置取消状态
+            isCancelled = false;
+            cancelProgressBtn.classList.remove('hide');
+            closeProgressBtn.classList.remove('show');
+
+            // 显示进度弹窗
+            progressModal.classList.add('active');
+
+            // 生成文件列表
+            fileList.innerHTML = updateFiles.map((file, index) => `
+                <div class="file-item" id="file${index}">
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${file.size}</div>
+                    </div>
+                    <div class="file-status pending" id="status${index}">等待中</div>
+                </div>
+            `).join('');
+
+            // 开始更新文件
+            updateFilesSequentially(0);
+        });
+
+        function updateFilesSequentially(index) {
+            // 检查是否已取消
+            if (isCancelled) {
+                console.log('更新已取消');
+                return;
+            }
+
+            if (index >= updateFiles.length) {
+                // 所有文件更新完成
+                document.querySelector('.progress-title').textContent = '更新完成';
+                document.querySelector('.progress-subtitle').textContent = '所有文件已成功更新';
+                cancelProgressBtn.classList.add('hide');
+                closeProgressBtn.classList.add('show');
+                return;
+            }
+
+            // 更新当前文件状态为"更新中"
+            const statusElement = document.getElementById(`status${index}`);
+            statusElement.className = 'file-status updating';
+            statusElement.innerHTML = '<div class="spinner"></div>更新中';
+
+            // 模拟文件更新过程(随机1-3秒)
+            const updateTime = 1000 + Math.random() * 2000;
+
+            setTimeout(() => {
+                // 再次检查是否已取消
+                if (isCancelled) {
+                    statusElement.className = 'file-status failed';
+                    statusElement.textContent = '❌ 已取消';
+                    return;
+                }
+
+                // 90%概率成功,10%概率失败
+                const isSuccess = Math.random() > 0.1;
+
+                if (isSuccess) {
+                    statusElement.className = 'file-status success';
+                    statusElement.textContent = '✅ 成功';
+                } else {
+                    statusElement.className = 'file-status failed';
+                    statusElement.textContent = '❌ 失败';
+                }
+
+                // 更新进度条
+                const progress = ((index + 1) / updateFiles.length) * 100;
+                progressBar.style.width = `${progress}%`;
+
+                // 继续下一个文件
+                setTimeout(() => {
+                    updateFilesSequentially(index + 1);
+                }, 500);
+            }, updateTime);
+        }
+
+        // 确认弹窗
+        const confirmModal = document.getElementById('confirmModal');
+        const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+        const confirmOkBtn = document.getElementById('confirmOkBtn');
+
+        // 取消更新
+        cancelProgressBtn.addEventListener('click', () => {
+            // 显示自定义确认弹窗
+            confirmModal.classList.add('active');
+        });
+
+        // 点击确认弹窗的"取消"按钮
+        confirmCancelBtn.addEventListener('click', () => {
+            confirmModal.classList.remove('active');
+        });
+
+        // 点击确认弹窗的"确定"按钮
+        confirmOkBtn.addEventListener('click', () => {
+            isCancelled = true;
+            console.log('用户取消更新');
+
+            // 关闭确认弹窗
+            confirmModal.classList.remove('active');
+
+            // 关闭进度弹窗
+            progressModal.classList.remove('active');
+
+            // 重置状态
+            setTimeout(() => {
+                document.querySelector('.progress-title').textContent = '正在更新';
+                document.querySelector('.progress-subtitle').textContent = '请勿关闭应用或断开网络';
+                progressBar.style.width = '0%';
+                closeProgressBtn.classList.remove('show');
+                cancelProgressBtn.classList.remove('hide');
+                isCancelled = false;
+            }, 300);
+        });
+
+        // 关闭进度弹窗
+        closeProgressBtn.addEventListener('click', () => {
+            progressModal.classList.remove('active');
+
+            // 重置状态
+            setTimeout(() => {
+                document.querySelector('.progress-title').textContent = '正在更新';
+                document.querySelector('.progress-subtitle').textContent = '请勿关闭应用或断开网络';
+                progressBar.style.width = '0%';
+                closeProgressBtn.classList.remove('show');
+                cancelProgressBtn.classList.remove('hide');
+                isCancelled = false;
+            }, 300);
+        });
+
+        // 测试按钮 - 显示提示弹窗
+        const testBtn = document.getElementById('testBtn');
+        testBtn.addEventListener('click', () => {
+            showModal('⚠️', '连接失败', '设备连接已断开,请重新连接设备');
+        });
+
+        // 示例图片查看功能
+        const imageModal = document.getElementById('imageModal');
+        const exampleLink = document.getElementById('exampleLink');
+        const closeImage = document.getElementById('closeImage');
+
+        // 点击示例链接打开图片
+        exampleLink.addEventListener('click', () => {
+            imageModal.classList.add('active');
+        });
+
+        // 点击关闭按钮关闭图片
+        closeImage.addEventListener('click', () => {
+            imageModal.classList.remove('active');
+        });
+
+        // 点击模态框背景关闭图片
+        imageModal.addEventListener('click', (e) => {
+            if (e.target === imageModal) {
+                imageModal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

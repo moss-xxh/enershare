@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title id="pageTitle">告警信息 - 爱尚</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            height: 100vh;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* iPhone 外壳 */
+        .iphone-frame {
+            width: 385px;
+            height: 822px;
+            background: #1d1d1f;
+            border-radius: 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            position: relative;
+        }
+
+        /* iPhone 屏幕容器 */
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 刘海 */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 28px;
+            background: #1d1d1f;
+            border-radius: 0 0 18px 18px;
+            z-index: 10;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            padding: 0 27px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000000;
+            font-size: 15px;
+            font-weight: 600;
+            z-index: 5;
+        }
+
+        .time {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .signal-icon {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            height: 12px;
+        }
+
+        .signal-dot {
+            width: 3px;
+            height: 3px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon {
+            width: 15px;
+            height: 11px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .wifi-icon::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2px;
+            background: #000000;
+            border-radius: 50%;
+        }
+
+        .wifi-icon::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border: 2px solid #000000;
+            border-radius: 50% 50% 0 0;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .battery-icon {
+            width: 25px;
+            height: 11.5px;
+            border: 1.5px solid #000000;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            opacity: 0.9;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5px;
+            height: 4px;
+            background: #000000;
+            border-radius: 0 2px 2px 0;
+            opacity: 0.5;
+        }
+
+        .battery-level {
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 1.5px;
+        }
+
+        /* 页面容器 */
+        .alert-page {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 页面头部 */
+        .alert-header {
+            padding: 0;
+            background: #ffffff;
+            position: sticky;
+            top: 44px;
+            z-index: 10;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .alert-header.scrolled {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0;
+        }
+
+        .header-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .device-sn-display {
+            font-size: 15px;
+            color: #1d1d1f;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 5px;
+            height: 5px;
+            background: #34C759;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-text {
+            font-size: 12px;
+            color: #34C759;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .disconnect-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid #e5e5ea;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #FF3B30;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .disconnect-btn:active {
+            background: #f9f9f9;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* 断开连接确认弹窗 */
+        .disconnect-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 40;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .disconnect-modal.active {
+            display: flex;
+        }
+
+        .disconnect-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 280px;
+            text-align: center;
+        }
+
+        .disconnect-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 12px;
+        }
+
+        .disconnect-message {
+            font-size: 14px;
+            color: #86868b;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .disconnect-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .disconnect-cancel,
+        .disconnect-confirm {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .disconnect-cancel {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .disconnect-cancel:active {
+            background: #e8e8ed;
+        }
+
+        .disconnect-confirm {
+            background: #FF3B30;
+            color: white;
+        }
+
+        .disconnect-confirm:active {
+            opacity: 0.8;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 查询条件 */
+        .query-conditions {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 0 32px 16px;
+            background: #ffffff;
+            border-bottom: 8px solid #f9f9f9;
+        }
+
+        .alert-page-title {
+            font-size: 34px;
+            font-weight: 700;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+            padding: 12px 32px 12px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .export-icon-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 0;
+            transition: all 0.2s ease;
+        }
+
+        .export-icon-btn:active {
+            opacity: 0.6;
+            transform: scale(0.95);
+        }
+
+        .export-icon-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #000000;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .time-range {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .time-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .query-btn, .export-btn {
+            padding: 10px 20px;
+            background: #34C759;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .export-btn {
+            background: #007AFF;
+        }
+
+        .query-btn:active, .export-btn:active {
+            opacity: 0.8;
+        }
+
+        .time-box {
+            min-width: 100px;
+            padding: 10px 12px;
+            border: 1px solid #e5e5ea;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #1d1d1f;
+            background: #ffffff;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .time-box:active {
+            background: #f5f5f7;
+            border-color: #34C759;
+        }
+
+        .time-separator {
+            color: #86868b;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .query-btn {
+            padding: 12px 24px;
+            background: #34C759;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .query-btn:active {
+            opacity: 0.8;
+        }
+
+        .reset-btn {
+            padding: 12px 24px;
+            background: #f5f5f7;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #1d1d1f;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reset-btn:active {
+            background: #e8e8ed;
+        }
+
+        /* 时间选择弹窗 */
+        .time-picker-modal {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 50;
+        }
+
+        .time-picker-modal.active {
+            transform: translateY(0);
+        }
+
+        .time-picker-header {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .time-picker-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .time-picker-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #86868b;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .time-picker-content {
+            padding: 20px;
+        }
+
+        .time-picker-section {
+            margin-bottom: 24px;
+        }
+
+        .time-picker-label {
+            font-size: 16px;
+            color: #1d1d1f;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e5e5ea;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #1d1d1f;
+            background: #ffffff;
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: #34C759;
+        }
+
+        /* 滚动选择器容器 */
+        .scroll-picker-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 240px;
+            position: relative;
+            background: #f9f9f9;
+            border-radius: 12px;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        /* 选中区域高亮 */
+        .scroll-picker-highlight {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 44px;
+            transform: translateY(-50%);
+            background: rgba(52, 199, 89, 0.1);
+            border-top: 1px solid rgba(52, 199, 89, 0.3);
+            border-bottom: 1px solid rgba(52, 199, 89, 0.3);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 滚动列 */
+        .scroll-column {
+            flex: 1;
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            position: relative;
+            touch-action: pan-y;
+        }
+
+        .scroll-column::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scroll-column::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+
+        /* 滚动列内部容器 */
+        .scroll-column-inner {
+            padding: 98px 0;
+        }
+
+        /* 滚动项 */
+        .scroll-item {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #86868b;
+            scroll-snap-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .scroll-item.active {
+            color: #1d1d1f;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        /* 年月日分隔符 */
+        .scroll-separator {
+            width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #86868b;
+            font-weight: 500;
+            z-index: 2;
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+
+        .time-picker-actions {
+            display: flex;
+            gap: 12px;
+            padding: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .time-picker-reset {
+            flex: 1;
+            padding: 14px;
+            background: #f5f5f7;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #1d1d1f;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .time-picker-confirm {
+            flex: 1;
+            padding: 14px;
+            background: #34C759;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            z-index: 40;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        /* 页面内容 */
+        .alert-body {
+            flex: 1;
+            padding: 16px 0;
+            padding-bottom: 110px;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+
+        /* 告警卡片 */
+        .alert-card {
+            background: #ffffff;
+            padding: 24px 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin: 0 16px 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .alert-card:first-child {
+            margin-top: 0;
+        }
+
+        .alert-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-card:active {
+            background: #f5f5f7;
+            transform: scale(0.98);
+        }
+
+        .alert-row-1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+
+        .alert-title-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .alert-description {
+            font-size: 20px;
+            color: #1d1d1f;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .alert-arrow {
+            font-size: 18px;
+            color: #86868b;
+            flex-shrink: 0;
+        }
+
+        .alert-level {
+            font-size: 20px;
+            font-weight: 700;
+            flex-shrink: 0;
+            color: #1d1d1f;
+        }
+
+        .alert-row-2 {
+            margin-bottom: 8px;
+        }
+
+        .alert-data {
+            font-size: 14px;
+            color: #86868b;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .alert-row-3 {
+            margin-top: 8px;
+        }
+
+        .alert-time {
+            font-size: 13px;
+            color: #86868b;
+            font-weight: 400;
+        }
+
+
+        /* 空状态 */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 40px;
+            color: #86868b;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        /* 底部菜单栏 - 悬浮设计 */
+        .bottom-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
+                        0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0;
+            border: 0.5px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 10px 0;
+            position: relative;
+        }
+
+        .nav-text {
+            font-size: 10px;
+            font-weight: 500;
+            color: #8e8e93;
+            transition: color 0.2s ease;
+        }
+
+        .nav-item.active .nav-text {
+            color: #34C759;
+        }
+
+        .nav-icon {
+            width: 28px;
+            height: 28px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-icon path,
+        .nav-icon rect,
+        .nav-icon circle,
+        .nav-icon line {
+            transition: all 0.2s ease;
+        }
+
+        .nav-item .nav-icon path,
+        .nav-item .nav-icon rect,
+        .nav-item .nav-icon circle,
+        .nav-item .nav-icon line {
+            stroke: #8e8e93;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .nav-item.active .nav-icon path,
+        .nav-item.active .nav-icon rect {
+            stroke: #34C759;
+            fill: #34C759;
+        }
+
+        .nav-item.active .nav-icon circle {
+            stroke: #34C759;
+            fill: #34C759;
+        }
+
+        .nav-item.active .nav-icon line {
+            stroke: #34C759;
+        }
+
+        .nav-item:active {
+            opacity: 0.6;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 400px) {
+            .iphone-frame {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                padding: 0;
+            }
+            .iphone-screen {
+                border-radius: 0;
+            }
+        }
+
+        /* 测试按钮 - 在屏幕外 */
+        .test-btn {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            padding: 12px 24px;
+            background: #FF3B30;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+            transition: all 0.2s ease;
+            z-index: 9999;
+        }
+
+        .test-btn:hover {
+            background: #FF2D1F;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .test-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* 连接失败弹窗 */
+        .error-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .error-modal.active {
+            display: flex;
+        }
+
+        .error-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .error-dialog {
+            background: white;
+            border-radius: 16px;
+            width: 320px;
+            padding: 32px 24px 24px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .error-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: #FFE5E5;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .error-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1d1d1f;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .error-message {
+            font-size: 15px;
+            color: #6e6e73;
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .error-btn {
+            width: 100%;
+            height: 48px;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .error-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- 测试按钮 -->
+    <button class="test-btn" id="testBtn">连接失败</button>
+
+    <!-- 连接失败弹窗 -->
+    <div class="error-modal" id="errorModal">
+        <div class="error-overlay"></div>
+        <div class="error-dialog">
+            <div class="error-icon">⚠️</div>
+            <div class="error-title">设备连接失败</div>
+            <div class="error-message">请重新连接</div>
+            <button class="error-btn" id="reconnectBtn">重新连接</button>
+        </div>
+    </div>
+    <div class="iphone-frame">
+        <div class="iphone-screen">
+            <!-- 刘海 -->
+            <div class="notch"></div>
+
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <div class="time" id="time">9:41</div>
+                <div class="status-icons">
+                    <div class="signal-icon">
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                        <div class="signal-dot"></div>
+                    </div>
+                    <div class="wifi-icon"></div>
+                    <div class="battery-icon">
+                        <div class="battery-level"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面内容 -->
+            <div class="alert-page">
+                <div class="alert-header">
+                    <div class="alert-page-title">
+                        <span data-i18n="alerts">告警</span>
+                        <button class="export-icon-btn" id="exportIconBtn" aria-label="导出">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="query-conditions">
+                        <div class="time-range">
+                            <div class="time-display">
+                                <div class="time-box" id="startTimeDisplay">2025-10-14</div>
+                                <span class="time-separator" id="timeSeparator">至</span>
+                                <div class="time-box" id="endTimeDisplay">2025-10-14</div>
+                                <button class="query-btn" id="queryBtn">查询</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-body" id="alertBody">
+                    <!-- 告警列表将通过 JavaScript 动态生成 -->
+                </div>
+
+                <!-- 底部导航栏 -->
+                <div class="bottom-nav">
+                    <div class="nav-item" id="navDevice">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="7" y="3" width="10" height="18" rx="2" stroke-linejoin="round"/>
+                                <line x1="10" y1="18" x2="14" y2="18" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-text" data-i18n="navDevice">设备</span>
+                    </div>
+                    <div class="nav-item active" id="navAlert">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.5 5C9.5 3.61929 10.6193 2.5 12 2.5C13.3807 2.5 14.5 3.61929 14.5 5C15.9464 5.31536 17.0379 6.53892 17.2425 8.04883L18 14H6L6.75746 8.04883C6.96213 6.53892 8.05357 5.31536 9.5 5Z" stroke-linejoin="round"/>
+                                <path d="M9 14V16C9 17.6569 10.3431 19 12 19C13.6569 19 15 17.6569 15 16V14" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-text" data-i18n="navAlert">告警</span>
+                    </div>
+                    <div class="nav-item" id="navProfile">
+                        <div class="nav-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="8" r="4" stroke-linejoin="round"/>
+                                <path d="M6 20C6 16.6863 8.68629 14 12 14C15.3137 14 18 16.6863 18 20" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="nav-text" data-i18n="navProfile">我的</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 时间选择弹窗 -->
+            <div class="modal-overlay" id="timePickerOverlay"></div>
+            <div class="time-picker-modal" id="timePickerModal">
+                <div class="time-picker-header">
+                    <div class="time-picker-title" id="timePickerTitle">选择开始时间</div>
+                    <button class="time-picker-close" id="timePickerClose">×</button>
+                </div>
+                <div class="time-picker-content">
+                    <div class="scroll-picker-container">
+                        <div class="scroll-picker-highlight"></div>
+
+                        <!-- 年份列 -->
+                        <div class="scroll-column" id="yearColumn">
+                            <div class="scroll-column-inner" id="yearColumnInner"></div>
+                        </div>
+
+                        <div class="scroll-separator" id="yearSeparator">年</div>
+
+                        <!-- 月份列 -->
+                        <div class="scroll-column" id="monthColumn">
+                            <div class="scroll-column-inner" id="monthColumnInner"></div>
+                        </div>
+
+                        <div class="scroll-separator" id="monthSeparator">月</div>
+
+                        <!-- 日期列 -->
+                        <div class="scroll-column" id="dayColumn">
+                            <div class="scroll-column-inner" id="dayColumnInner"></div>
+                        </div>
+
+                        <div class="scroll-separator" id="daySeparator">日</div>
+                    </div>
+                </div>
+                <div class="time-picker-actions">
+                    <button class="time-picker-reset" id="timePickerReset">重置</button>
+                    <button class="time-picker-confirm" id="timePickerConfirm">确定</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 多语言翻译数据
+        const translations = {
+            'zh-CN': {
+                title: '告警信息',
+                deviceSN: '设备序列号',
+                deviceSNLabel: '设备SN:',
+                connected: '连接中',
+                disconnect: '断开连接',
+                disconnectTitle: '断开连接？',
+                disconnectMessage: '断开连接后将无法查看设备实时数据，确定要断开吗？',
+                cancel: '取消',
+                confirm: '断开',
+                alerts: '告警',
+                filterDate: '2025/10/14',
+                filterBMU: 'BMU',
+                read: 'Read',
+                clear: 'Clear',
+                powerOn: 'Power ON',
+                systemStatus: 'System Status',
+                addressAssignment: 'Address Assignment',
+                noAlerts: '暂无告警信息',
+                navDevice: '设备',
+                navAlert: '告警',
+                navProfile: '我的',
+                selectLanguage: '选择语言',
+                selectStartTime: '选择开始时间',
+                selectEndTime: '选择结束时间',
+                year: '年',
+                month: '月',
+                day: '日',
+                reset: '重置',
+                confirmBtn: '确定',
+                to: '至',
+                query: '查询',
+                export: '导出',
+                exportTitle: '选择导出格式',
+                exportConfirm: '导出',
+                exportSuccess: '导出成功',
+                exportSuccessMsg: '告警数据已导出到下载文件夹'
+            },
+            'zh-TW': {
+                title: '告警信息',
+                deviceSN: '設備序列號',
+                deviceSNLabel: '設備SN:',
+                connected: '連接中',
+                disconnect: '斷開連接',
+                disconnectTitle: '斷開連接？',
+                disconnectMessage: '斷開連接後將無法查看設備實時數據，確定要斷開嗎？',
+                cancel: '取消',
+                confirm: '斷開',
+                alerts: '告警',
+                filterDate: '2025/10/14',
+                filterBMU: 'BMU',
+                read: 'Read',
+                clear: 'Clear',
+                powerOn: 'Power ON',
+                systemStatus: 'System Status',
+                addressAssignment: 'Address Assignment',
+                noAlerts: '暫無告警信息',
+                navDevice: '設備',
+                navAlert: '告警',
+                navProfile: '我的',
+                selectLanguage: '選擇語言',
+                selectStartTime: '選擇開始時間',
+                selectEndTime: '選擇結束時間',
+                year: '年',
+                month: '月',
+                day: '日',
+                reset: '重置',
+                confirmBtn: '確定',
+                to: '至',
+                query: '查詢',
+                export: '導出',
+                exportTitle: '選擇導出格式',
+                exportConfirm: '導出',
+                exportSuccess: '導出成功',
+                exportSuccessMsg: '告警數據已導出到下載文件夾'
+            },
+            'en': {
+                title: 'Alert Information',
+                deviceSN: 'Device Serial Number',
+                deviceSNLabel: 'Device SN:',
+                connected: 'Connecting',
+                disconnect: 'Disconnect',
+                disconnectTitle: 'Disconnect Device?',
+                disconnectMessage: 'You will not be able to view real-time device data after disconnection. Are you sure?',
+                cancel: 'Cancel',
+                confirm: 'Disconnect',
+                alerts: 'Alerts',
+                filterDate: '2025/10/14',
+                filterBMU: 'BMU',
+                read: 'Read',
+                clear: 'Clear',
+                powerOn: 'Power ON',
+                systemStatus: 'System Status',
+                addressAssignment: 'Address Assignment',
+                noAlerts: 'No Alerts',
+                navDevice: 'Device',
+                navAlert: 'Alerts',
+                navProfile: 'Profile',
+                selectLanguage: 'Select Language',
+                selectStartTime: 'Select Start Time',
+                selectEndTime: 'Select End Time',
+                year: 'Year',
+                month: 'Month',
+                day: 'Day',
+                reset: 'Reset',
+                confirmBtn: 'Confirm',
+                to: 'to',
+                query: 'Query',
+                export: 'Export',
+                exportTitle: 'Select Export Format',
+                exportConfirm: 'Export',
+                exportSuccess: 'Export Successful',
+                exportSuccessMsg: 'Alert data has been exported to downloads folder'
+            }
+        };
+
+        // 当前语言 - 从localStorage读取
+        let currentLanguage = localStorage.getItem('appLanguage') || 'zh-CN';
+
+        // 生成今天的告警数据
+        function generateTodayAlerts() {
+            const now = new Date();
+            const today = now.toISOString().slice(0, 10);
+
+            return [
+                {
+                    time: `${today} 18:26:20`,
+                    code: '0',
+                    type: 'power-on',
+                    description: 'Power ON',
+                    data: '00 02 00 00 00 00 00 00 00 00 08 3F 00 00 00...'
+                },
+                {
+                    time: `${today} 18:26:20`,
+                    code: '1',
+                    type: 'system-status',
+                    description: 'System Status',
+                    data: '01 FF 00 00 00 00 00 00 00 00 08 3F 00 00 00...'
+                },
+                {
+                    time: `${today} 12:41:53`,
+                    code: '6',
+                    type: 'address',
+                    description: 'Address Assignment',
+                    data: '01 FF FF FF FF FF FF FF FF FF FF FF FF FF FF...'
+                },
+                {
+                    time: `${today} 12:37:40`,
+                    code: '1',
+                    type: 'system-status',
+                    description: 'System Status',
+                    data: '05 00 0C DC 0C DB 1B 1B 08 3A 08 3B 00 00 0...'
+                },
+                {
+                    time: `${today} 12:20:15`,
+                    code: '6',
+                    type: 'address',
+                    description: 'Address Assignment',
+                    data: '01 FF FF FF FF FF FF FF FF FF FF FF FF FF FF...'
+                },
+                {
+                    time: `${today} 10:15:30`,
+                    code: '0',
+                    type: 'power-on',
+                    description: 'Power ON',
+                    data: '00 02 00 00 00 00 00 00 00 00 00 3B 00 00 00...'
+                },
+                {
+                    time: `${today} 09:05:12`,
+                    code: '1',
+                    type: 'system-status',
+                    description: 'System Status',
+                    data: '01 FF 00 00 00 00 00 00 00 00 08 3F 00 00 00...'
+                }
+            ];
+        }
+
+        // 模拟告警数据（按时间倒序排列）
+        const alertData = generateTodayAlerts();
+
+        // 渲染告警列表
+        function renderAlerts() {
+            const alertBody = document.getElementById('alertBody');
+            const texts = translations[currentLanguage];
+
+            if (alertData.length === 0) {
+                alertBody.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔔</div>
+                        <div class="empty-text">${texts.noAlerts}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            alertBody.innerHTML = alertData.map((alert, index) => {
+                return `
+                <div class="alert-card level-${alert.code}" onclick="showAlertDetail(${index})">
+                    <div class="alert-row-1">
+                        <div class="alert-title-container">
+                            <div class="alert-description">${alert.description}</div>
+                            <div class="alert-arrow">›</div>
+                        </div>
+                        <div class="alert-level">${alert.code}</div>
+                    </div>
+                    <div class="alert-row-2">
+                        <div class="alert-data">${alert.data}</div>
+                    </div>
+                    <div class="alert-row-3">
+                        <div class="alert-time">${alert.time}</div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // 显示告警详情
+        function showAlertDetail(index) {
+            const alert = alertData[index];
+            const alertJson = encodeURIComponent(JSON.stringify(alert));
+            window.location.href = `警报详情.html?data=${alertJson}`;
+        }
+
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // 初始化告警列表
+        renderAlerts();
+
+        // 监听滚动事件，添加头部阴影
+        const alertBody = document.querySelector('.alert-body');
+        const alertHeader = document.querySelector('.alert-header');
+
+        alertBody.addEventListener('scroll', () => {
+            if (alertBody.scrollTop > 10) {
+                alertHeader.classList.add('scrolled');
+            } else {
+                alertHeader.classList.remove('scrolled');
+            }
+        });
+
+        // 时间选择弹窗功能
+        const timePickerModal = document.getElementById('timePickerModal');
+        const timePickerOverlay = document.getElementById('timePickerOverlay');
+        const timePickerClose = document.getElementById('timePickerClose');
+        const timePickerReset = document.getElementById('timePickerReset');
+        const timePickerConfirm = document.getElementById('timePickerConfirm');
+        const timePickerTitle = document.getElementById('timePickerTitle');
+        const startTimeDisplay = document.getElementById('startTimeDisplay');
+        const endTimeDisplay = document.getElementById('endTimeDisplay');
+
+        // 滚动选择器状态
+        let currentPickerType = 'start'; // 'start' 或 'end'
+        let selectedYear = 2025;
+        let selectedMonth = 1;
+        let selectedDay = 1;
+
+        // 初始化滚动选择器
+        function initScrollPicker() {
+            const now = new Date();
+            selectedYear = now.getFullYear();
+            selectedMonth = now.getMonth() + 1;
+            selectedDay = now.getDate();
+
+            // 生成年份选项（2020-2030）
+            const yearColumn = document.getElementById('yearColumnInner');
+            yearColumn.innerHTML = '';
+            for (let year = 2020; year <= 2030; year++) {
+                const item = document.createElement('div');
+                item.className = 'scroll-item';
+                item.textContent = year;
+                item.dataset.value = year;
+                yearColumn.appendChild(item);
+            }
+
+            // 生成月份选项
+            const monthColumn = document.getElementById('monthColumnInner');
+            monthColumn.innerHTML = '';
+            for (let month = 1; month <= 12; month++) {
+                const item = document.createElement('div');
+                item.className = 'scroll-item';
+                item.textContent = month;
+                item.dataset.value = month;
+                monthColumn.appendChild(item);
+            }
+
+            // 生成日期选项
+            updateDayColumn();
+
+            // 设置初始滚动位置
+            scrollToValue('yearColumn', selectedYear);
+            scrollToValue('monthColumn', selectedMonth);
+            scrollToValue('dayColumn', selectedDay);
+
+            // 添加滚动事件监听
+            document.getElementById('yearColumn').addEventListener('scroll', () => {
+                handleScroll('yearColumn', (value) => {
+                    selectedYear = parseInt(value);
+                    updateDayColumn();
+                });
+            });
+
+            document.getElementById('monthColumn').addEventListener('scroll', () => {
+                handleScroll('monthColumn', (value) => {
+                    selectedMonth = parseInt(value);
+                    updateDayColumn();
+                });
+            });
+
+            document.getElementById('dayColumn').addEventListener('scroll', () => {
+                handleScroll('dayColumn', (value) => {
+                    selectedDay = parseInt(value);
+                });
+            });
+        }
+
+        // 更新日期列（根据年月计算天数）
+        function updateDayColumn() {
+            const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+            const dayColumn = document.getElementById('dayColumnInner');
+            const currentScrollRatio = document.getElementById('dayColumn').scrollTop / document.getElementById('dayColumn').scrollHeight;
+
+            dayColumn.innerHTML = '';
+            for (let day = 1; day <= daysInMonth; day++) {
+                const item = document.createElement('div');
+                item.className = 'scroll-item';
+                item.textContent = day;
+                item.dataset.value = day;
+                dayColumn.appendChild(item);
+            }
+
+            // 如果当前选择的日期超过了新月份的天数，调整为最后一天
+            if (selectedDay > daysInMonth) {
+                selectedDay = daysInMonth;
+            }
+
+            // 恢复滚动位置或滚动到选中的日期
+            setTimeout(() => {
+                scrollToValue('dayColumn', selectedDay);
+            }, 50);
+        }
+
+        // 滚动到指定值
+        function scrollToValue(columnId, value) {
+            const column = document.getElementById(columnId);
+            const items = column.querySelectorAll('.scroll-item');
+
+            for (let i = 0; i < items.length; i++) {
+                if (parseInt(items[i].dataset.value) === value) {
+                    const itemOffset = items[i].offsetTop;
+                    const columnHeight = column.clientHeight;
+                    const itemHeight = items[i].clientHeight;
+                    column.scrollTop = itemOffset - (columnHeight / 2) + (itemHeight / 2);
+                    break;
+                }
+            }
+        }
+
+        // 处理滚动事件
+        function handleScroll(columnId, callback) {
+            const column = document.getElementById(columnId);
+            const items = column.querySelectorAll('.scroll-item');
+            const columnRect = column.getBoundingClientRect();
+            const centerY = columnRect.top + columnRect.height / 2;
+
+            let closestItem = null;
+            let closestDistance = Infinity;
+
+            items.forEach(item => {
+                item.classList.remove('active');
+                const itemRect = item.getBoundingClientRect();
+                const itemCenterY = itemRect.top + itemRect.height / 2;
+                const distance = Math.abs(centerY - itemCenterY);
+
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestItem = item;
+                }
+            });
+
+            if (closestItem) {
+                closestItem.classList.add('active');
+                callback(closestItem.dataset.value);
+            }
+        }
+
+        // 显示时间选择弹窗
+        function showTimePicker(type) {
+            currentPickerType = type;
+            const texts = translations[currentLanguage];
+            timePickerTitle.textContent = type === 'start' ? texts.selectStartTime : texts.selectEndTime;
+
+            // 根据类型设置当前选中的日期
+            const currentDate = type === 'start'
+                ? startTimeDisplay.textContent
+                : endTimeDisplay.textContent;
+
+            const [year, month, day] = currentDate.split('-').map(Number);
+            selectedYear = year;
+            selectedMonth = month;
+            selectedDay = day;
+
+            updateDayColumn();
+            scrollToValue('yearColumn', selectedYear);
+            scrollToValue('monthColumn', selectedMonth);
+            scrollToValue('dayColumn', selectedDay);
+
+            timePickerModal.classList.add('active');
+            timePickerOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // 延迟更新高亮，确保滚动完成
+            setTimeout(() => {
+                handleScroll('yearColumn', (value) => { selectedYear = parseInt(value); });
+                handleScroll('monthColumn', (value) => { selectedMonth = parseInt(value); });
+                handleScroll('dayColumn', (value) => { selectedDay = parseInt(value); });
+            }, 100);
+        }
+
+        // 隐藏时间选择弹窗
+        function hideTimePicker() {
+            timePickerModal.classList.remove('active');
+            timePickerOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // 点击时间框显示弹窗
+        startTimeDisplay.addEventListener('click', () => showTimePicker('start'));
+        endTimeDisplay.addEventListener('click', () => showTimePicker('end'));
+
+        // 关闭弹窗
+        timePickerClose.addEventListener('click', hideTimePicker);
+        timePickerOverlay.addEventListener('click', hideTimePicker);
+
+        // 重置时间选择
+        timePickerReset.addEventListener('click', () => {
+            const now = new Date();
+            selectedYear = now.getFullYear();
+            selectedMonth = now.getMonth() + 1;
+            selectedDay = now.getDate();
+
+            updateDayColumn();
+            scrollToValue('yearColumn', selectedYear);
+            scrollToValue('monthColumn', selectedMonth);
+            scrollToValue('dayColumn', selectedDay);
+
+            setTimeout(() => {
+                handleScroll('yearColumn', (value) => { selectedYear = parseInt(value); });
+                handleScroll('monthColumn', (value) => { selectedMonth = parseInt(value); });
+                handleScroll('dayColumn', (value) => { selectedDay = parseInt(value); });
+            }, 100);
+        });
+
+        // 确认时间选择
+        timePickerConfirm.addEventListener('click', () => {
+            const dateStr = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
+
+            if (currentPickerType === 'start') {
+                startTimeDisplay.textContent = dateStr;
+            } else {
+                endTimeDisplay.textContent = dateStr;
+            }
+
+            hideTimePicker();
+        });
+
+        // 查询功能
+        document.getElementById('queryBtn').addEventListener('click', () => {
+            const startDate = startTimeDisplay.textContent;
+            const endDate = endTimeDisplay.textContent;
+            const startTime = startDate + 'T00:00';
+            const endTime = endDate + 'T23:59';
+            console.log('查询时间范围:', startTime, '至', endTime);
+            // 根据时间范围过滤告警数据
+            filterAlertsByTime(startTime, endTime);
+        });
+
+        // 根据时间范围过滤告警
+        function filterAlertsByTime(startTime, endTime) {
+            const filteredAlerts = alertData.filter(alert => {
+                const alertTime = new Date(alert.time.replace(' ', 'T'));
+                const start = new Date(startTime);
+                const end = new Date(endTime);
+                return alertTime >= start && alertTime <= end;
+            });
+            
+            // 渲染过滤后的告警
+            renderFilteredAlerts(filteredAlerts);
+        }
+
+        // 渲染过滤后的告警列表
+        function renderFilteredAlerts(filteredAlerts) {
+            const alertBody = document.getElementById('alertBody');
+            const texts = translations[currentLanguage];
+
+            if (filteredAlerts.length === 0) {
+                alertBody.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔍</div>
+                        <div class="empty-text">该时间段内无告警信息</div>
+                    </div>
+                `;
+                return;
+            }
+
+            alertBody.innerHTML = filteredAlerts.map((alert, index) => {
+                return `
+                <div class="alert-card level-${alert.code}" onclick="showAlertDetail(${index})">
+                    <div class="alert-row-1">
+                        <div class="alert-title-container">
+                            <div class="alert-description">${alert.description}</div>
+                            <div class="alert-arrow">›</div>
+                        </div>
+                        <div class="alert-level">${alert.code}</div>
+                    </div>
+                    <div class="alert-row-2">
+                        <div class="alert-data">${alert.data}</div>
+                    </div>
+                    <div class="alert-row-3">
+                        <div class="alert-time">${alert.time}</div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            const texts = translations[lang];
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (texts[key]) {
+                    element.textContent = texts[key];
+                }
+            });
+            // 更新页面标题
+            document.getElementById('pageTitle').textContent = texts.title + ' - 爱尚';
+
+            // 更新日期选择器文本
+            document.getElementById('timeSeparator').textContent = texts.to;
+            document.getElementById('queryBtn').textContent = texts.query;
+            document.getElementById('yearSeparator').textContent = texts.year;
+            document.getElementById('monthSeparator').textContent = texts.month;
+            document.getElementById('daySeparator').textContent = texts.day;
+            document.getElementById('timePickerReset').textContent = texts.reset;
+            document.getElementById('timePickerConfirm').textContent = texts.confirmBtn;
+
+            // 更新时间选择器标题（如果当前有显示的话）
+            if (currentPickerType === 'start') {
+                document.getElementById('timePickerTitle').textContent = texts.selectStartTime;
+            } else {
+                document.getElementById('timePickerTitle').textContent = texts.selectEndTime;
+            }
+        }
+
+        // 断开连接功能已移除，因为告警页面不需要显示连接状态
+
+        // 底部导航栏切换
+        const navItems = document.querySelectorAll('.nav-item');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // 移除所有active状态
+                navItems.forEach(nav => nav.classList.remove('active'));
+
+                // 添加active状态到当前点击项
+                item.classList.add('active');
+
+                // 这里可以添加页面切换逻辑
+                const navId = item.id;
+                if (navId === 'navDevice') {
+                    // 跳转到设备页面
+                    window.location.href = '仪表盘.html';
+                } else if (navId === 'navAlert') {
+                    // 跳转到告警页面
+                    window.location.href = '警报.html';
+                } else if (navId === 'navProfile') {
+                    // 跳转到我的页面
+                    window.location.href = '个人资料.html';
+                }
+            });
+        });
+
+        // 初始化时间选择器
+        function initTimePicker() {
+            const now = new Date();
+            const today = now.toISOString().slice(0, 10);
+
+            // 设置显示的时间
+            startTimeDisplay.textContent = today;
+            endTimeDisplay.textContent = today;
+        }
+
+        // 初始化页面文本
+        updatePageText(currentLanguage);
+        initTimePicker();
+        initScrollPicker();
+
+        // 测试按钮 - 显示连接失败弹窗
+        const testBtn = document.getElementById('testBtn');
+        const errorModal = document.getElementById('errorModal');
+        const reconnectBtn = document.getElementById('reconnectBtn');
+
+        testBtn.addEventListener('click', () => {
+            errorModal.classList.add('active');
+        });
+
+        // 重新连接按钮 - 跳转到连接页面
+        reconnectBtn.addEventListener('click', () => {
+            window.location.href = '连接设备.html';
+        });
+
+        // 点击遮罩层关闭弹窗
+        document.querySelector('.error-overlay').addEventListener('click', () => {
+            errorModal.classList.remove('active');
+        });
+
+        // 导出功能
+        const exportIconBtn = document.getElementById('exportIconBtn');
+
+        // 点击导出按钮直接导出CSV格式
+        exportIconBtn.addEventListener('click', () => {
+            exportAlerts();
+        });
+
+        // 导出告警数据（CSV格式）
+        function exportAlerts() {
+            const startDate = startTimeDisplay.textContent;
+            const endDate = endTimeDisplay.textContent;
+            const fileName = `alerts_${startDate}_to_${endDate}`;
+
+            // 获取当前显示的告警数据
+            const currentAlerts = alertData.filter(alert => {
+                const alertDate = alert.time.split(' ')[0];
+                return alertDate >= startDate && alertDate <= endDate;
+            });
+
+            if (currentAlerts.length === 0) {
+                alert('当前时间段内没有告警数据可导出');
+                return;
+            }
+
+            // 导出为CSV格式
+            const content = exportToCSV(currentAlerts);
+            const mimeType = 'text/csv;charset=utf-8;';
+            const fileExtension = 'csv';
+
+            // 创建下载链接
+            const blob = new Blob([content], { type: mimeType });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', `${fileName}.${fileExtension}`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // 显示成功提示
+            alert('导出成功');
+        }
+
+        // 导出为CSV格式
+        function exportToCSV(data) {
+            const headers = ['时间', '代码', '类型', '描述', '数据'];
+            const rows = data.map(alert => [
+                alert.time,
+                alert.code,
+                alert.type,
+                alert.description,
+                alert.data
+            ]);
+
+            const csvContent = [
+                headers.join(','),
+                ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+            ].join('\n');
+
+            // 添加BOM以支持Excel正确显示中文
+            return '\uFEFF' + csvContent;
+        }
+
+    </script>
+
+</body>
+</html>

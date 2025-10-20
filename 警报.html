@@ -352,16 +352,55 @@
             border-bottom: 8px solid #f9f9f9;
         }
 
-        .alert-page-title {
-            font-size: 34px;
-            font-weight: 700;
-            color: #1d1d1f;
-            letter-spacing: -0.5px;
-            padding: 12px 32px 12px;
-            background: #ffffff;
+        /* Tab切换样式 - 作为页面标题 */
+        .tab-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 12px 32px 24px;  /* 增加底部padding，拉开与查询区域的距离 */
+            background: #ffffff;
+        }
+
+        .tab-group {
+            display: flex;
+            gap: 24px;
+            align-items: baseline;  /* 基线对齐，让不同大小的文字底部对齐 */
+        }
+
+        .tab-item {
+            padding: 8px 0;
+            font-size: 24px;  /* 未选中状态：小字号 */
+            font-weight: 600;
+            color: #86868b;
+            cursor: pointer;
+            border: none;
+            background: none;
+            position: relative;
+            transition: all 0.3s ease;
+            letter-spacing: -0.3px;
+        }
+
+        .tab-item.active {
+            font-size: 34px;  /* 选中状态：大字号 */
+            font-weight: 700;
+            color: #1d1d1f;
+            letter-spacing: -0.5px;
+        }
+
+        .tab-item::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;  /* 紧贴文字底部 */
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #34C759;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .tab-item.active::after {
+            transform: scaleX(1);
         }
 
         .export-icon-btn {
@@ -1082,8 +1121,11 @@
             <!-- 页面内容 -->
             <div class="alert-page">
                 <div class="alert-header">
-                    <div class="alert-page-title">
-                        <span data-i18n="alerts">告警</span>
+                    <div class="tab-container">
+                        <div class="tab-group">
+                            <button class="tab-item active" id="tabBMU" data-tab="BMU">BMU</button>
+                            <button class="tab-item" id="tabBMS1" data-tab="BMS1">BMS1</button>
+                        </div>
                         <button class="export-icon-btn" id="exportIconBtn" aria-label="导出">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -1790,6 +1832,62 @@
         updatePageText(currentLanguage);
         initTimePicker();
         initScrollPicker();
+
+        // Tab切换功能
+        const tabBMU = document.getElementById('tabBMU');
+        const tabBMS1 = document.getElementById('tabBMS1');
+        let currentTab = 'BMU';
+
+        // BMU和BMS1的不同告警数据
+        const bmuAlerts = generateTodayAlerts();
+        const bms1Alerts = [
+            {
+                time: `${new Date().toISOString().slice(0, 10)} 17:15:30`,
+                code: '2',
+                type: 'voltage-warning',
+                description: 'Voltage Warning',
+                data: '03 FF 0D 48 0D 47 00 00 00 00 08 3F 00 00 00...'
+            },
+            {
+                time: `${new Date().toISOString().slice(0, 10)} 16:30:45`,
+                code: '3',
+                type: 'temp-alert',
+                description: 'Temperature Alert',
+                data: '04 00 00 1A 00 1B 00 00 00 00 08 3F 00 00 00...'
+            },
+            {
+                time: `${new Date().toISOString().slice(0, 10)} 14:20:10`,
+                code: '1',
+                type: 'system-status',
+                description: 'System Status',
+                data: '01 FF 00 00 00 00 00 00 00 00 08 3F 00 00 00...'
+            },
+            {
+                time: `${new Date().toISOString().slice(0, 10)} 11:45:22`,
+                code: '4',
+                type: 'comm-error',
+                description: 'Communication Error',
+                data: '05 FF FF FF FF FF FF FF FF FF FF FF FF FF FF...'
+            }
+        ];
+
+        tabBMU.addEventListener('click', () => {
+            tabBMU.classList.add('active');
+            tabBMS1.classList.remove('active');
+            currentTab = 'BMU';
+            alertData.length = 0;
+            alertData.push(...bmuAlerts);
+            renderAlerts();
+        });
+
+        tabBMS1.addEventListener('click', () => {
+            tabBMS1.classList.add('active');
+            tabBMU.classList.remove('active');
+            currentTab = 'BMS1';
+            alertData.length = 0;
+            alertData.push(...bms1Alerts);
+            renderAlerts();
+        });
 
         // 测试按钮 - 显示连接失败弹窗
         const testBtn = document.getElementById('testBtn');

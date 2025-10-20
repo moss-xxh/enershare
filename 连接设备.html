@@ -1679,11 +1679,11 @@
                             <!-- 网络连接状态 -->
                             <div class="network-status">
                                 <div class="network-status-item">
-                                    <div class="network-status-label">当前网络</div>
+                                    <div class="network-status-label" data-i18n="currentNetwork">当前网络</div>
                                     <div class="network-status-value disconnected" id="currentWifiName">未连接</div>
                                 </div>
                                 <div class="network-status-item">
-                                    <div class="network-status-label">连接状态</div>
+                                    <div class="network-status-label" data-i18n="connectionStatusLabel">连接状态</div>
                                     <div class="network-status-value checking" id="connectionStatus">检测中...</div>
                                 </div>
                             </div>
@@ -1906,6 +1906,11 @@
                 connecting1: '正在建立连接',
                 connecting2: '正在同步数据',
                 connectSuccess: '连接成功',
+                currentNetwork: '当前网络',
+                connectionStatusLabel: '连接状态',
+                connected: '已连接',
+                disconnected: '未连接',
+                detecting: '检测中...',
                 connectSuccessDesc: '设备已成功连接',
                 connectError: '连接失败',
                 connectErrorDesc: '无法连接到设备，请检查WiFi连接',
@@ -2088,6 +2093,11 @@
                 connecting1: 'Establishing connection',
                 connecting2: 'Syncing data',
                 connectSuccess: 'Connection Successful',
+                currentNetwork: 'Current Network',
+                connectionStatusLabel: 'Connection Status',
+                connected: 'Connected',
+                disconnected: 'Disconnected',
+                detecting: 'Detecting...',
                 connectSuccessDesc: 'Device connected successfully',
                 connectError: 'Connection Failed',
                 connectErrorDesc: 'Unable to connect to device, please check WiFi connection',
@@ -2458,16 +2468,16 @@
                     currentWifiName.classList.remove('disconnected', 'checking');
                     currentWifiName.classList.add('connected');
 
-                    connectionStatus.textContent = '已连接';
+                    connectionStatus.textContent = translations[currentLanguage].connected;
                     connectionStatus.classList.remove('checking', 'disconnected');
                     connectionStatus.classList.add('connected');
                 }, 2000);
             } else {
-                currentWifiName.textContent = '未连接';
+                currentWifiName.textContent = translations[currentLanguage].disconnected;
                 currentWifiName.classList.remove('connected', 'checking');
                 currentWifiName.classList.add('disconnected');
 
-                connectionStatus.textContent = '未连接';
+                connectionStatus.textContent = translations[currentLanguage].disconnected;
                 connectionStatus.classList.remove('checking', 'connected');
                 connectionStatus.classList.add('disconnected');
             }
@@ -2484,9 +2494,9 @@
                 const currentWifiName = document.getElementById('currentWifiName');
                 const connectionStatus = document.getElementById('connectionStatus');
 
-                currentWifiName.textContent = '未连接';
+                currentWifiName.textContent = translations[currentLanguage].disconnected;
                 currentWifiName.className = 'network-status-value disconnected';
-                connectionStatus.textContent = '检测中...';
+                connectionStatus.textContent = translations[currentLanguage].detecting;
                 connectionStatus.className = 'network-status-value checking';
 
                 // 开始检测

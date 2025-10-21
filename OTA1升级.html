@@ -1464,6 +1464,34 @@
             opacity: 0.6;
         }
 
+        /* 去下载按钮 - 小尺寸内联样式 */
+        .download-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 4px 12px;
+            background: #ffffff;
+            color: #1d1d1f;
+            border: 1.5px solid #34C759;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 8px;
+        }
+
+        .download-link-btn:hover {
+            background: rgba(52, 199, 89, 0.05);
+            border-color: #2CA549;
+        }
+
+        .download-link-btn:active {
+            transform: scale(0.95);
+            background: rgba(52, 199, 89, 0.1);
+        }
+
         /* 图片查看弹窗 */
         .image-modal {
             position: absolute;
@@ -1582,7 +1610,15 @@
                     </div>
 
                     <!-- 提示文字 -->
-                    <div class="hint-text">若没有下载升级包,可以断开设备连接,前往升级包下载<br><span class="hint-link" id="exampleLink">示例</span></div>
+                    <div class="hint-text">
+                        若没有下载升级包,可以断开设备连接,前往升级包下载<br>
+                        <!-- 去下载按钮 - 内联小按钮 -->
+                        <button class="download-link-btn" id="downloadLinkBtn">
+                            <span>📥</span>
+                            <span>去下载</span>
+                        </button>
+                        <span class="hint-link" id="exampleLink">示例</span>
+                    </div>
 
                     <!-- 开始升级按钮 -->
                     <button class="start-upgrade-btn" id="startUpdateBtn" disabled>开始升级</button>
@@ -1648,6 +1684,19 @@
                 <div class="image-container">
                     <div class="close-image" id="closeImage">×</div>
                     <img src="5.jpg" alt="文件夹示例">
+                </div>
+            </div>
+
+            <!-- 断开连接确认弹窗 -->
+            <div class="confirm-modal" id="disconnectConfirmModal">
+                <div class="confirm-overlay"></div>
+                <div class="confirm-dialog">
+                    <div class="confirm-title">需要断开连接</div>
+                    <div class="confirm-message">前往下载需要断开当前设备连接，是否继续？</div>
+                    <div class="confirm-buttons">
+                        <button class="confirm-btn-cancel" id="disconnectCancelBtn">取消</button>
+                        <button class="confirm-btn-ok" id="disconnectOkBtn" style="background: #34C759;">继续</button>
+                    </div>
                 </div>
             </div>
 
@@ -1912,6 +1961,33 @@
         const testBtn = document.getElementById('testBtn');
         testBtn.addEventListener('click', () => {
             showModal('⚠️', '连接失败', '设备连接已断开,请重新连接设备');
+        });
+
+        // 去下载按钮功能
+        const downloadLinkBtn = document.getElementById('downloadLinkBtn');
+        const disconnectConfirmModal = document.getElementById('disconnectConfirmModal');
+        const disconnectCancelBtn = document.getElementById('disconnectCancelBtn');
+        const disconnectOkBtn = document.getElementById('disconnectOkBtn');
+
+        // 点击去下载按钮
+        downloadLinkBtn.addEventListener('click', () => {
+            console.log('点击去下载按钮');
+            // 显示断开连接确认弹窗
+            disconnectConfirmModal.classList.add('active');
+        });
+
+        // 点击取消按钮
+        disconnectCancelBtn.addEventListener('click', () => {
+            console.log('用户取消断开连接');
+            disconnectConfirmModal.classList.remove('active');
+        });
+
+        // 点击继续按钮 - 跳转到个人资料页面
+        disconnectOkBtn.addEventListener('click', () => {
+            console.log('用户确认断开连接，跳转到个人资料页面');
+            disconnectConfirmModal.classList.remove('active');
+            // 跳转到个人资料副本页面
+            window.location.href = '个人资料副本.html';
         });
 
         // 示例图片查看功能

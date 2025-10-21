@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试OTA功能</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f5f5f7;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #1d1d1f;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .test-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-info {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0f0f5;
+            border-radius: 8px;
+        }
+
+        .test-info h2 {
+            color: #34C759;
+            margin-bottom: 15px;
+        }
+
+        .test-info p {
+            color: #6e6e73;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .test-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .test-btn {
+            padding: 14px 28px;
+            background: #007AFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .test-btn:hover {
+            background: #0051D5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+
+        .test-btn.success {
+            background: #34C759;
+        }
+
+        .test-btn.success:hover {
+            background: #2CA549;
+            box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
+        }
+
+        .steps {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fffef5;
+            border-radius: 8px;
+            border: 2px solid #FFD60A;
+        }
+
+        .steps h3 {
+            color: #FF9500;
+            margin-bottom: 15px;
+        }
+
+        .steps ol {
+            color: #6e6e73;
+            line-height: 1.8;
+            padding-left: 20px;
+        }
+
+        .steps li {
+            margin-bottom: 8px;
+        }
+
+        .success-badge {
+            display: inline-block;
+            background: #34C759;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 OTA升级功能测试页面</h1>
+
+    <div class="test-container">
+        <div class="test-info">
+            <h2>✅ 功能已实现 - 样式已更新！</h2>
+            <p>老王已经成功实现了OTA升级功能！现在：</p>
+            <p>1. 在OTA升级页面，点击"固件下载"按钮开始下载（绿色按钮）</p>
+            <p>2. 下载完成后会出现"立即升级设备"按钮<span class="success-badge">NEW</span></p>
+            <p>3. 升级按钮采用橙红渐变色+脉冲动画，更加醒目！</p>
+            <p>4. 点击升级按钮会跳转到连接设备页面</p>
+        </div>
+
+        <div class="test-links">
+            <a href="OTA升级.html" class="test-btn">打开OTA升级页面</a>
+            <a href="连接设备.html" class="test-btn success">查看连接设备页面</a>
+        </div>
+
+        <div class="steps">
+            <h3>测试步骤：</h3>
+            <ol>
+                <li>点击上方"打开OTA升级页面"按钮</li>
+                <li>在页面中点击"已连接WiFi，继续"进入第二步</li>
+                <li>点击"下载更新包"按钮开始下载</li>
+                <li>等待下载完成（约3秒）</li>
+                <li>下载完成后会显示"去升级"按钮</li>
+                <li>点击"去升级"按钮会跳转到连接设备页面</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

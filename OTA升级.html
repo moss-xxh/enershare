@@ -1254,9 +1254,9 @@
                         <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M10 2L2 10L10 18" stroke="#007AFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        返回
+                        <span data-i18n="backBtn">返回</span>
                     </button>
-                    <div class="nav-title">固件下载</div>
+                    <div class="nav-title" data-i18n="navTitle">固件下载</div>
                 </div>
 
                 <!-- OTA内容 -->
@@ -1265,11 +1265,11 @@
                     <div class="steps-indicator">
                         <div class="step active" data-step="1">
                             <div class="step-circle">1</div>
-                            <div class="step-label">连接WiFi</div>
+                            <div class="step-label" data-i18n="step1Label">连接WiFi</div>
                         </div>
                         <div class="step" data-step="2">
                             <div class="step-circle">2</div>
-                            <div class="step-label">固件下载</div>
+                            <div class="step-label" data-i18n="step2Label">固件下载</div>
                         </div>
                     </div>
 
@@ -1277,21 +1277,21 @@
                     <div class="step-content active" id="step1Content">
                         <div class="version-card">
                             <div class="wifi-icon-large">📶</div>
-                            <div class="instruction-title">连接家庭WiFi</div>
-                            <div class="instruction-text">请确保手机已连接到互联网WiFi，以便下载更新包</div>
+                            <div class="instruction-title" data-i18n="step1Title">连接家庭WiFi</div>
+                            <div class="instruction-text" data-i18n="step1Desc">请确保手机已连接到互联网WiFi，以便下载更新包</div>
 
                             <div class="network-status">
                                 <div class="network-status-item">
-                                    <div class="network-status-label">当前网络</div>
-                                    <div class="network-status-value" id="currentNetwork">未连接</div>
+                                    <div class="network-status-label" data-i18n="currentNetwork">当前网络</div>
+                                    <div class="network-status-value" id="currentNetwork" data-i18n="notConnected">未连接</div>
                                 </div>
                                 <div class="network-status-item">
-                                    <div class="network-status-label">网络类型</div>
+                                    <div class="network-status-label" data-i18n="networkType">网络类型</div>
                                     <div class="network-status-value" id="networkType">-</div>
                                 </div>
                             </div>
 
-                            <button class="action-btn" id="step1Btn">已连接WiFi，继续</button>
+                            <button class="action-btn" id="step1Btn" data-i18n="step1Btn">已连接WiFi，继续</button>
                         </div>
                     </div>
 
@@ -1301,12 +1301,12 @@
                         <div class="version-card">
                             <div class="version-compare">
                                 <div class="version-item current">
-                                    <div class="version-label">当前版本</div>
+                                    <div class="version-label" data-i18n="currentVersionLabel">当前版本</div>
                                     <div class="version-number-small">V1.0.0</div>
                                 </div>
                                 <div class="version-arrow">→</div>
                                 <div class="version-item new">
-                                    <div class="version-label">最新版本</div>
+                                    <div class="version-label" data-i18n="latestVersionLabel">最新版本</div>
                                     <div class="version-number-small new-color">V1.1.0</div>
                                     <div class="new-badge-small">NEW</div>
                                 </div>
@@ -1316,13 +1316,13 @@
                         <!-- 下载按钮 -->
                         <button class="download-btn" id="downloadBtn">
                             <span class="btn-icon">⬇</span>
-                            <span>下载更新包</span>
+                            <span data-i18n="downloadBtn">下载更新包</span>
                         </button>
 
                         <!-- 升级按钮（下载完成后显示） -->
                         <button class="upgrade-btn" id="upgradeBtn" style="display: none;">
                             <span class="btn-icon">🚀</span>
-                            <span>立即升级</span>
+                            <span data-i18n="upgradeBtn">立即升级</span>
                         </button>
                     </div>
 
@@ -1375,6 +1375,106 @@
     </div>
 
 <script>
+        // 多语言翻译数据
+        const translations = {
+            'zh-CN': {
+                navTitle: '固件下载',
+                backBtn: '返回',
+                step1Label: '连接WiFi',
+                step2Label: '固件下载',
+                step1Title: '连接家庭WiFi',
+                step1Desc: '请确保手机已连接到互联网WiFi，以便下载更新包',
+                currentNetwork: '当前网络',
+                networkType: '网络类型',
+                notConnected: '未连接',
+                wifiConnected: 'WiFi (已连接)',
+                step1Btn: '已连接WiFi，继续',
+                currentVersionLabel: '当前版本',
+                latestVersionLabel: '最新版本',
+                downloadBtn: '下载更新包',
+                downloading: '下载中...',
+                downloadComplete: '下载完成',
+                upgradeBtn: '立即升级',
+                errorTitle: '设备连接失败',
+                errorMessage: '请重新连接',
+                confirmBtn: '确定',
+                alertTitle: '提示'
+            },
+            'zh-TW': {
+                navTitle: '固件下載',
+                backBtn: '返回',
+                step1Label: '連接WiFi',
+                step2Label: '固件下載',
+                step1Title: '連接家庭WiFi',
+                step1Desc: '請確保手機已連接到互聯網WiFi，以便下載更新包',
+                currentNetwork: '當前網絡',
+                networkType: '網絡類型',
+                notConnected: '未連接',
+                wifiConnected: 'WiFi (已連接)',
+                step1Btn: '已連接WiFi，繼續',
+                currentVersionLabel: '當前版本',
+                latestVersionLabel: '最新版本',
+                downloadBtn: '下載更新包',
+                downloading: '下載中...',
+                downloadComplete: '下載完成',
+                upgradeBtn: '立即升級',
+                errorTitle: '設備連接失敗',
+                errorMessage: '請重新連接',
+                confirmBtn: '確定',
+                alertTitle: '提示'
+            },
+            'en': {
+                navTitle: 'Firmware Download',
+                backBtn: 'Back',
+                step1Label: 'Connect WiFi',
+                step2Label: 'Download Firmware',
+                step1Title: 'Connect to Home WiFi',
+                step1Desc: 'Please ensure your phone is connected to internet WiFi to download updates',
+                currentNetwork: 'Current Network',
+                networkType: 'Network Type',
+                notConnected: 'Not Connected',
+                wifiConnected: 'WiFi (Connected)',
+                step1Btn: 'WiFi Connected, Continue',
+                currentVersionLabel: 'Current Version',
+                latestVersionLabel: 'Latest Version',
+                downloadBtn: 'Download Update',
+                downloading: 'Downloading...',
+                downloadComplete: 'Download Complete',
+                upgradeBtn: 'Upgrade Now',
+                errorTitle: 'Device Connection Failed',
+                errorMessage: 'Please reconnect',
+                confirmBtn: 'OK',
+                alertTitle: 'Notice'
+            }
+        };
+
+        // 获取当前语言
+        let currentLanguage = localStorage.getItem('appLanguage') || 'zh-CN';
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = translations[lang][key];
+                    } else if (element.tagName === 'META') {
+                        element.content = translations[lang][key];
+                    } else {
+                        // 处理含有HTML内容的翻译
+                        if (key.endsWith('Desc') && translations[lang][key].includes('<')) {
+                            element.innerHTML = translations[lang][key];
+                        } else {
+                            element.textContent = translations[lang][key];
+                        }
+                    }
+                }
+            });
+        }
+
+        // 初始化页面语言
+        updatePageText(currentLanguage);
+
         // 更新时间
         function updateTime() {
             const now = new Date();
@@ -1427,7 +1527,7 @@
         setTimeout(() => {
             document.getElementById('currentNetwork').textContent = 'Home WiFi';
             document.getElementById('currentNetwork').classList.add('connected');
-            document.getElementById('networkType').textContent = 'WiFi (已连接)';
+            document.getElementById('networkType').textContent = translations[currentLanguage].wifiConnected;
         }, 500);
 
         step1Btn.addEventListener('click', () => {
@@ -1439,18 +1539,18 @@
         let isDownloaded = false;
 
         downloadBtn.addEventListener('click', () => {
-            downloadBtn.innerHTML = '<span class="btn-icon">⏳</span><span>下载中... 0%</span>';
+            downloadBtn.innerHTML = '<span class="btn-icon">⏳</span><span>' + translations[currentLanguage].downloading + ' 0%</span>';
             downloadBtn.classList.add('downloading');
 
             // 模拟下载进度
             let progress = 0;
             const downloadInterval = setInterval(() => {
                 progress += 10;
-                downloadBtn.innerHTML = `<span class="btn-icon">⏳</span><span>下载中... ${progress}%</span>`;
+                downloadBtn.innerHTML = `<span class="btn-icon">⏳</span><span>${translations[currentLanguage].downloading} ${progress}%</span>`;
 
                 if (progress >= 100) {
                     clearInterval(downloadInterval);
-                    downloadBtn.innerHTML = '<span class="btn-icon">✅</span><span>下载完成</span>';
+                    downloadBtn.innerHTML = '<span class="btn-icon">✅</span><span>' + translations[currentLanguage].downloadComplete + '</span>';
                     downloadBtn.classList.remove('downloading');
                     downloadBtn.classList.add('success');
                     isDownloaded = true;
@@ -1496,7 +1596,7 @@
         // 测试按钮
         const testBtn = document.getElementById('testBtn');
         testBtn.addEventListener('click', () => {
-            showModal('⚠️', '设备连接失败', '请重新连接');
+            showModal('⚠️', translations[currentLanguage].errorTitle, translations[currentLanguage].errorMessage);
         });
     </script>
 </body>

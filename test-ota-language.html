@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTA升级页面多语言测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #34C759;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            background: #f5f5f7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .language-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .lang-btn {
+            padding: 10px 20px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #0051D5;
+        }
+        .lang-btn.active {
+            background: #34C759;
+        }
+        .test-frame {
+            width: 100%;
+            height: 900px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .status {
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            padding: 5px 0;
+            color: #666;
+        }
+        li:before {
+            content: "✓ ";
+            color: #34C759;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 OTA升级页面多语言测试工具</h1>
+
+    <div class="test-section">
+        <h2>语言切换测试</h2>
+        <div class="language-buttons">
+            <button class="lang-btn active" onclick="changeLanguage('zh-CN')">🇨🇳 简体中文</button>
+            <button class="lang-btn" onclick="changeLanguage('zh-TW')">🇹🇼 繁體中文</button>
+            <button class="lang-btn" onclick="changeLanguage('en')">🇬🇧 English</button>
+        </div>
+
+        <div class="status info">
+            <strong>当前语言：</strong><span id="currentLang">简体中文 (zh-CN)</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>✅ 已实现的多语言功能</h2>
+        <ul>
+            <li>导航栏标题翻译（固件下载 / Firmware Download）</li>
+            <li>返回按钮翻译</li>
+            <li>步骤标签翻译（连接WiFi、固件下载）</li>
+            <li>连接WiFi页面文本翻译</li>
+            <li>网络状态标签翻译</li>
+            <li>按钮文本翻译（已连接WiFi，继续）</li>
+            <li>版本标签翻译（当前版本、最新版本）</li>
+            <li>下载按钮动态文本翻译</li>
+            <li>升级按钮文本翻译</li>
+            <li>错误弹窗文本翻译</li>
+            <li>下载进度动态文本翻译</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>页面预览</h2>
+        <iframe id="testFrame" class="test-frame" src="OTA升级.html"></iframe>
+    </div>
+
+    <script>
+        function changeLanguage(lang) {
+            // 更新localStorage
+            localStorage.setItem('appLanguage', lang);
+
+            // 更新按钮状态
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 更新当前语言显示
+            const langMap = {
+                'zh-CN': '简体中文 (zh-CN)',
+                'zh-TW': '繁體中文 (zh-TW)',
+                'en': 'English (en)'
+            };
+            document.getElementById('currentLang').textContent = langMap[lang];
+
+            // 刷新iframe
+            document.getElementById('testFrame').src = 'OTA升级.html?t=' + Date.now();
+        }
+
+        // 初始化
+        window.onload = () => {
+            const currentLang = localStorage.getItem('appLanguage') || 'zh-CN';
+            const langMap = {
+                'zh-CN': '简体中文 (zh-CN)',
+                'zh-TW': '繁體中文 (zh-TW)',
+                'en': 'English (en)'
+            };
+            document.getElementById('currentLang').textContent = langMap[currentLang];
+        };
+    </script>
+</body>
+</html>

@@ -311,31 +311,31 @@
                         <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M10 2L2 10L10 18" stroke="#007AFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        返回
+                        <span data-i18n="backBtn">返回</span>
                     </button>
-                    <div class="nav-title">告警详情</div>
+                    <div class="nav-title" data-i18n="navTitle">告警详情</div>
                 </div>
 
                 <!-- 详情内容 -->
                 <div class="detail-content">
                     <div class="detail-card">
                         <div class="detail-section">
-                            <div class="section-title">Description</div>
+                            <div class="section-title" data-i18n="description">Description</div>
                             <div class="section-value" id="detailDescription">Power ON</div>
                         </div>
 
                         <div class="detail-section">
-                            <div class="section-title">Code</div>
+                            <div class="section-title" data-i18n="code">Code</div>
                             <div class="section-value level-value" id="detailLevel">0</div>
                         </div>
 
                         <div class="detail-section">
-                            <div class="section-title">Data</div>
+                            <div class="section-title" data-i18n="data">Data</div>
                             <div class="data-display" id="detailData">00 02 00 00 00 00 00 00 00 00 08 3F 00 00 00...</div>
                         </div>
 
                         <div class="detail-section">
-                            <div class="section-title">Date&Time</div>
+                            <div class="section-title" data-i18n="dateTime">Date&Time</div>
                             <div class="section-value" id="detailTime">2024-01-09 18:26:20</div>
                         </div>
                     </div>
@@ -346,6 +346,60 @@
     </div>
 
     <script>
+        // 多语言翻译数据
+        const translations = {
+            'zh-CN': {
+                pageTitle: '告警详情 - 爱尚',
+                navTitle: '告警详情',
+                backBtn: '返回',
+                description: 'Description',
+                code: 'Code',
+                data: 'Data',
+                dateTime: 'Date&Time'
+            },
+            'zh-TW': {
+                pageTitle: '告警詳情 - 愛尚',
+                navTitle: '告警詳情',
+                backBtn: '返回',
+                description: 'Description',
+                code: 'Code',
+                data: 'Data',
+                dateTime: 'Date&Time'
+            },
+            'en': {
+                pageTitle: 'Alert Details - Core Link+',
+                navTitle: 'Alert Details',
+                backBtn: 'Back',
+                description: 'Description',
+                code: 'Code',
+                data: 'Data',
+                dateTime: 'Date&Time'
+            }
+        };
+
+        // 获取当前语言
+        let currentLanguage = localStorage.getItem('appLanguage') || 'zh-CN';
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            // 更新页面标题
+            const pageTitle = document.getElementById('pageTitle');
+            if (pageTitle && translations[lang].pageTitle) {
+                document.title = translations[lang].pageTitle;
+            }
+
+            // 更新所有带 data-i18n 属性的元素
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // 初始化页面语言
+        updatePageText(currentLanguage);
+
         // 更新时间
         function updateTime() {
             const now = new Date();

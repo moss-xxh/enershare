@@ -575,9 +575,9 @@
         <div class="error-overlay"></div>
         <div class="error-dialog">
             <div class="error-icon">⚠️</div>
-            <div class="error-title">设备连接失败</div>
-            <div class="error-message">请重新连接</div>
-            <button class="error-btn" id="reconnectBtn">重新连接</button>
+            <div class="error-title" data-i18n="errorTitle">设备连接失败</div>
+            <div class="error-message" data-i18n="errorMessage">请重新连接</div>
+            <button class="error-btn" id="reconnectBtn" data-i18n="reconnectBtn">重新连接</button>
         </div>
     </div>
     <div class="iphone-frame">
@@ -606,7 +606,7 @@
             <div class="profile-page">
                 <!-- 页面头部 -->
                 <div class="profile-header">
-                    <div class="profile-title">我的</div>
+                    <div class="profile-title" data-i18n="title">我的</div>
                 </div>
 
                 <!-- 设置列表 -->
@@ -616,7 +616,7 @@
                         <div class="settings-item" id="otaUpgrade">
                             <div class="settings-icon">🔄</div>
                             <div class="settings-content">
-                                <span class="settings-label">OTA升级</span>
+                                <span class="settings-label" data-i18n="otaUpgrade">OTA升级</span>
                                 <div style="display: flex; align-items: center;">
                                     <span class="settings-arrow">›</span>
                                 </div>
@@ -625,7 +625,7 @@
                         <div class="settings-item" id="ota1Upgrade" style="display: none;">
                             <div class="settings-icon">🔋</div>
                             <div class="settings-content">
-                                <span class="settings-label">OTA升级</span>
+                                <span class="settings-label" data-i18n="otaUpgrade">OTA升级</span>
                                 <div style="display: flex; align-items: center;">
                                     <span class="settings-arrow">›</span>
                                 </div>
@@ -644,7 +644,7 @@
                                 <line x1="10" y1="18" x2="14" y2="18" stroke-linecap="round"/>
                             </svg>
                         </div>
-                        <span class="nav-text">设备</span>
+                        <span class="nav-text" data-i18n="navDevice">设备</span>
                     </div>
                     <div class="nav-item" id="navAlert">
                         <div class="nav-icon">
@@ -653,7 +653,7 @@
                                 <path d="M9 14V16C9 17.6569 10.3431 19 12 19C13.6569 19 15 17.6569 15 16V14" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </div>
-                        <span class="nav-text">告警</span>
+                        <span class="nav-text" data-i18n="navAlert">告警</span>
                     </div>
                     <div class="nav-item active" id="navProfile">
                         <div class="nav-icon">
@@ -662,7 +662,7 @@
                                 <path d="M6 20C6 16.6863 8.68629 14 12 14C15.3137 14 18 16.6863 18 20" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </div>
-                        <span class="nav-text">我的</span>
+                        <span class="nav-text" data-i18n="navProfile">我的</span>
                     </div>
                 </div>
             </div>
@@ -672,6 +672,56 @@
     </div>
 
     <script>
+        // 多语言翻译数据
+        const translations = {
+            'zh-CN': {
+                title: '我的',
+                otaUpgrade: 'OTA升级',
+                navDevice: '设备',
+                navAlert: '告警',
+                navProfile: '我的',
+                errorTitle: '设备连接失败',
+                errorMessage: '请重新连接',
+                reconnectBtn: '重新连接'
+            },
+            'zh-TW': {
+                title: '我的',
+                otaUpgrade: 'OTA升級',
+                navDevice: '設備',
+                navAlert: '告警',
+                navProfile: '我的',
+                errorTitle: '設備連接失敗',
+                errorMessage: '請重新連接',
+                reconnectBtn: '重新連接'
+            },
+            'en': {
+                title: 'Profile',
+                otaUpgrade: 'OTA Upgrade',
+                navDevice: 'Device',
+                navAlert: 'Alerts',
+                navProfile: 'Profile',
+                errorTitle: 'Device Connection Failed',
+                errorMessage: 'Please reconnect',
+                reconnectBtn: 'Reconnect'
+            }
+        };
+
+        // 获取当前语言
+        let currentLanguage = localStorage.getItem('appLanguage') || 'zh-CN';
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // 初始化页面语言
+        updatePageText(currentLanguage);
+
         // 更新时间
         function updateTime() {
             const now = new Date();

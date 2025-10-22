@@ -261,13 +261,42 @@
                     <div class="icon-image">
                         <img src="标志.webp" alt="Core Link+">
                     </div>
-                    <div class="app-name">Core Link+</div>
+                    <div class="app-name" data-i18n="appName">Core Link+</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // 多语言翻译数据
+        const translations = {
+            'zh-CN': {
+                appName: 'Core Link+'
+            },
+            'zh-TW': {
+                appName: 'Core Link+'
+            },
+            'en': {
+                appName: 'Core Link+'
+            }
+        };
+
+        // 获取当前语言
+        let currentLanguage = localStorage.getItem('appLanguage') || 'zh-CN';
+
+        // 更新页面文本
+        function updatePageText(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // 初始化页面语言
+        updatePageText(currentLanguage);
+
         // 更新时间
         function updateTime() {
             const now = new Date();

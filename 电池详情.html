@@ -261,6 +261,13 @@
             flex-direction: column;
             align-items: center;
             gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .battery-cell:active {
+            transform: scale(0.95);
+            opacity: 0.7;
         }
 
         .battery-cell-icon {
@@ -305,10 +312,27 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            z-index: 2;
+        }
+
+        .battery-cell-percentage {
             font-size: 20px;
             font-weight: 700;
             color: #1d1d1f;
-            z-index: 2;
+            line-height: 1;
+        }
+
+        .battery-cell-detail {
+            font-size: 11px;
+            color: #8e8e93;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            text-decoration: underline;
+            white-space: nowrap;
         }
 
         .battery-cell-info {
@@ -319,13 +343,6 @@
             font-size: 14px;
             font-weight: 600;
             color: #1d1d1f;
-            margin-bottom: 4px;
-        }
-
-        .battery-cell-voltage {
-            font-size: 12px;
-            color: #86868b;
-            font-weight: 500;
         }
 
 
@@ -506,12 +523,15 @@
                         </div>
                         <div class="battery-grid">
                             <!-- 电池1 -->
-                            <div class="battery-cell">
+                            <div class="battery-cell" data-battery-id="1">
                                 <div class="battery-cell-icon">
                                     <div class="battery-cell-body">
                                         <div class="battery-cell-head"></div>
                                         <div class="battery-cell-fill" style="height: 26%;"></div>
-                                        <div class="battery-cell-soc">26%</div>
+                                        <div class="battery-cell-soc">
+                                            <div class="battery-cell-percentage">26%</div>
+                                            <div class="battery-cell-detail" data-i18n="detail">Detail</div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="battery-cell-info">
@@ -520,12 +540,15 @@
                             </div>
 
                             <!-- 电池2 -->
-                            <div class="battery-cell">
+                            <div class="battery-cell" data-battery-id="2">
                                 <div class="battery-cell-icon">
                                     <div class="battery-cell-body">
                                         <div class="battery-cell-head"></div>
                                         <div class="battery-cell-fill" style="height: 45%; background: #34C759;"></div>
-                                        <div class="battery-cell-soc">45%</div>
+                                        <div class="battery-cell-soc">
+                                            <div class="battery-cell-percentage">45%</div>
+                                            <div class="battery-cell-detail" data-i18n="detail">Detail</div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="battery-cell-info">
@@ -534,12 +557,15 @@
                             </div>
 
                             <!-- 电池3 -->
-                            <div class="battery-cell">
+                            <div class="battery-cell" data-battery-id="3">
                                 <div class="battery-cell-icon">
                                     <div class="battery-cell-body">
                                         <div class="battery-cell-head"></div>
                                         <div class="battery-cell-fill" style="height: 68%; background: #34C759;"></div>
-                                        <div class="battery-cell-soc">68%</div>
+                                        <div class="battery-cell-soc">
+                                            <div class="battery-cell-percentage">68%</div>
+                                            <div class="battery-cell-detail" data-i18n="detail">Detail</div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="battery-cell-info">
@@ -548,12 +574,15 @@
                             </div>
 
                             <!-- 电池4 -->
-                            <div class="battery-cell">
+                            <div class="battery-cell" data-battery-id="4">
                                 <div class="battery-cell-icon">
                                     <div class="battery-cell-body">
                                         <div class="battery-cell-head"></div>
                                         <div class="battery-cell-fill" style="height: 82%; background: #34C759;"></div>
-                                        <div class="battery-cell-soc">82%</div>
+                                        <div class="battery-cell-soc">
+                                            <div class="battery-cell-percentage">82%</div>
+                                            <div class="battery-cell-detail" data-i18n="detail">Detail</div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="battery-cell-info">
@@ -584,7 +613,8 @@
                 systemInfo: '系统信息',
                 navDevice: '设备',
                 navAlert: '告警',
-                navProfile: '我的'
+                navProfile: '我的',
+                detail: '详情'
             },
             'en': {
                 back: 'Back',
@@ -600,7 +630,8 @@
                 systemInfo: 'System Information',
                 navDevice: 'Device',
                 navAlert: 'Alerts',
-                navProfile: 'Profile'
+                navProfile: 'Profile',
+                detail: 'Detail'
             }
         };
 
@@ -637,6 +668,13 @@
             window.location.href = '仪表盘.html';
         });
 
+        // 电池cell点击事件 - 跳转到BMS详情页面
+        document.querySelectorAll('.battery-cell').forEach(cell => {
+            cell.addEventListener('click', function() {
+                const batteryId = this.getAttribute('data-battery-id');
+                window.location.href = `BMS详情.html?battery=${batteryId}`;
+            });
+        });
 
         // 监听滚动事件，添加头部阴影
         const detailsBody = document.querySelector('.details-body');
